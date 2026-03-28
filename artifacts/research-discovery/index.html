@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research &amp; Discovery — Data &amp; AI Enablement Hub</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A2240;--teal:#0B9E80;--blue:#1A6BC4;--purple:#5E52D4;
+  --gold:#D4921A;--coral:#E0522A;
+  --tl:#D6F5EC;--bl:#DFF0FF;--nl:#E8EFF8;--pl:#EEECFF;--gl:#FEF3D7;
+  --text:#0D1B2A;--muted:#596577;--border:#D8E3F0;--surf:#F2F7FD;--white:#fff;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);font-size:14px;display:flex;flex-direction:column}
+
+/* ── TOP NAV ── */
+.topnav{height:48px;min-height:48px;background:#0A2240;display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0;border-bottom:2px solid #3DDBB0}
+.topnav-dot{width:8px;height:8px;border-radius:50%;background:#3DDBB0;flex-shrink:0}
+.topnav-brand{color:#fff;font-family:Georgia,serif;font-size:15px}
+.topnav-sub{font-size:12px;color:rgba(255,255,255,.45);margin-left:2px}
+
+/* ── BODY LAYOUT ── */
+.body-layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;min-width:240px;max-width:240px;
+  background:#1E3D5C;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.sb-hd{padding:16px 18px 10px}
+.sb-ttl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#3DDBB0;margin-bottom:5px}
+.sb-desc{font-size:11px;color:rgba(255,255,255,.55);line-height:1.5}
+.sb-div{height:1px;background:rgba(255,255,255,.12);margin:0 18px 6px}
+.sb-scroll{overflow-y:auto;flex:1;padding:4px 8px 16px}
+.sb-scroll::-webkit-scrollbar{width:3px}
+.sb-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:3px}
+.sb-grp{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:10px 8px 4px}
+.sb-item{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:background .15s}
+.sb-item:hover{background:rgba(255,255,255,.1)}
+.sb-item.on{background:rgba(255,255,255,.16);border-left:3px solid #3DDBB0;padding-left:7px}
+.sb-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sb-name{font-size:12px;color:rgba(255,255,255,.88);line-height:1.3;font-family:Georgia,serif}
+.sb-item.on .sb-name{color:#3DDBB0;font-weight:600}
+.sb-tag{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px}
+.sb-pips{display:flex;gap:3px;margin-top:3px}
+.sb-pip{width:5px;height:5px;border-radius:50%}
+.sb-sub{display:flex;align-items:center;gap:7px;padding:6px 8px 6px 22px;border-radius:7px;cursor:pointer;margin-bottom:1px;transition:background .15s}
+.sb-sub:hover{background:rgba(255,255,255,.09)}
+.sb-sub.on{background:rgba(255,255,255,.14);border-left:2px solid #3DDBB0;padding-left:20px}
+.sb-sub-arr{font-size:10px;color:rgba(255,255,255,.35)}
+.sb-sub-nm{font-size:11px;color:rgba(255,255,255,.75)}
+.sb-sub.on .sb-sub-nm{color:#3DDBB0;font-weight:600}
+
+/* ── MAIN PANEL ── */
+.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--surf)}
+.main::-webkit-scrollbar{width:5px}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ── PANE SYSTEM ── */
+.pane{display:none}.pane.on{display:block}
+
+/* ── TOOL HEADER ── */
+.t-hdr{padding:24px 32px 20px;background:var(--white);border-bottom:1px solid var(--border)}
+.t-ey{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.t-title{font-size:26px;color:var(--navy);font-family:Georgia,serif;margin-bottom:6px;line-height:1.2}
+.t-tag{font-size:15px;color:var(--muted);line-height:1.6;max-width:640px;margin-bottom:14px;font-style:italic}
+.t-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:14px}
+
+/* ── TAB NAV ── */
+.tnav{display:flex;background:var(--white);border-bottom:2px solid var(--border);padding:0 32px;overflow-x:auto}
+.tnav::-webkit-scrollbar{display:none}
+.tb{padding:11px 16px;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;flex-shrink:0;transition:color .15s}
+.tb:hover{color:var(--navy)}.tb.on{color:var(--navy);font-weight:700;border-bottom-color:currentColor}
+
+/* ── TAB CONTENT ── */
+.tc{display:none;padding:24px 32px}.tc.on{display:block}
+
+/* ── CARDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.card-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.card p,.card li{font-size:13px;color:var(--text);line-height:1.65}
+.blist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.blist li{display:flex;gap:9px;align-items:flex-start}
+.bd{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.vstrip{border-radius:9px;padding:16px 20px;margin-bottom:18px}
+.vstrip-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.vstrip p{font-size:13px;line-height:1.65}
+
+/* ── PROTO ── */
+.proto{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.p-in{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.p-out{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;flex-direction:column;min-height:400px}
+.plbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.fl2{font-size:12px;color:var(--navy);font-weight:600;margin-bottom:4px}
+.fh{font-size:11px;color:var(--muted);margin-bottom:5px}
+select,textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);resize:none;outline:none}
+select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(--white)}
+.run{padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;color:#fff;width:100%;display:flex;align-items:center;justify-content:center;gap:7px}
+.run:hover{opacity:.86}
+.out{flex:1;overflow-y:auto;font-size:13px;color:var(--text);line-height:1.7}
+.out-ph{color:var(--muted);font-style:italic;font-size:13px}
+.out-h{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:10px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── ARCH ── */
+.arch-layer{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.arch-lhdr{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--border)}
+.arch-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.arch-ltitle{font-size:13px;color:var(--navy);font-weight:600}
+.arch-lsub{font-size:11px;color:var(--muted)}
+.arch-comps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 15px}
+.acomp{background:var(--surf);border:1px solid var(--border);border-radius:7px;padding:10px 12px}
+.acomp-n{font-size:12px;color:var(--navy);font-weight:600;margin-bottom:3px}
+.acomp-d{font-size:11px;color:var(--muted);line-height:1.45;margin-bottom:6px}
+.acomp-chips{display:flex;gap:3px;flex-wrap:wrap}
+.ac{font-size:10px;padding:2px 6px;border-radius:7px;font-weight:600}
+.flow-row{display:flex;align-items:center;gap:0;overflow-x:auto;margin-bottom:18px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.flow-step{flex:1;min-width:100px;text-align:center;background:var(--surf);border:1px solid var(--border);border-radius:7px;padding:10px 8px;font-size:11px;color:var(--navy);line-height:1.4}
+.flow-step strong{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+.flow-arr{color:var(--muted);font-size:16px;padding:0 5px;flex-shrink:0}
+
+/* ── PATTERNS ── */
+.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.pat{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.pat-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.pat-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.pat-title{font-size:12px;color:var(--navy);font-weight:600}
+.pat-tag{font-size:10px;color:var(--muted);margin-top:1px}
+.pat-body{padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.55}
+.pat-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.pchip{font-size:10px;padding:2px 8px;border-radius:9px;background:var(--surf);border:1px solid var(--border);color:var(--navy)}
+.osb{background:#0A1F3A;border-radius:10px;padding:16px 18px;margin-bottom:18px}
+.osb-ttl{font-size:13px;color:#fff;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.osb-tag{font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(61,219,176,.2);color:#3DDBB0;font-weight:700}
+.osb-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:10px}
+.osb-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.osb-item{background:rgba(255,255,255,.07);border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.1)}
+.osb-in{font-size:11px;color:#fff;font-weight:600;margin-bottom:2px}
+.osb-id{font-size:11px;color:rgba(255,255,255,.5);line-height:1.45}
+
+/* ── INSIGHT CARDS ── */
+.ins-g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.ins{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ins-top{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.ins-src{font-size:11px;color:var(--muted);font-weight:600}
+.ins-dt{font-size:11px;color:var(--muted)}
+.ins-body{padding:11px 13px}
+.ins-title{font-size:13px;color:var(--navy);font-weight:600;margin-bottom:4px;line-height:1.35}
+.ins-text{font-size:12px;color:var(--muted);line-height:1.55}
+.ins-tags{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.itag{font-size:10px;padding:2px 7px;border-radius:8px}
+.rel{display:flex;align-items:center;gap:6px;padding:7px 13px;border-top:1px solid var(--border);background:var(--surf)}
+.rel-lbl{font-size:10px;color:var(--muted)}
+.rel-track{flex:1;background:var(--border);border-radius:3px;height:4px}
+.rel-fill{height:4px;border-radius:3px}
+
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.met{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.met-n{font-size:22px;font-family:Georgia,serif;font-weight:bold;line-height:1}
+.met-d{font-size:11px;margin-top:2px;font-weight:600}
+.met-l{font-size:11px;color:var(--muted);margin-top:2px}
+.up{color:#0B9E80}.dn{color:#E0522A}.fl{color:#D4921A}
+
+/* ── DOCS TABLE ── */
+.dtbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;table-layout:fixed;word-break:break-word}
+.dtbl th{text-align:left;padding:8px 12px;background:var(--nl);color:var(--navy);font-weight:700;font-size:11px}
+.dtbl td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;line-height:1.5}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:var(--surf)}
+.schip{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600}
+
+/* ── BENCH ROWS ── */
+.bench{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.bench-hdr{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surf)}
+.bench-hdr-ttl{font-size:13px;color:var(--navy);font-family:Georgia,serif}
+.bench-cols{display:grid;grid-template-columns:120px 1fr 46px 46px 80px;gap:0;padding:6px 14px;background:var(--nl)}
+.bench-col-lbl{font-size:10px;font-weight:700;color:var(--navy);letter-spacing:.3px}
+.bench-row{display:grid;grid-template-columns:120px 1fr 46px 46px 80px;gap:0;padding:7px 14px;border-bottom:1px solid var(--border);align-items:center}
+.bench-row:last-child{border-bottom:none}
+.bench-row:hover{background:var(--surf)}
+.b-name{font-size:12px;color:var(--navy);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.b-bar-wrap{padding-right:10px}
+.b-bar-track{background:var(--border);border-radius:3px;height:6px}
+.b-bar-fill{height:6px;border-radius:3px}
+.b-val{font-size:12px;color:var(--navy);font-weight:700}
+.b-tgt{font-size:12px;color:var(--muted)}
+
+/* ── CWRAP ── */
+.cwrap{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.cwrap-ttl{font-size:13px;color:var(--navy);font-family:Georgia,serif;margin-bottom:2px}
+.cwrap-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.cbox{position:relative;height:200px}
+
+/* ── CHAT ── */
+.chat-wrap{display:grid;grid-template-columns:1fr 300px;gap:16px;height:520px}
+.chat-win{background:var(--white);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;overflow:hidden}
+.chat-hdr{padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surf);display:flex;align-items:center;gap:9px}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.chat-inp{padding:12px 14px;border-top:1px solid var(--border);background:var(--surf);display:flex;gap:8px;align-items:flex-end}
+.chat-side{display:flex;flex-direction:column;gap:12px}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="topnav-dot"></div>
+  <div class="topnav-brand">Data &amp; AI Enablement Hub</div>
+  <span class="topnav-sub">US Program · Research &amp; Discovery</span>
+</div>
+
+<!-- BODY -->
+<div class="body-layout">
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="sb-hd">
+    <div class="sb-ttl">Research &amp; Discovery</div>
+    <div class="sb-desc">Community Infrastructure · Signal Layer</div>
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-scroll">
+
+    <div class="sb-item on" id="nav-research" onclick="go('research')">
+      <div class="sb-icon" style="background:#0D3A28">&#128269;</div>
+      <div><div class="sb-name">Research &amp; Discovery</div><div class="sb-tag">Overview &amp; architecture</div>
+      <div class="sb-pips"><div class="sb-pip" style="background:#3DDBB0"></div><div class="sb-pip" style="background:#5BA8F5"></div></div></div>
+    </div>
+
+    <div class="sb-grp">Sub-capabilities</div>
+
+    <div class="sb-item" id="nav-market" onclick="go('market')">
+      <div class="sb-icon" style="background:#0D2A3A">&#127758;</div>
+      <div><div class="sb-name">Hyperscaler &amp; Memory Insights</div><div class="sb-tag">Live infrastructure intelligence</div>
+      <div class="sb-pips"><div class="sb-pip" style="background:#3DDBB0"></div><div class="sb-pip" style="background:#EEECFF"></div></div></div>
+    </div>
+
+    <div class="sb-item" id="nav-agents" onclick="go('agents')">
+      <div class="sb-icon" style="background:#0D1F40">&#129776;</div>
+      <div><div class="sb-name">EDUAgent · Streamlit</div><div class="sb-tag">Agentic evidence synthesis</div>
+      <div class="sb-pips"><div class="sb-pip" style="background:#5BA8F5"></div><div class="sb-pip" style="background:#EEECFF"></div></div></div>
+    </div>
+
+    <div class="sb-item" id="nav-forecast" onclick="go('forecast')">
+      <div class="sb-icon" style="background:#1A1040">&#9889;</div>
+      <div><div class="sb-name">Forecast Agent</div><div class="sb-tag">Benchmark &amp; capability projection</div>
+      <div class="sb-pips"><div class="sb-pip" style="background:#A29BFE"></div><div class="sb-pip" style="background:#3DDBB0"></div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" id="main">
+
+<!-- ════ RESEARCH OVERVIEW ════ -->
+<div id="pane-research" class="pane on">
+  <div class="t-hdr">
+    <div class="t-ey" style="color:#0B9E80">Community Infrastructure · Signal Layer</div>
+    <div class="t-title">Research &amp; Discovery</div>
+    <div class="t-tag">Parent capability for insight generation — comprising Hyperscaler &amp; Memory Insights, EDUAgent, and Forecast Agent as three sub-capabilities.</div>
+    <div class="t-chips">
+      <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
+      <div class="chip" style="background:#DFF0FF;color:#0E4A8A"><span style="width:6px;height:6px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>Personalization</div>
+    </div>
+  </div>
+  <div class="tnav">
+    <div class="tb on" onclick="stab(this)">Overview</div>
+    <div class="tb" onclick="stab(this)">Architecture</div>
+    <div class="tb" onclick="stab(this)">Use Cases</div>
+    <div class="tb" onclick="stab(this)">Reusable Patterns</div>
+    <div class="tb" onclick="stab(this)">&#128269; Try the tool</div>
+  </div>
+  <div class="tc on">
+    <div class="g2">
+      <div class="card"><div class="card-lbl">What it does</div><p>Synthesizes research literature, grantee reports, and external evidence into structured briefs. Three sub-capabilities handle market intelligence, agentic deep research, and capability forecasting.</p></div>
+      <div class="card"><div class="card-lbl">Sub-capabilities</div><ul class="blist">
+        <li><div class="bd" style="background:#0B9E80"></div><strong>Hyperscaler &amp; Memory Insights</strong> — live field &amp; infrastructure intelligence</li>
+        <li><div class="bd" style="background:#1A6BC4"></div><strong>EDUAgent · Streamlit</strong> — multi-step agentic synthesis</li>
+        <li><div class="bd" style="background:#5E52D4"></div><strong>Forecast Agent</strong> — dynamic benchmark &amp; capability projection</li>
+      </ul></div>
+    </div>
+    <div class="vstrip" style="background:#D6F5EC;border:1px solid #A0E8D0">
+      <div class="vstrip-lbl" style="color:#065C3A">Value created</div>
+      <p style="color:#0B3D2E">Transforms fragmented experimentation into <strong>collective intelligence</strong> — each sub-capability double-clicks into a specific insight modality.</p>
+    </div>
+    <div class="g3">
+      <div class="card" style="cursor:pointer;border-top:3px solid #0B9E80" onclick="go('market')"><div class="card-lbl">&#127758; Hyperscaler Insights →</div><p style="font-size:12px">Live intelligence on hyperscaler AI infrastructure, memory architecture, DPI risks and investment signals.</p></div>
+      <div class="card" style="cursor:pointer;border-top:3px solid #1A6BC4" onclick="go('agents')"><div class="card-lbl">&#129776; EDUAgent →</div><p style="font-size:12px">Six-rung evidence ladder, citation chasing, knowledge graph traversal and investment calibration.</p></div>
+      <div class="card" style="cursor:pointer;border-top:3px solid #5E52D4" onclick="go('forecast')"><div class="card-lbl">&#9889; Forecast Agent →</div><p style="font-size:12px">Dynamic benchmarks, capability trajectory projections, build vs buy vs partner decisions to 2030.</p></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="flow-row">
+      <div class="flow-step"><strong>Ingest</strong>Field signals, grantee data, research, market feeds</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Index</strong>OpenSearch vector + keyword</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Retrieve</strong>Hybrid semantic + keyword re-ranking</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Synthesize</strong>Claude multi-step reasoning</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Deliver</strong>Structured brief with audit trail</div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-lhdr"><div class="arch-icon" style="background:#D6F5EC">&#128246;</div><div><div class="arch-ltitle">Ingestion &amp; Indexing</div><div class="arch-lsub">OpenSearch · S3 · Document parsers</div></div></div>
+      <div class="arch-comps">
+        <div class="acomp"><div class="acomp-n">OpenSearch cluster</div><div class="acomp-d">Dual-mode BM25 + k-NN vector index. Hybrid retrieval with RRF score normalization.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#DFF0FF;color:#0E4A8A">AWS managed</span></div></div>
+        <div class="acomp"><div class="acomp-n">Embedding pipeline</div><div class="acomp-d">Bedrock Titan Embeddings v2. Chunking: 512 tokens, 10% overlap.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
+        <div class="acomp"><div class="acomp-n">Document parser</div><div class="acomp-d">PDF, DOCX, HTML ingestion with metadata extraction — grantee, program, date, evidence type.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#FEF3D7;color:#7A4A0A">In progress</span></div></div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-lhdr"><div class="arch-icon" style="background:#DFF0FF">&#129504;</div><div><div class="arch-ltitle">Retrieval &amp; Synthesis</div><div class="arch-lsub">RAG · Re-ranking · Claude Sonnet</div></div></div>
+      <div class="arch-comps">
+        <div class="acomp"><div class="acomp-n">Hybrid RAG retriever</div><div class="acomp-d">BM25 + vector via RRF. Tunable alpha weighting per query type.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#DFF0FF;color:#0E4A8A">API-ready</span></div></div>
+        <div class="acomp"><div class="acomp-n">Evidence grader</div><div class="acomp-d">Six-rung ladder scoring applied at retrieval time — each chunk tagged before synthesis.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
+        <div class="acomp"><div class="acomp-n">Multi-step synthesizer</div><div class="acomp-d">Claude Sonnet with chain-of-thought. JSON schema output. Potemkin test applied.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tc">
+    <table class="dtbl">
+      <tr><th>Use case</th><th>Who</th><th>Input</th><th>Output</th><th>Sub-capability</th></tr>
+      <tr><td>Pre-investment evidence scan</td><td>Program officers</td><td>Investment domain</td><td>Evidence brief: known, gaps, actors, next steps</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Research</span></td></tr>
+      <tr><td>Hyperscaler risk assessment</td><td>Strategy, legal</td><td>Vendor + geo focus</td><td>Concentration risk brief with LMIC sovereignty flags</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Market Insights</span></td></tr>
+      <tr><td>Deep agentic synthesis</td><td>Research leads</td><td>Research question</td><td>Evidence-graded brief with citation chain</td><td><span class="schip" style="background:#DFF0FF;color:#0E4A8A">EDUAgent</span></td></tr>
+      <tr><td>Capability gap forecast</td><td>Hub leadership</td><td>Capability + horizon</td><td>Trajectory projection + build/buy/partner rec</td><td><span class="schip" style="background:#EEECFF;color:#3A2FAA">Forecast</span></td></tr>
+    </table>
+  </div>
+  <div class="tc">
+    <div class="osb">
+      <div class="osb-ttl">OpenSearch — Shared Retrieval Backbone <span class="osb-tag">Foundation Infrastructure</span></div>
+      <div class="osb-desc">One cluster, three index configurations — market_signals, edu_evidence, capability_signals — avoiding duplicate infrastructure across sub-capabilities.</div>
+      <div class="osb-g">
+        <div class="osb-item"><div class="osb-in">market_signals</div><div class="osb-id">News feeds, filings, EdTech reports. Freshness-weighted BM25 with date decay.</div></div>
+        <div class="osb-item"><div class="osb-in">edu_evidence</div><div class="osb-id">Academic literature, grantee outputs, evidence ladder metadata. k-NN with evidence-type filters.</div></div>
+        <div class="osb-item"><div class="osb-in">capability_signals</div><div class="osb-id">Benchmark scores, peer data, trend signals. Time-series aware with projections.</div></div>
+      </div>
+    </div>
+    <div class="pat-grid">
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#D6F5EC">&#128269;</div><div><div class="pat-title">Hybrid RAG retrieval</div><div class="pat-tag">Reusable · All sub-capabilities</div></div></div><div class="pat-body">BM25 keyword + k-NN vector via RRF. Tunable alpha per sub-capability.<div class="pat-chips"><span class="pchip">OpenSearch</span><span class="pchip">Bedrock Embeddings</span><span class="pchip">RRF fusion</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#EEECFF">&#129504;</div><div><div class="pat-title">Evidence grading pipeline</div><div class="pat-tag">Reusable · EDUAgent</div></div></div><div class="pat-body">Six-rung ladder at chunk level. Grade feeds synthesis weighting and Potemkin flags.<div class="pat-chips"><span class="pchip">Six-rung ladder</span><span class="pchip">MLE rubric</span><span class="pchip">Potemkin test</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#FEF3D7">&#9889;</div><div><div class="pat-title">Freshness-weighted indexing</div><div class="pat-tag">Reusable · Market · Forecast</div></div></div><div class="pat-body">Date-decay scoring for market signal documents. Configurable decay rate per index.<div class="pat-chips"><span class="pchip">Date decay</span><span class="pchip">Score normalization</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128274;</div><div><div class="pat-title">Provenance-tagged output</div><div class="pat-tag">Reusable · All sub-capabilities</div></div></div><div class="pat-body">Every output includes source IDs, retrieval scores, evidence grades, model version.<div class="pat-chips"><span class="pchip">DynamoDB log</span><span class="pchip">Source tracking</span><span class="pchip">HITL checkpoint</span></div></div></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="proto">
+      <div class="p-in">
+        <div class="plbl">Configure research brief</div>
+        <div><div class="fl2">Topic</div><div class="fh">What do you want to understand?</div><textarea id="r-topic" rows="3" placeholder="e.g. AI-enabled tutoring efficacy in K-12 low-income districts"></textarea></div>
+        <div><div class="fl2">Program context</div><select id="r-prog"><option value="">Select…</option><option>K-12 Education</option><option>Postsecondary &amp; Workforce</option><option>Global Health</option><option>US Poverty</option></select></div>
+        <div><div class="fl2">Brief type</div><select id="r-type"><option value="evidence">Evidence synthesis</option><option value="gaps">Evidence gap map</option><option value="landscape">Field landscape scan</option><option value="investment">Investment opportunity brief</option></select></div>
+        <div><div class="fl2">Context <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="r-ctx" rows="2" placeholder="e.g. Focus on RCTs 2018–2024, LMIC contexts"></textarea></div>
+        <button class="run" style="background:#0B9E80" onclick="runResearch()">&#9654; Generate brief</button>
+      </div>
+      <div class="p-out"><div class="plbl">Output</div><div class="out" id="r-out"><p class="out-ph">Configure and click Generate.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MARKET ════ -->
+<div id="pane-market" class="pane">
+  <div class="t-hdr">
+    <div class="t-ey" style="color:#0B9E80">Research &amp; Discovery ↳ Sub-capability · Data &amp; AI Enablement Hub</div>
+    <div class="t-title">Hyperscaler Memory &amp; Infrastructure Insights</div>
+    <div class="t-tag">Live intelligence on hyperscaler AI infrastructure positioning, memory architecture investments, and implications for Foundation grantees and DPI strategy.</div>
+    <div class="t-chips">
+      <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
+      <div class="chip" style="background:#DFF0FF;color:#0E4A8A"><span style="width:6px;height:6px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>Infrastructure intelligence</div>
+      <div class="chip" style="background:#EEECFF;color:#3A2FAA"><span style="width:6px;height:6px;border-radius:50%;background:#5E52D4;display:inline-block"></span>DPI-aligned</div>
+    </div>
+  </div>
+  <div class="tnav">
+    <div class="tb on" onclick="stab(this)">&#127760; Live Dashboard</div>
+    <div class="tb" onclick="stab(this)">&#9674; Memory Architecture</div>
+    <div class="tb" onclick="stab(this)">&#9654; AI Analysis</div>
+    <div class="tb" onclick="stab(this)">Architecture</div>
+    <div class="tb" onclick="stab(this)">Reusable Patterns</div>
+  </div>
+  <div class="tc on">
+    <div class="metrics">
+      <div class="met" style="border-top:3px solid #0B9E80"><div class="met-n" style="color:#0B9E80">$47B</div><div class="met-d up">↑ 34% YoY</div><div class="met-l">EdTech AI market 2026</div></div>
+      <div class="met" style="border-top:3px solid #E0522A"><div class="met-n" style="color:#E0522A">3</div><div class="met-d dn">↓ Concentration risk</div><div class="met-l">Hyperscalers control 82%</div></div>
+      <div class="met" style="border-top:3px solid #D4921A"><div class="met-n" style="color:#D4921A">47</div><div class="met-d fl">→ Monitoring</div><div class="met-l">LMIC sovereignty gaps</div></div>
+    </div>
+    <div class="bench">
+      <div class="bench-hdr"><div class="bench-hdr-ttl">Hyperscaler AI Infrastructure Scorecard — Q1 2026</div></div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed">
+        <tr style="background:var(--nl)"><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--navy)">Provider</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--navy)">Memory strategy</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--navy)">DPI risk</th><th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--navy)">Signal</th></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 12px;font-weight:700;color:#0078D4">Microsoft</td><td style="padding:8px 12px;color:var(--muted)">Azure AI Memory via Cosmos DB. Copilot Studio cross-session context.</td><td style="padding:8px 12px"><span class="schip" style="background:#FCE8E8;color:#8B1A1A">High</span></td><td style="padding:8px 12px"><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Monitor</span></td></tr>
+        <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:8px 12px;font-weight:700;color:#4285F4">Google</td><td style="padding:8px 12px;color:var(--muted)">Gemini 1M token context. Memory API in Workspace. Vertex AI persistent state.</td><td style="padding:8px 12px"><span class="schip" style="background:#FCE8E8;color:#8B1A1A">High</span></td><td style="padding:8px 12px"><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Monitor</span></td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 12px;font-weight:700;color:#FF9900">AWS</td><td style="padding:8px 12px;color:var(--muted)">Bedrock Knowledge Bases + Agent memory. Skills Center portable identity pilot.</td><td style="padding:8px 12px"><span class="schip" style="background:#D6F5EC;color:#065C3A">Low</span></td><td style="padding:8px 12px"><span class="schip" style="background:#D6F5EC;color:#065C3A">Strategic partner</span></td></tr>
+        <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:8px 12px;font-weight:700;color:#0467DF">Meta / OSS</td><td style="padding:8px 12px;color:var(--muted)">Llama 3 + MemGPT. Open weights enable local memory deployment.</td><td style="padding:8px 12px"><span class="schip" style="background:#D6F5EC;color:#065C3A">Minimal</span></td><td style="padding:8px 12px"><span class="schip" style="background:#EEECFF;color:#3A2FAA">Invest signal</span></td></tr>
+        <tr><td style="padding:8px 12px;font-weight:700;color:#5E52D4">Anthropic</td><td style="padding:8px 12px;color:var(--muted)">Claude Projects persistent memory. MCP protocol for cross-system memory.</td><td style="padding:8px 12px"><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Medium</span></td><td style="padding:8px 12px"><span class="schip" style="background:#D6F5EC;color:#065C3A">Active partner</span></td></tr>
+      </table>
+    </div>
+    <div class="ins-g">
+      <div class="ins"><div class="ins-top"><span class="ins-src">Stanford HAI · 2026</span><span class="ins-dt">Mar 2026</span></div><div class="ins-body"><div class="ins-title">AI tutoring 0.4 SD gains — only with teacher integration</div><div class="ins-text">Meta-analysis of 34 RCTs. Effect sizes collapse without sustained teacher PD.</div><div class="ins-tags"><span class="itag" style="background:#D6F5EC;color:#065C3A">Tutoring AI</span><span class="itag" style="background:#DFF0FF;color:#0E4A8A">Evidence</span></div></div><div class="rel"><span class="rel-lbl">Relevance</span><div class="rel-track"><div class="rel-fill" style="width:90%;background:#0B9E80"></div></div><span style="font-size:10px;color:#0B9E80;font-weight:700">High</span></div></div>
+      <div class="ins"><div class="ins-top"><span class="ins-src">MIT Media Lab · 2026</span><span class="ins-dt">Feb 2026</span></div><div class="ins-body"><div class="ins-title">Learning Tapestry: portable records reduce friction 60%</div><div class="ins-text">Cross-institutional portable memory pilots aligned with global memory stack.</div><div class="ins-tags"><span class="itag" style="background:#EEECFF;color:#3A2FAA">Portable memory</span><span class="itag" style="background:#D6F5EC;color:#065C3A">DPI</span></div></div><div class="rel"><span class="rel-lbl">Relevance</span><div class="rel-track"><div class="rel-fill" style="width:96%;background:#0B9E80"></div></div><span style="font-size:10px;color:#0B9E80;font-weight:700">Critical</span></div></div>
+      <div class="ins"><div class="ins-top"><span class="ins-src">AWS Skills Center · Mar 2026</span><span class="ins-dt">Mar 2026</span></div><div class="ins-body"><div class="ins-title">Global Portable Memory Build-a-Thon: five-layer stack validated</div><div class="ins-text">OpenID-based portable identity + preference AI layer tested across 12 institutions.</div><div class="ins-tags"><span class="itag" style="background:#EEECFF;color:#3A2FAA">Portable memory</span><span class="itag" style="background:#DFF0FF;color:#0E4A8A">Hub-direct</span></div></div><div class="rel"><span class="rel-lbl">Relevance</span><div class="rel-track"><div class="rel-fill" style="width:98%;background:#0B9E80"></div></div><span style="font-size:10px;color:#0B9E80;font-weight:700">Critical</span></div></div>
+      <div class="ins"><div class="ins-top"><span class="ins-src">Mullainathan · 2025</span><span class="ins-dt">Jan 2026</span></div><div class="ins-body"><div class="ins-title">Simulation compresses R&amp;D cycles from years to weeks</div><div class="ins-text">AI-accelerated social science framework relevant to Hub simulation patterns.</div><div class="ins-tags"><span class="itag" style="background:#FEF3D7;color:#7A4A0A">Simulation</span><span class="itag" style="background:#DFF0FF;color:#0E4A8A">R&amp;D</span></div></div><div class="rel"><span class="rel-lbl">Relevance</span><div class="rel-track"><div class="rel-fill" style="width:78%;background:#D4921A"></div></div><span style="font-size:10px;color:#D4921A;font-weight:700">High</span></div></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Five-layer global memory stack — AWS Build-a-Thon (March 2026)</div>
+    <table class="dtbl">
+      <tr><th>Layer</th><th>Name</th><th>Stores</th><th>Controls</th><th>DPI status</th></tr>
+      <tr><td><span class="schip" style="background:#D6F5EC;color:#065C3A">L1</span></td><td><strong>Session memory</strong></td><td>Current conversation, working state</td><td>System</td><td><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Proprietary</span></td></tr>
+      <tr><td><span class="schip" style="background:#DFF0FF;color:#0E4A8A">L2</span></td><td><strong>Personal memory</strong></td><td>User preferences, learning history</td><td>User (ideally)</td><td><span class="schip" style="background:#FCE8E8;color:#8B1A1A">Lock-in risk</span></td></tr>
+      <tr><td><span class="schip" style="background:#EEECFF;color:#3A2FAA">L3</span></td><td><strong>Institutional memory</strong></td><td>Org knowledge, past decisions, grantee history</td><td>Institution</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Foundation-owned</span></td></tr>
+      <tr><td><span class="schip" style="background:#FEF3D7;color:#7A4A0A">L4</span></td><td><strong>Community memory</strong></td><td>Cross-institutional learning, field signals</td><td>Collective</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">DPI-aligned</span></td></tr>
+      <tr><td><span class="schip" style="background:#FCE8E8;color:#8B1A1A">L5</span></td><td><strong>Global portable memory</strong></td><td>Learner-owned credentials, skills, preference AI</td><td>Learner</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Open standard</span></td></tr>
+    </table>
+    <div class="osb" style="margin-top:16px">
+      <div class="osb-ttl">Hub positioning across the stack <span class="osb-tag">Strategic framing</span></div>
+      <div class="osb-desc">The Hub operates at L3 (institutional) and L4 (community) — lowest lock-in risk. L5 is the strategic horizon tied to Ambition 2045.</div>
+      <div class="osb-g">
+        <div class="osb-item"><div class="osb-in">L3 — Build</div><div class="osb-id">Knowledge Infrastructure, grantee memory, decision history. Foundation-owned, AWS-hosted.</div></div>
+        <div class="osb-item"><div class="osb-in">L4 — Partner</div><div class="osb-id">EDUAgent KG, MIT Learning Tapestry, ASU coalition, 1EdTech.</div></div>
+        <div class="osb-item"><div class="osb-in">L5 — Invest</div><div class="osb-id">Portable learner credentials, OpenID wallet, Stanford Law fiduciary. Ambition 2045.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="proto">
+      <div class="p-in">
+        <div class="plbl">Configure market scan</div>
+        <div><div class="fl2">Domain or sector</div><textarea id="mkt-domain" rows="2" placeholder="e.g. AI tutoring platforms in K-12, hyperscaler education offerings"></textarea></div>
+        <div><div class="fl2">Scan type</div><select id="mkt-type"><option value="landscape">Market landscape</option><option value="hyperscaler">Hyperscaler analysis</option><option value="concentration">Concentration &amp; sovereignty risk</option><option value="emerging">Emerging players</option><option value="investment">Investment signal brief</option></select></div>
+        <div><div class="fl2">Geographic focus</div><select id="mkt-geo"><option value="us">United States</option><option value="lmic">LMIC contexts</option><option value="global">Global</option><option value="both">US + LMIC comparison</option></select></div>
+        <div><div class="fl2">Foundation lens</div><select id="mkt-lens"><option value="equity">Equity &amp; access</option><option value="dpi">Digital public infrastructure</option><option value="evidence">Evidence &amp; trust</option><option value="scale">Scale &amp; sustainability</option></select></div>
+        <div><div class="fl2">Specific question <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="mkt-q" rows="2" placeholder="e.g. Data sovereignty risks for grantees on Google Workspace EDU?"></textarea></div>
+        <button class="run" style="background:#0B9E80" onclick="runMarket()">&#9654; Generate market intelligence</button>
+      </div>
+      <div class="p-out"><div class="plbl">Output</div><div class="out" id="mkt-out"><p class="out-ph">Configure and click Generate.</p></div></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="flow-row">
+      <div class="flow-step"><strong>Signal</strong>News feeds, filings, EdTech reports</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Index</strong>Freshness-weighted BM25</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Entity filter</strong>Hyperscaler NER tagging</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Score</strong>LMIC sovereignty flags</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Brief</strong>Structured intelligence output</div>
+    </div>
+    <div class="pat-grid">
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#D6F5EC">&#8635;</div><div><div class="pat-title">Date-decay freshness scoring</div><div class="pat-tag">OpenSearch · Market</div></div></div><div class="pat-body">Exponential decay on document scores based on publication date. Configurable λ per use case.<div class="pat-chips"><span class="pchip">script_score</span><span class="pchip">date_decay</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#FEF3D7">&#128204;</div><div><div class="pat-title">Entity-filtered retrieval</div><div class="pat-tag">OpenSearch · All</div></div></div><div class="pat-body">Pre-filter on entity tags before vector/BM25 scoring. Reduces latency and improves precision.<div class="pat-chips"><span class="pchip">Nested filters</span><span class="pchip">Entity NER</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#EEECFF">&#127760;</div><div><div class="pat-title">LMIC sovereignty flag</div><div class="pat-tag">Market · Governance</div></div></div><div class="pat-body">Automated flagging of content implying data sovereignty risks in LMIC contexts.<div class="pat-chips"><span class="pchip">Classifier</span><span class="pchip">Risk taxonomy</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128228;</div><div><div class="pat-title">Zero-downtime re-index</div><div class="pat-tag">OpenSearch · Operations</div></div></div><div class="pat-body">Alias-based index rotation for market_signals. No query interruption during daily updates.<div class="pat-chips"><span class="pchip">Index aliases</span><span class="pchip">Blue/green</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EDUAGENT ════ -->
+<div id="pane-agents" class="pane">
+  <div class="t-hdr">
+    <div class="t-ey" style="color:#1A6BC4">Research &amp; Discovery ↳ Sub-capability · Streamlit App</div>
+    <div class="t-title">EDUAgent</div>
+    <div class="t-tag">Multi-step agentic research — six-rung evidence ladder, citation chasing, knowledge graph traversal, and investment calibration. Built as a Streamlit application.</div>
+    <div class="t-chips">
+      <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
+      <div class="chip" style="background:#DFF0FF;color:#0E4A8A"><span style="width:6px;height:6px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>Personalization</div>
+      <div class="chip" style="background:#FEF3D7;color:#7A4A0A"><span style="width:6px;height:6px;border-radius:50%;background:#D4921A;display:inline-block"></span>Streamlit</div>
+    </div>
+  </div>
+  <div class="tnav">
+    <div class="tb on" onclick="stab(this)">&#129776; EDUAgent Console</div>
+    <div class="tb" onclick="stab(this)">Architecture</div>
+    <div class="tb" onclick="stab(this)">Use Cases</div>
+    <div class="tb" onclick="stab(this)">Reusable Patterns</div>
+  </div>
+  <div class="tc on">
+    <div style="background:#0A1F3A;border-radius:10px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #3DDBB0">
+      <div style="font-size:11px;color:#3DDBB0;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px">Core Question</div>
+      <div style="font-size:15px;color:#fff;font-family:Georgia,serif;line-height:1.6;margin-bottom:8px">"When, for whom, and under what conditions does it work?"</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.62);line-height:1.6">EDUAgent treats variation across classrooms, schools, and student populations as signal, not noise — shortening the distance between evidence and action.</div>
+    </div>
+    <div class="g2">
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:11px 14px;border-bottom:1px solid var(--border);background:#D6F5EC"><div style="font-size:13px;color:#065C3A;font-family:Georgia,serif">Component 1 — Evidence Ladder</div><div style="font-size:11px;color:#0B9E80">What can be claimed at each rung</div></div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed">
+          <tr style="background:#F2FBF8"><th style="padding:6px 10px;text-align:left;font-size:10px;font-weight:700;color:#065C3A;border-bottom:1px solid var(--border)">Rung</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:#065C3A;text-align:left;border-bottom:1px solid var(--border)">Stage</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:#065C3A;text-align:left;border-bottom:1px solid var(--border)">May claim</th></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#E0E0E0;color:#555;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">1</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Monitoring</td><td style="padding:6px 10px;color:var(--muted)">Usage, uptake, feasibility</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:6px 10px"><span style="background:#B2EBD4;color:#065C3A;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">2</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Implementation</td><td style="padding:6px 10px;color:var(--muted)">Can be implemented; fidelity</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#80DECC;color:#044D3A;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">3</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Comparative</td><td style="padding:6px 10px;color:var(--muted)">Favorable vs. comparison</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:6px 10px"><span style="background:#4DB6AC;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">4</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Causal Effectiveness</td><td style="padding:6px 10px;color:var(--muted)">Caused improvement in studied settings</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#0B9E80;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">5</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Generalizability</td><td style="padding:6px 10px;color:var(--muted)">Effects hold across settings</td></tr>
+          <tr><td style="padding:6px 10px"><span style="background:#065C3A;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">6</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Personalized</td><td style="padding:6px 10px;color:var(--muted)">Differential benefit for groups</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:11px 14px;border-bottom:1px solid var(--border);background:#DFF0FF"><div style="font-size:13px;color:#0E4A8A;font-family:Georgia,serif">Component 2 — Maturity Matrix</div><div style="font-size:11px;color:#1A6BC4">What should be done with the evidence</div></div>
+        <div style="padding:14px">
+          <div style="display:grid;grid-template-columns:64px 1fr 1fr;gap:0;font-size:12px">
+            <div></div>
+            <div style="padding:6px 8px;background:#EEF5FF;border-radius:7px 0 0 0;text-align:center;font-size:10px;font-weight:700;color:#0E4A8A;border:1px solid var(--border);border-right:none">High Generalizability</div>
+            <div style="padding:6px 8px;background:#F5F0FF;border-radius:0 7px 0 0;text-align:center;font-size:10px;font-weight:700;color:#3A2FAA;border:1px solid var(--border)">Low Generalizability</div>
+            <div style="padding:7px 5px;display:flex;align-items:center;justify-content:flex-end;font-size:9px;font-weight:700;color:#0E4A8A;text-align:right;line-height:1.3;border:1px solid var(--border);border-right:none;border-top:none">High Causal</div>
+            <div style="padding:9px;background:#E8F8F2;border:1px solid var(--border);border-right:none;border-top:none"><div style="font-size:11px;color:#065C3A;font-weight:700;margin-bottom:2px">&#9650; Scale &amp; policy</div><div style="font-size:11px;color:var(--muted)">Best bets for broad adoption.</div></div>
+            <div style="padding:9px;background:#F0F6FF;border:1px solid var(--border);border-top:none"><div style="font-size:11px;color:#0E4A8A;font-weight:700;margin-bottom:2px">&#9670; Targeted pilots</div><div style="font-size:11px;color:var(--muted)">Context-bound; constraints needed.</div></div>
+            <div style="padding:7px 5px;display:flex;align-items:center;justify-content:flex-end;font-size:9px;font-weight:700;color:#5E52D4;text-align:right;line-height:1.3;border:1px solid var(--border);border-right:none;border-top:none">Low Causal</div>
+            <div style="padding:9px;background:#FEF3D7;border:1px solid var(--border);border-right:none;border-top:none"><div style="font-size:11px;color:#7A4A0A;font-weight:700;margin-bottom:2px">&#9675; Prioritize testing</div><div style="font-size:11px;color:var(--muted)">Warrant rigorous evaluation.</div></div>
+            <div style="padding:9px;background:#F8F6FF;border:1px solid var(--border);border-top:none;border-radius:0 0 7px 0"><div style="font-size:11px;color:#3A2FAA;font-weight:700;margin-bottom:2px">&#9651; Explore &amp; iterate</div><div style="font-size:11px;color:var(--muted)">Early evidence; design iteration.</div></div>
+          </div>
+          <div style="margin-top:9px;font-size:11px;color:var(--muted);font-style:italic">The ladder defines what can be claimed; the matrix defines what should be done.</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#1A3A5C;border-radius:10px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <div><div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:3px">&#129776; EDUAgent is deployed as a Streamlit application</div><div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.5">Full app — agent log, citation graph, evidence ladder viz, investment calibration — runs as a dedicated Streamlit interface. Console below previews via API.</div></div>
+      <div style="flex-shrink:0"><div style="background:#FF4B4B;color:#fff;font-size:12px;font-weight:700;padding:8px 16px;border-radius:7px;display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap">&#9654; Open Streamlit App</div><div style="font-size:10px;color:rgba(255,255,255,.4);text-align:center;margin-top:4px">AWS / Streamlit Cloud</div></div>
+    </div>
+    <div class="proto">
+      <div class="p-in">
+        <div class="plbl">Configure agent task</div>
+        <div><div class="fl2">Research question</div><div class="fh">What should the agent investigate?</div><textarea id="ag-q" rows="3" placeholder="e.g. What does evidence say about AI tutoring in rural contexts, who are practitioners, where are gaps?"></textarea></div>
+        <div><div class="fl2">Agent mode</div><select id="ag-mode"><option value="deep">Deep research — multi-step synthesis</option><option value="edu">EDUAgent — education knowledge graph</option><option value="market">Market intelligence aggregation</option><option value="citation">Citation chaser — evidence ladder</option><option value="investment">Investment calibration</option></select></div>
+        <div><div class="fl2">Evidence standard</div><select id="ag-ev"><option value="all">All available evidence</option><option value="rct">RCTs and quasi-experimental only</option><option value="systematic">Systematic reviews &amp; meta-analyses</option><option value="mixed">Mixed methods + practitioner</option></select></div>
+        <div><div class="fl2">Constraints <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="ag-c" rows="2" placeholder="e.g. Focus 2020–2025, prioritize LMIC, flag Potemkin risks"></textarea></div>
+        <button class="run" style="background:#1A6BC4" onclick="runAgents()">&#9654; Run EDUAgent</button>
+      </div>
+      <div class="p-out"><div class="plbl">Agent output</div><div class="out" id="ag-out"><p class="out-ph">Configure and click Run.</p></div></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="flow-row">
+      <div class="flow-step"><strong>Query</strong>NL question decomposed into sub-queries</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Retrieve</strong>OpenSearch hybrid + Neptune KG traversal</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Grade</strong>Six-rung ladder + MLE rubric</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Reason</strong>Chain-of-thought + Potemkin test</div><div class="flow-arr">→</div>
+      <div class="flow-step"><strong>Output</strong>Graded brief with audit trail</div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-lhdr"><div class="arch-icon" style="background:#DFF0FF">&#129776;</div><div><div class="arch-ltitle">Agentic Orchestration</div><div class="arch-lsub">Bedrock Agents · Lambda · Step Functions</div></div></div>
+      <div class="arch-comps">
+        <div class="acomp"><div class="acomp-n">Query decomposer</div><div class="acomp-d">Breaks complex questions into 3–5 typed sub-queries using Claude.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
+        <div class="acomp"><div class="acomp-n">KG traversal agent</div><div class="acomp-d">Neptune graph queries for connected grants, evidence, and actors via Bedrock tool use.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
+        <div class="acomp"><div class="acomp-n">Citation chaser</div><div class="acomp-d">Follows reference chains from seed papers. Scores each on MLE rubric. Stops at depth 3.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tc">
+    <table class="dtbl">
+      <tr><th>Use case</th><th>Who</th><th>Agent mode</th><th>Output</th></tr>
+      <tr><td>Deep evidence synthesis</td><td>Research leads, POs</td><td>EDUAgent KG traversal</td><td>Six-rung graded brief with citation chain and Potemkin flags</td></tr>
+      <tr><td>Investment calibration</td><td>Investment teams</td><td>Investment calibration</td><td>Scored signal (0–10) with evidence strength breakdown</td></tr>
+      <tr><td>Citation audit</td><td>Evaluators</td><td>Citation chaser</td><td>Source trace from seed paper through 3 citation hops</td></tr>
+      <tr><td>Gap identification</td><td>Strategy team</td><td>Deep research</td><td>Gap map: known, contested, missing by geography and population</td></tr>
+    </table>
+  </div>
+  <div class="tc">
+    <div class="pat-grid">
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#EEECFF">&#127381;</div><div><div class="pat-title">Query decomposition</div><div class="pat-tag">EDUAgent · Reusable</div></div></div><div class="pat-body">Decomposes complex questions into typed sub-queries. Each runs independently, merged pre-synthesis.<div class="pat-chips"><span class="pchip">Chain-of-thought</span><span class="pchip">Structured output</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#D6F5EC">&#127968;</div><div><div class="pat-title">Evidence rung filter</div><div class="pat-tag">OpenSearch · EDUAgent</div></div></div><div class="pat-body">Pre-filter on evidence_rung field before vector scoring. Configurable minimum rung per mode.<div class="pat-chips"><span class="pchip">Index filter</span><span class="pchip">Six-rung ladder</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#FEF3D7">&#9888;</div><div><div class="pat-title">Potemkin detection pass</div><div class="pat-tag">EDUAgent · QA</div></div></div><div class="pat-body">Secondary Claude pass checks each claim against retrieved chunks. Flags ungrounded synthesis.<div class="pat-chips"><span class="pchip">Secondary LLM</span><span class="pchip">Claim grounding</span></div></div></div>
+      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128279;</div><div><div class="pat-title">Neptune + OpenSearch fusion</div><div class="pat-tag">EDUAgent · Architecture</div></div></div><div class="pat-body">Neptune for entity relationships; OpenSearch for text. Fused at application layer before synthesis.<div class="pat-chips"><span class="pchip">Neptune SPARQL</span><span class="pchip">OpenSearch k-NN</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FORECAST ════ -->
+<div id="pane-forecast" class="pane">
+  <div class="t-hdr">
+    <div class="t-ey" style="color:#5E52D4">Research &amp; Discovery ↳ Sub-capability</div>
+    <div class="t-title">Forecast Agent</div>
+    <div class="t-tag">Dynamic benchmark dashboard, capability trajectory projections, and build vs buy vs partner decision support — benchmarked against field velocity out to 2030.</div>
+    <div class="t-chips">
+      <div class="chip" style="background:#EEECFF;color:#3A2FAA"><span style="width:6px;height:6px;border-radius:50%;background:#5E52D4;display:inline-block"></span>Forecasting</div>
+      <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
+    </div>
+  </div>
+  <div class="tnav">
+    <div class="tb on" onclick="stab(this)">&#128202; Benchmark Dashboard</div>
+    <div class="tb" onclick="stab(this)">&#9889; Forecast Engine</div>
+    <div class="tb" onclick="stab(this)">Use Cases</div>
+  </div>
+  <div class="tc on">
+    <div class="metrics">
+      <div class="met" style="border-top:3px solid #5E52D4"><div class="met-n" style="color:#5E52D4">68%</div><div class="met-d up">↑ +12pts Q3 2025</div><div class="met-l">Capability maturity index</div></div>
+      <div class="met" style="border-top:3px solid #0B9E80"><div class="met-n" style="color:#0B9E80">2027</div><div class="met-d fl">→ On track</div><div class="met-l">Projected full deployment</div></div>
+      <div class="met" style="border-top:3px solid #D4921A"><div class="met-n" style="color:#D4921A">3.2×</div><div class="met-d up">↑ Velocity multiplier</div><div class="met-l">AI pace vs 2024 baseline</div></div>
+    </div>
+    <div class="cwrap">
+      <div class="cwrap-ttl">Capability Maturity Trajectory</div>
+      <div class="cwrap-sub">Foundation Hub vs top-quartile peers vs field velocity — 2025–2030</div>
+      <div class="cbox"><canvas id="c-trajectory"></canvas></div>
+    </div>
+    <div class="bench">
+      <div class="bench-hdr"><div class="bench-hdr-ttl">Dynamic Benchmark — Q1 2026</div></div>
+      <div class="bench-cols">
+        <div class="bench-col-lbl">Capability</div>
+        <div class="bench-col-lbl">Progress</div>
+        <div class="bench-col-lbl">Now</div>
+        <div class="bench-col-lbl">Target</div>
+        <div class="bench-col-lbl">Strategy</div>
+      </div>
+      <div class="bench-row"><div class="b-name">Research</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:72%;background:#0B9E80"></div></div></div><div class="b-val">72%</div><div class="b-tgt">90%</div><div><span class="schip" style="background:#D6F5EC;color:#065C3A">Build</span></div></div>
+      <div class="bench-row"><div class="b-name">Grantmaking</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:45%;background:#1A6BC4"></div></div></div><div class="b-val">45%</div><div class="b-tgt">85%</div><div><span class="schip" style="background:#DFF0FF;color:#0E4A8A">Build+Partner</span></div></div>
+      <div class="bench-row"><div class="b-name">Portfolio Intel</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:38%;background:#D4921A"></div></div></div><div class="b-val">38%</div><div class="b-tgt">80%</div><div><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Partner</span></div></div>
+      <div class="bench-row"><div class="b-name">Knowledge Infra</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:55%;background:#5E52D4"></div></div></div><div class="b-val">55%</div><div class="b-tgt">95%</div><div><span class="schip" style="background:#EEECFF;color:#3A2FAA">Build</span></div></div>
+      <div class="bench-row"><div class="b-name">Market Intel</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:30%;background:#E0522A"></div></div></div><div class="b-val">30%</div><div class="b-tgt">75%</div><div><span class="schip" style="background:#FCE8E8;color:#8B1A1A">Buy</span></div></div>
+      <div class="bench-row"><div class="b-name">EDUAgent / KG</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:65%;background:#0B9E80"></div></div></div><div class="b-val">65%</div><div class="b-tgt">90%</div><div><span class="schip" style="background:#D6F5EC;color:#065C3A">Build</span></div></div>
+      <div class="bench-row"><div class="b-name">Governance</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:60%;background:#0A2240"></div></div></div><div class="b-val">60%</div><div class="b-tgt">100%</div><div><span class="schip" style="background:#E8EFF8;color:#0A2240">Build</span></div></div>
+    </div>
+    <div class="cwrap">
+      <div class="cwrap-ttl">Build vs Buy vs Partner</div>
+      <div class="cwrap-sub">Strategic sourcing by capability area — radar view</div>
+      <div class="cbox"><canvas id="c-bbp"></canvas></div>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="proto">
+      <div class="p-in">
+        <div class="plbl">Configure forecast</div>
+        <div><div class="fl2">Capability</div><textarea id="fc-cap" rows="2" placeholder="e.g. AI-powered grantmaking decision support across USP"></textarea></div>
+        <div><div class="fl2">Horizon</div><select id="fc-h"><option value="1yr">1 year (2027)</option><option value="3yr">3 years (2028)</option><option value="5yr">5 years (2030 — Ambition 2045)</option></select></div>
+        <div><div class="fl2">Benchmark against</div><select id="fc-b"><option value="field">Top-quartile peers</option><option value="tech">Leading EdTech orgs</option><option value="philanthropy">Major philanthropies</option></select></div>
+        <div><div class="fl2">Strategic question</div><select id="fc-q"><option value="bbp">Build vs buy vs partner</option><option value="maturity">Maturity projection</option><option value="risk">Risk and dependency</option><option value="roadmap">Capability roadmap</option></select></div>
+        <div><div class="fl2">Constraints <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="fc-c" rows="2" placeholder="e.g. 1.0 FTE, seed budget, AWS partnership, 18-month runway"></textarea></div>
+        <button class="run" style="background:#5E52D4" onclick="runForecast()">&#9654; Run forecast agent</button>
+      </div>
+      <div class="p-out"><div class="plbl">Forecast output</div><div class="out" id="fc-out"><p class="out-ph">Configure and click Run.</p></div></div>
+    </div>
+  </div>
+  <div class="tc">
+    <table class="dtbl">
+      <tr><th>Use case</th><th>Who</th><th>Horizon</th><th>Output</th></tr>
+      <tr><td>Annual capability planning</td><td>Hub leadership</td><td>1–3 year</td><td>Maturity trajectory + build/buy/partner per workstream</td></tr>
+      <tr><td>Ambition 2045 alignment</td><td>Strategy team</td><td>5 year (2030)</td><td>Gap analysis vs 2030 milestone requirements</td></tr>
+      <tr><td>FTE investment scenario</td><td>Hub Director</td><td>18 months</td><td>Low/base/high FTE projections with ROI estimates</td></tr>
+      <tr><td>Vendor dependency audit</td><td>Infrastructure team</td><td>2 year</td><td>Risk flags for single-vendor dependencies</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end body-layout -->
+
+<script>
+// ══ NAVIGATION ══
+const PANES=['research','market','agents','forecast'];
+function go(id){
+  PANES.forEach(p=>{
+    const el=document.getElementById('pane-'+p);
+    if(el) el.classList.toggle('on',p===id);
+  });
+  document.querySelectorAll('.sb-item').forEach(el=>{
+    const eid=el.id?.replace('nav-','');
+    el.classList.toggle('on',eid===id);
+  });
+  document.getElementById('main').scrollTop=0;
+  if(id==='forecast') setTimeout(initForecastCharts,100);
+}
+
+// ══ TABS ══
+function stab(el){
+  const pane=el.closest('.pane');
+  if(!pane) return;
+  const tnav=pane.querySelector('.tnav');
+  if(!tnav) return;
+  const tabs=[...tnav.querySelectorAll('.tb')];
+  const idx=tabs.indexOf(el);
+  if(idx<0) return;
+  tabs.forEach((t,i)=>t.classList.toggle('on',i===idx));
+  const tcs=[...pane.children].filter(c=>c.classList.contains('tc'));
+  tcs.forEach((c,i)=>{c.style.display=i===idx?'block':'none';});
+  if(pane.id==='pane-forecast'&&idx===0) setTimeout(initForecastCharts,60);
+}
+
+function initTabs(){
+  document.querySelectorAll('.pane').forEach(pane=>{
+    const tcs=[...pane.children].filter(c=>c.classList.contains('tc'));
+    tcs.forEach((tc,i)=>{tc.style.display=i===0?'block':'none';});
+  });
+}
+
+// ══ CHARTS ══
+const CH={};
+function mk(id,cfg){if(CH[id]){CH[id].destroy();delete CH[id];}const c=document.getElementById(id);if(!c)return;CH[id]=new Chart(c,cfg);}
+const teal='#0B9E80',blue='#1A6BC4',purple='#5E52D4',gold='#D4921A',coral='#E0522A';
+const ta=a=>`rgba(11,158,128,${a})`,ba=a=>`rgba(26,107,196,${a})`,pa=a=>`rgba(94,82,212,${a})`;
+const leg={position:'bottom',labels:{font:{size:11},padding:10,boxWidth:10}};
+const grid={color:'rgba(0,0,0,.05)'};
+
+function initForecastCharts(){
+  mk('c-trajectory',{type:'line',data:{labels:['Q1\'25','Q2\'25','Q3\'25','Q4\'25','Q1\'26','Q2\'26','Q4\'26','Q2\'27','Q4\'27','Q4\'30'],datasets:[
+    {label:'Hub — actual',data:[42,48,54,58,68,null,null,null,null,null],borderColor:teal,backgroundColor:ta(.1),tension:.4,fill:true,pointRadius:4,borderWidth:2.5},
+    {label:'Hub — projected',data:[null,null,null,null,68,74,81,86,90,97],borderColor:teal,backgroundColor:ta(.04),tension:.4,fill:true,pointRadius:3,borderDash:[6,4],borderWidth:2},
+    {label:'Top-quartile peers',data:[50,55,60,64,70,74,80,84,88,96],borderColor:blue,backgroundColor:'transparent',tension:.4,pointRadius:2,borderWidth:1.5,borderDash:[3,3]},
+    {label:'Field velocity',data:[55,62,70,78,85,91,97,null,null,null],borderColor:coral,backgroundColor:'transparent',tension:.4,pointRadius:2,borderWidth:1.5,borderDash:[2,4]},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:leg},scales:{y:{min:30,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid},x:{ticks:{font:{size:10},maxRotation:40},grid:{display:false}}}}});
+  mk('c-bbp',{type:'radar',data:{labels:['Research','Grantmaking','Portfolio','Knowledge','Governance','Market','EDUAgent'],datasets:[
+    {label:'Build',data:[85,60,40,80,90,30,75],backgroundColor:ta(.18),borderColor:teal,borderWidth:2,pointRadius:3},
+    {label:'Buy',data:[20,35,50,15,10,70,20],backgroundColor:ba(.12),borderColor:blue,borderWidth:2,pointRadius:3},
+    {label:'Partner',data:[40,75,60,55,45,35,60],backgroundColor:pa(.12),borderColor:purple,borderWidth:2,pointRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:leg},scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:25,font:{size:10}},grid:{color:'rgba(0,0,0,.07)'},pointLabels:{font:{size:11}}}}}});
+}
+
+// ══ API CALLS ══
+async function callClaude(prompt,outId){
+  const out=document.getElementById(outId);if(!out)return;
+  out.innerHTML='<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px"><div class="spin" style="border-color:rgba(0,0,0,.12);border-top-color:#1A6BC4"></div>Generating…</div>';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    renderOut(out,d.content?.find(b=>b.type==='text')?.text||'No response.');
+  }catch(e){out.innerHTML='<p style="color:#E0522A;font-size:13px">Connection error. Please try again.</p>';}
+}
+function renderOut(el,text){
+  const lines=text.split('\n');let html='',inL=false,inS=false;
+  lines.forEach(l=>{
+    if(!l.trim()){if(inL){html+='</ul>';inL=false}return}
+    if(l.startsWith('## ')||(l.startsWith('**')&&l.endsWith('**'))){
+      if(inL){html+='</ul>';inL=false}if(inS)html+='</div>';
+      html+=`<div><div class="out-h">${l.replace(/^##\s*/,'').replace(/\*\*/g,'')}</div>`;inS=true;
+    }else if(l.match(/^[-•*]\s/)){
+      if(!inL){html+='<ul style="padding-left:13px;margin:4px 0 8px;display:flex;flex-direction:column;gap:3px">';inL=true}
+      html+=`<li style="font-size:13px;line-height:1.6;color:var(--text)">${l.replace(/^[-•*]\s/,'')}</li>`;
+    }else{
+      if(inL){html+='</ul>';inL=false}
+      html+=`<p style="font-size:13px;line-height:1.7;margin-bottom:4px">${l}</p>`;
+    }
+  });
+  if(inL)html+='</ul>';if(inS)html+='</div>';
+  el.innerHTML=html||`<p style="font-size:13px">${text}</p>`;
+}
+
+async function runResearch(){
+  const t=document.getElementById('r-topic').value.trim(),p=document.getElementById('r-prog').value,tp=document.getElementById('r-type').value,c=document.getElementById('r-ctx').value.trim();
+  if(!t){document.getElementById('r-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please enter a topic.</p>';return}
+  const lbl={evidence:'evidence synthesis',gaps:'evidence gap map',landscape:'field landscape scan',investment:'investment opportunity brief'};
+  await callClaude(`You are a research assistant for the Bill & Melinda Gates Foundation. Generate a structured ${lbl[tp]}.\n\nTopic: ${t}\nProgram: ${p||'unspecified'}\n${c?'Context: '+c:''}\n\nUse ## headings:\n## What the field knows\n## Evidence gaps\n## Key actors\n## Recommended next steps\n\n3–5 bullets per section.`,'r-out');
+}
+async function runMarket(){
+  const d=document.getElementById('mkt-domain').value.trim(),t=document.getElementById('mkt-type').value,g=document.getElementById('mkt-geo').value,l=document.getElementById('mkt-lens').value,q=document.getElementById('mkt-q').value.trim();
+  if(!d){document.getElementById('mkt-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please enter a domain.</p>';return}
+  const tl={landscape:'market landscape',hyperscaler:'hyperscaler analysis',concentration:'concentration and sovereignty risk',emerging:'emerging players',investment:'investment signal brief'};
+  await callClaude(`Gates Foundation market intelligence analyst. Generate a ${tl[t]}.\n\nDomain: ${d}\nGeo: ${g}\nLens: ${l}\n${q?'Question: '+q:''}\n\nUse ## headings:\n## Market landscape\n## Key players\n## Concentration and sovereignty risks\n## Emerging signals\n## Foundation investment implications`,'mkt-out');
+}
+async function runAgents(){
+  const q=document.getElementById('ag-q').value.trim(),m=document.getElementById('ag-mode').value,e=document.getElementById('ag-ev').value,c=document.getElementById('ag-c').value.trim();
+  if(!q){document.getElementById('ag-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please enter a question.</p>';return}
+  const ml={deep:'deep synthesis',edu:'EDUAgent KG traversal',market:'market intelligence',citation:'citation chasing',investment:'investment calibration'};
+  await callClaude(`EDUAgent for Gates Foundation.\n\nTask: ${ml[m]}\nQuestion: ${q}\nEvidence: ${e}\n${c?'Constraints: '+c:''}\n\nUse ## headings:\n## Agent reasoning steps\n## Key findings\n## Evidence quality (six-rung ladder)\n## Gaps and Potemkin risks\n## Investment calibration`,'ag-out');
+}
+async function runForecast(){
+  const c=document.getElementById('fc-cap').value.trim(),h=document.getElementById('fc-h').value,b=document.getElementById('fc-b').value,q=document.getElementById('fc-q').value,cn=document.getElementById('fc-c').value.trim();
+  if(!c){document.getElementById('fc-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please describe the capability.</p>';return}
+  const ql={bbp:'build vs buy vs partner',maturity:'maturity projection',risk:'risk and dependency',roadmap:'capability roadmap'};
+  await callClaude(`Forecast Agent for Gates Foundation AI Enablement Hub.\n\nCapability: ${c}\nHorizon: ${h}\nBenchmark: ${b}\nQuestion: ${ql[q]}\n${cn?'Constraints: '+cn:''}\n\nUse ## headings:\n## Capability trajectory\n## Benchmark comparison\n## Build vs buy vs partner recommendation\n## Risk flags\n## Sequenced roadmap`,'fc-out');
+}
+
+// ══ INIT ══
+initTabs();
+go('research');
+</script>
+</body>
+</html>
