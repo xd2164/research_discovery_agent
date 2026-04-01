@@ -254,11 +254,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <div class="sb-pips"><div class="sb-pip" style="background:#5BA8F5"></div><div class="sb-pip" style="background:#EEECFF"></div></div></div>
     </div>
 
-    <div class="sb-item" id="nav-forecast" onclick="go('forecast')">
-      <div class="sb-icon" style="background:#1A1040">&#9889;</div>
-      <div><div class="sb-name">Forecast Agent</div><div class="sb-tag">Benchmark &amp; capability projection</div>
-      <div class="sb-pips"><div class="sb-pip" style="background:#A29BFE"></div><div class="sb-pip" style="background:#3DDBB0"></div></div></div>
-    </div>
 
   </div>
 </div>
@@ -271,7 +266,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   <div class="t-hdr">
     <div class="t-ey" style="color:#0B9E80">Community Infrastructure · Signal Layer</div>
     <div class="t-title">Research &amp; Discovery</div>
-    <div class="t-tag">Parent capability for insight generation — comprising Market Insights, EDUAgent, and Forecast Agent as three sub-capabilities.</div>
+    <div class="t-tag">Parent capability for insight generation — comprising Market Insights and EDUAgent as two sub-capabilities.</div>
     <div class="t-chips">
       <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
       <div class="chip" style="background:#DFF0FF;color:#0E4A8A"><span style="width:6px;height:6px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>Personalization</div>
@@ -286,11 +281,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
   <div class="tc on">
     <div class="g2">
-      <div class="card"><div class="card-lbl">What it does</div><p>Synthesizes research literature, grantee reports, and external evidence into structured briefs. Three sub-capabilities handle market intelligence, agentic deep research, and capability forecasting.</p></div>
+      <div class="card"><div class="card-lbl">What it does</div><p>Synthesizes research literature, grantee reports, and external evidence into structured briefs. Two sub-capabilities handle market intelligence and agentic deep research.</p></div>
       <div class="card"><div class="card-lbl">Sub-capabilities</div><ul class="blist">
         <li><div class="bd" style="background:#0B9E80"></div><strong>Market Insights</strong> — market intelligence &amp; signals</li>
         <li><div class="bd" style="background:#1A6BC4"></div><strong>EDUAgent · Streamlit</strong> — multi-step agentic synthesis</li>
-        <li><div class="bd" style="background:#5E52D4"></div><strong>Forecast Agent</strong> — dynamic benchmark &amp; capability projection</li>
       </ul></div>
     </div>
     <div class="vstrip" style="background:#D6F5EC;border:1px solid #A0E8D0">
@@ -300,7 +294,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     <div class="g3">
       <div class="card" style="cursor:pointer;border-top:3px solid #0B9E80" onclick="go('market')"><div class="card-lbl">&#128202; Market Insights →</div><p style="font-size:12px">Market intelligence, hyperscaler signals, DPI risks, investment briefs and field landscape analysis.</p></div>
       <div class="card" style="cursor:pointer;border-top:3px solid #1A6BC4" onclick="go('agents')"><div class="card-lbl">&#129776; EDUAgent →</div><p style="font-size:12px">Six-rung evidence ladder, citation chasing, knowledge graph traversal and investment calibration.</p></div>
-      <div class="card" style="cursor:pointer;border-top:3px solid #5E52D4" onclick="go('forecast')"><div class="card-lbl">&#9889; Forecast Agent →</div><p style="font-size:12px">Dynamic benchmarks, capability trajectory projections, build vs buy vs partner decisions to 2030.</p></div>
     </div>
   </div>
   <div class="tc">
@@ -580,87 +573,13 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
 </div>
 
-<!-- ════ FORECAST ════ -->
-<div id="pane-forecast" class="pane">
-  <div class="t-hdr">
-    <div class="t-ey" style="color:#5E52D4">Research &amp; Discovery ↳ Sub-capability</div>
-    <div class="t-title">Forecast Agent</div>
-    <div class="t-tag">Dynamic benchmark dashboard, capability trajectory projections, and build vs buy vs partner decision support — benchmarked against field velocity out to 2030.</div>
-    <div class="t-chips">
-      <div class="chip" style="background:#EEECFF;color:#3A2FAA"><span style="width:6px;height:6px;border-radius:50%;background:#5E52D4;display:inline-block"></span>Forecasting</div>
-      <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Community signal</div>
-    </div>
-  </div>
-  <div class="tnav">
-    <div class="tb on" onclick="stab(this)">&#128202; Benchmark Dashboard</div>
-    <div class="tb" onclick="stab(this)">&#9889; Forecast Engine</div>
-    <div class="tb" onclick="stab(this)">Use Cases</div>
-  </div>
-  <div class="tc on">
-    <div class="metrics">
-      <div class="met" style="border-top:3px solid #5E52D4"><div class="met-n" style="color:#5E52D4">68%</div><div class="met-d up">↑ +12pts Q3 2025</div><div class="met-l">Capability maturity index</div></div>
-      <div class="met" style="border-top:3px solid #0B9E80"><div class="met-n" style="color:#0B9E80">2027</div><div class="met-d fl">→ On track</div><div class="met-l">Projected full deployment</div></div>
-      <div class="met" style="border-top:3px solid #D4921A"><div class="met-n" style="color:#D4921A">3.2×</div><div class="met-d up">↑ Velocity multiplier</div><div class="met-l">AI pace vs 2024 baseline</div></div>
-    </div>
-    <div class="cwrap">
-      <div class="cwrap-ttl">Capability Maturity Trajectory</div>
-      <div class="cwrap-sub">Foundation Hub vs top-quartile peers vs field velocity — 2025–2030</div>
-      <div class="cbox"><canvas id="c-trajectory"></canvas></div>
-    </div>
-    <div class="bench">
-      <div class="bench-hdr"><div class="bench-hdr-ttl">Dynamic Benchmark — Q1 2026</div></div>
-      <div class="bench-cols">
-        <div class="bench-col-lbl">Capability</div>
-        <div class="bench-col-lbl">Progress</div>
-        <div class="bench-col-lbl">Now</div>
-        <div class="bench-col-lbl">Target</div>
-        <div class="bench-col-lbl">Strategy</div>
-      </div>
-      <div class="bench-row"><div class="b-name">Research</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:72%;background:#0B9E80"></div></div></div><div class="b-val">72%</div><div class="b-tgt">90%</div><div><span class="schip" style="background:#D6F5EC;color:#065C3A">Build</span></div></div>
-      <div class="bench-row"><div class="b-name">Grantmaking</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:45%;background:#1A6BC4"></div></div></div><div class="b-val">45%</div><div class="b-tgt">85%</div><div><span class="schip" style="background:#DFF0FF;color:#0E4A8A">Build+Partner</span></div></div>
-      <div class="bench-row"><div class="b-name">Portfolio Intel</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:38%;background:#D4921A"></div></div></div><div class="b-val">38%</div><div class="b-tgt">80%</div><div><span class="schip" style="background:#FEF3D7;color:#7A4A0A">Partner</span></div></div>
-      <div class="bench-row"><div class="b-name">Knowledge Infra</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:55%;background:#5E52D4"></div></div></div><div class="b-val">55%</div><div class="b-tgt">95%</div><div><span class="schip" style="background:#EEECFF;color:#3A2FAA">Build</span></div></div>
-      <div class="bench-row"><div class="b-name">Market Intel</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:30%;background:#E0522A"></div></div></div><div class="b-val">30%</div><div class="b-tgt">75%</div><div><span class="schip" style="background:#FCE8E8;color:#8B1A1A">Buy</span></div></div>
-      <div class="bench-row"><div class="b-name">EDUAgent / KG</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:65%;background:#0B9E80"></div></div></div><div class="b-val">65%</div><div class="b-tgt">90%</div><div><span class="schip" style="background:#D6F5EC;color:#065C3A">Build</span></div></div>
-      <div class="bench-row"><div class="b-name">Governance</div><div class="b-bar-wrap"><div class="b-bar-track"><div class="b-bar-fill" style="width:60%;background:#0A2240"></div></div></div><div class="b-val">60%</div><div class="b-tgt">100%</div><div><span class="schip" style="background:#E8EFF8;color:#0A2240">Build</span></div></div>
-    </div>
-    <div class="cwrap">
-      <div class="cwrap-ttl">Build vs Buy vs Partner</div>
-      <div class="cwrap-sub">Strategic sourcing by capability area — radar view</div>
-      <div class="cbox"><canvas id="c-bbp"></canvas></div>
-    </div>
-  </div>
-  <div class="tc">
-    <div class="proto">
-      <div class="p-in">
-        <div class="plbl">Configure forecast</div>
-        <div><div class="fl2">Capability</div><textarea id="fc-cap" rows="2" placeholder="e.g. AI-powered grantmaking decision support across USP"></textarea></div>
-        <div><div class="fl2">Horizon</div><select id="fc-h"><option value="1yr">1 year (2027)</option><option value="3yr">3 years (2028)</option><option value="5yr">5 years (2030 — Ambition 2045)</option></select></div>
-        <div><div class="fl2">Benchmark against</div><select id="fc-b"><option value="field">Top-quartile peers</option><option value="tech">Leading EdTech orgs</option><option value="philanthropy">Major philanthropies</option></select></div>
-        <div><div class="fl2">Strategic question</div><select id="fc-q"><option value="bbp">Build vs buy vs partner</option><option value="maturity">Maturity projection</option><option value="risk">Risk and dependency</option><option value="roadmap">Capability roadmap</option></select></div>
-        <div><div class="fl2">Constraints <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="fc-c" rows="2" placeholder="e.g. 1.0 FTE, seed budget, AWS partnership, 18-month runway"></textarea></div>
-        <button class="run" style="background:#5E52D4" onclick="runForecast()">&#9654; Run forecast agent</button>
-      </div>
-      <div class="p-out"><div class="plbl">Forecast output</div><div class="out" id="fc-out"><p class="out-ph">Configure and click Run.</p></div></div>
-    </div>
-  </div>
-  <div class="tc">
-    <table class="dtbl">
-      <tr><th>Use case</th><th>Who</th><th>Horizon</th><th>Output</th></tr>
-      <tr><td>Annual capability planning</td><td>Hub leadership</td><td>1–3 year</td><td>Maturity trajectory + build/buy/partner per workstream</td></tr>
-      <tr><td>Ambition 2045 alignment</td><td>Strategy team</td><td>5 year (2030)</td><td>Gap analysis vs 2030 milestone requirements</td></tr>
-      <tr><td>FTE investment scenario</td><td>Hub Director</td><td>18 months</td><td>Low/base/high FTE projections with ROI estimates</td></tr>
-      <tr><td>Vendor dependency audit</td><td>Infrastructure team</td><td>2 year</td><td>Risk flags for single-vendor dependencies</td></tr>
-    </table>
-  </div>
-</div>
 
 </div><!-- end main -->
 </div><!-- end body-layout -->
 
 <script>
 // ══ NAVIGATION ══
-const PANES=['research','market','agents','forecast'];
+const PANES=['research','market','agents'];
 function go(id){
   PANES.forEach(p=>{
     const el=document.getElementById('pane-'+p);
@@ -671,7 +590,6 @@ function go(id){
     el.classList.toggle('on',eid===id);
   });
   document.getElementById('main').scrollTop=0;
-  if(id==='forecast') setTimeout(initForecastCharts,100);
 }
 
 // ══ TABS ══
@@ -686,7 +604,6 @@ function stab(el){
   tabs.forEach((t,i)=>t.classList.toggle('on',i===idx));
   const tcs=[...pane.children].filter(c=>c.classList.contains('tc'));
   tcs.forEach((c,i)=>{c.style.display=i===idx?'block':'none';});
-  if(pane.id==='pane-forecast'&&idx===0) setTimeout(initForecastCharts,60);
 }
 
 function initTabs(){
@@ -703,20 +620,6 @@ const teal='#0B9E80',blue='#1A6BC4',purple='#5E52D4',gold='#D4921A',coral='#E052
 const ta=a=>`rgba(11,158,128,${a})`,ba=a=>`rgba(26,107,196,${a})`,pa=a=>`rgba(94,82,212,${a})`;
 const leg={position:'bottom',labels:{font:{size:11},padding:10,boxWidth:10}};
 const grid={color:'rgba(0,0,0,.05)'};
-
-function initForecastCharts(){
-  mk('c-trajectory',{type:'line',data:{labels:['Q1\'25','Q2\'25','Q3\'25','Q4\'25','Q1\'26','Q2\'26','Q4\'26','Q2\'27','Q4\'27','Q4\'30'],datasets:[
-    {label:'Hub — actual',data:[42,48,54,58,68,null,null,null,null,null],borderColor:teal,backgroundColor:ta(.1),tension:.4,fill:true,pointRadius:4,borderWidth:2.5},
-    {label:'Hub — projected',data:[null,null,null,null,68,74,81,86,90,97],borderColor:teal,backgroundColor:ta(.04),tension:.4,fill:true,pointRadius:3,borderDash:[6,4],borderWidth:2},
-    {label:'Top-quartile peers',data:[50,55,60,64,70,74,80,84,88,96],borderColor:blue,backgroundColor:'transparent',tension:.4,pointRadius:2,borderWidth:1.5,borderDash:[3,3]},
-    {label:'Field velocity',data:[55,62,70,78,85,91,97,null,null,null],borderColor:coral,backgroundColor:'transparent',tension:.4,pointRadius:2,borderWidth:1.5,borderDash:[2,4]},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:leg},scales:{y:{min:30,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid},x:{ticks:{font:{size:10},maxRotation:40},grid:{display:false}}}}});
-  mk('c-bbp',{type:'radar',data:{labels:['Research','Grantmaking','Portfolio','Knowledge','Governance','Market','EDUAgent'],datasets:[
-    {label:'Build',data:[85,60,40,80,90,30,75],backgroundColor:ta(.18),borderColor:teal,borderWidth:2,pointRadius:3},
-    {label:'Buy',data:[20,35,50,15,10,70,20],backgroundColor:ba(.12),borderColor:blue,borderWidth:2,pointRadius:3},
-    {label:'Partner',data:[40,75,60,55,45,35,60],backgroundColor:pa(.12),borderColor:purple,borderWidth:2,pointRadius:3},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:leg},scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:25,font:{size:10}},grid:{color:'rgba(0,0,0,.07)'},pointLabels:{font:{size:11}}}}}});
-}
 
 // ══ API CALLS ══
 async function callClaude(prompt,outId){
@@ -764,12 +667,6 @@ async function runAgents(){
   if(!q){document.getElementById('ag-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please enter a question.</p>';return}
   const ml={deep:'deep synthesis',edu:'EDUAgent KG traversal',market:'market intelligence',citation:'citation chasing',investment:'investment calibration'};
   await callClaude(`EDUAgent for Gates Foundation.\n\nTask: ${ml[m]}\nQuestion: ${q}\nEvidence: ${e}\n${c?'Constraints: '+c:''}\n\nUse ## headings:\n## Agent reasoning steps\n## Key findings\n## Evidence quality (six-rung ladder)\n## Gaps and Potemkin risks\n## Investment calibration`,'ag-out');
-}
-async function runForecast(){
-  const c=document.getElementById('fc-cap').value.trim(),h=document.getElementById('fc-h').value,b=document.getElementById('fc-b').value,q=document.getElementById('fc-q').value,cn=document.getElementById('fc-c').value.trim();
-  if(!c){document.getElementById('fc-out').innerHTML='<p style="color:#D4921A;font-size:13px">Please describe the capability.</p>';return}
-  const ql={bbp:'build vs buy vs partner',maturity:'maturity projection',risk:'risk and dependency',roadmap:'capability roadmap'};
-  await callClaude(`Forecast Agent for Gates Foundation AI Enablement Hub.\n\nCapability: ${c}\nHorizon: ${h}\nBenchmark: ${b}\nQuestion: ${ql[q]}\n${cn?'Constraints: '+cn:''}\n\nUse ## headings:\n## Capability trajectory\n## Benchmark comparison\n## Build vs buy vs partner recommendation\n## Risk flags\n## Sequenced roadmap`,'fc-out');
 }
 
 // ══ INIT ══
