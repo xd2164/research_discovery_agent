@@ -274,9 +274,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
   <div class="tnav">
     <div class="tb on" onclick="stab(this)">&#9672; Synthesis Guide</div>
-    <div class="tb" onclick="stab(this)">Architecture</div>
-    <div class="tb" onclick="stab(this)">Use Cases</div>
-    <div class="tb" onclick="stab(this)">Reusable Patterns</div>
   </div>
   <div class="tc on">
     <div class="vstrip" style="background:#F0F9FF;border:1px solid #B8DEFF;margin-bottom:16px">
@@ -319,57 +316,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       </div>
     </div>
 
-  </div>
-  <div class="tc">
-    <div class="flow-row">
-      <div class="flow-step"><strong>Ingest</strong>Field signals, grantee data, research, market feeds</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Index</strong>OpenSearch vector + keyword</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Retrieve</strong>Hybrid semantic + keyword re-ranking</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Synthesize</strong>Claude multi-step reasoning</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Deliver</strong>Structured brief with audit trail</div>
-    </div>
-    <div class="arch-layer">
-      <div class="arch-lhdr"><div class="arch-icon" style="background:#D6F5EC">&#128246;</div><div><div class="arch-ltitle">Ingestion &amp; Indexing</div><div class="arch-lsub">OpenSearch · S3 · Document parsers</div></div></div>
-      <div class="arch-comps">
-        <div class="acomp"><div class="acomp-n">OpenSearch cluster</div><div class="acomp-d">Dual-mode BM25 + k-NN vector index. Hybrid retrieval with RRF score normalization.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#DFF0FF;color:#0E4A8A">AWS managed</span></div></div>
-        <div class="acomp"><div class="acomp-n">Embedding pipeline</div><div class="acomp-d">Bedrock Titan Embeddings v2. Chunking: 512 tokens, 10% overlap.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
-        <div class="acomp"><div class="acomp-n">Document parser</div><div class="acomp-d">PDF, DOCX, HTML ingestion with metadata extraction — grantee, program, date, evidence type.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#FEF3D7;color:#7A4A0A">In progress</span></div></div>
-      </div>
-    </div>
-    <div class="arch-layer">
-      <div class="arch-lhdr"><div class="arch-icon" style="background:#DFF0FF">&#129504;</div><div><div class="arch-ltitle">Retrieval &amp; Synthesis</div><div class="arch-lsub">RAG · Re-ranking · Claude Sonnet</div></div></div>
-      <div class="arch-comps">
-        <div class="acomp"><div class="acomp-n">Hybrid RAG retriever</div><div class="acomp-d">BM25 + vector via RRF. Tunable alpha weighting per query type.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span><span class="ac" style="background:#DFF0FF;color:#0E4A8A">API-ready</span></div></div>
-        <div class="acomp"><div class="acomp-n">Evidence grader</div><div class="acomp-d">Six-rung ladder scoring applied at retrieval time — each chunk tagged before synthesis.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
-        <div class="acomp"><div class="acomp-n">Multi-step synthesizer</div><div class="acomp-d">Claude Sonnet with chain-of-thought. JSON schema output. Potemkin test applied.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
-      </div>
-    </div>
-  </div>
-  <div class="tc">
-    <table class="dtbl">
-      <tr><th>Use case</th><th>Who</th><th>Input</th><th>Output</th><th>Stream</th></tr>
-      <tr><td>Pre-investment evidence scan</td><td>Program officers</td><td>Investment domain or question</td><td>Evidence brief: what's known, gaps, key actors, next steps</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Both streams</span></td></tr>
-      <tr><td>Hyperscaler &amp; market landscape</td><td>Strategy, program teams</td><td>Sector or vendor focus</td><td>Market landscape with investment signals &amp; LMIC flags</td><td><span class="schip" style="background:#D6F5EC;color:#065C3A">Market Insights</span></td></tr>
-      <tr><td>Deep literature synthesis</td><td>Research leads</td><td>Research question</td><td>Evidence-graded brief with citation chain &amp; gap map</td><td><span class="schip" style="background:#DFF0FF;color:#0E4A8A">EDUAgent</span></td></tr>
-      <tr><td>Field landscape + evidence scan</td><td>Program officers, leads</td><td>Topic + program context</td><td>Combined brief: market context layered with literature evidence</td><td><span class="schip" style="background:#EEECFF;color:#3A2FAA">Both streams</span></td></tr>
-    </table>
-  </div>
-  <div class="tc">
-    <div class="osb">
-      <div class="osb-ttl">OpenSearch — Shared Retrieval Backbone <span class="osb-tag">Foundation Infrastructure</span></div>
-      <div class="osb-desc">One cluster, three index configurations — market_signals, edu_evidence, capability_signals — avoiding duplicate infrastructure across sub-capabilities.</div>
-      <div class="osb-g">
-        <div class="osb-item"><div class="osb-in">market_signals</div><div class="osb-id">News feeds, filings, EdTech reports. Freshness-weighted BM25 with date decay.</div></div>
-        <div class="osb-item"><div class="osb-in">edu_evidence</div><div class="osb-id">Academic literature, grantee outputs, evidence ladder metadata. k-NN with evidence-type filters.</div></div>
-        <div class="osb-item"><div class="osb-in">capability_signals</div><div class="osb-id">Benchmark scores, peer data, trend signals. Time-series aware with projections.</div></div>
-      </div>
-    </div>
-    <div class="pat-grid">
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#D6F5EC">&#128269;</div><div><div class="pat-title">Hybrid RAG retrieval</div><div class="pat-tag">Reusable · All sub-capabilities</div></div></div><div class="pat-body">BM25 keyword + k-NN vector via RRF. Tunable alpha per sub-capability.<div class="pat-chips"><span class="pchip">OpenSearch</span><span class="pchip">Bedrock Embeddings</span><span class="pchip">RRF fusion</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#EEECFF">&#129504;</div><div><div class="pat-title">Evidence grading pipeline</div><div class="pat-tag">Reusable · EDUAgent</div></div></div><div class="pat-body">Six-rung ladder at chunk level. Grade feeds synthesis weighting and Potemkin flags.<div class="pat-chips"><span class="pchip">Six-rung ladder</span><span class="pchip">MLE rubric</span><span class="pchip">Potemkin test</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#FEF3D7">&#9889;</div><div><div class="pat-title">Freshness-weighted indexing</div><div class="pat-tag">Reusable · Market · Forecast</div></div></div><div class="pat-body">Date-decay scoring for market signal documents. Configurable decay rate per index.<div class="pat-chips"><span class="pchip">Date decay</span><span class="pchip">Score normalization</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128274;</div><div><div class="pat-title">Provenance-tagged output</div><div class="pat-tag">Reusable · All sub-capabilities</div></div></div><div class="pat-body">Every output includes source IDs, retrieval scores, evidence grades, model version.<div class="pat-chips"><span class="pchip">DynamoDB log</span><span class="pchip">Source tracking</span><span class="pchip">HITL checkpoint</span></div></div></div>
-    </div>
   </div>
 
 </div>
