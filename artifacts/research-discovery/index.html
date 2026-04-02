@@ -1158,12 +1158,19 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
         <div style="padding:12px;background:#F8F9FB;display:flex;flex-direction:column;gap:10px">
           <!-- Supervisor diagram -->
-          <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:10px">
-            <div style="background:#1A6BC4;color:#fff;text-align:center;font-size:11px;font-weight:700;border-radius:5px;padding:5px 8px;margin-bottom:8px">Research Supervisor</div>
-            <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:6px">SR: Returns Top-K from Tavily<br>RS: Breaks down query into topics</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-              <div style="background:#DFF0FF;border:1px solid #B8D4F5;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:700;color:#0E4A8A;text-align:center">Sub-Researcher</div>
-              <div style="background:#DFF0FF;border:1px solid #B8D4F5;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:700;color:#0E4A8A;text-align:center">Sub-Researcher</div>
+          <div style="background:#fff;border:2px solid #1A6BC4;border-radius:8px;overflow:hidden">
+            <div style="background:#1A6BC4;color:#fff;text-align:center;font-size:11px;font-weight:700;padding:6px 8px">Research Supervisor</div>
+            <div style="padding:8px 10px">
+              <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:8px;line-height:1.5">SR: Returns Top-K from Tavily<br>RS: Breaks down query into topics</div>
+              <div style="display:flex;justify-content:center;margin-bottom:6px">
+                <div style="width:1px;height:10px;background:#B8D4F5"></div>
+              </div>
+              <div style="background:#EFF6FF;border:1.5px solid #B8D4F5;border-radius:6px;padding:8px 10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                  <div style="background:#1A6BC4;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:700;color:#fff;text-align:center">Sub-Researcher</div>
+                  <div style="background:#1A6BC4;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:700;color:#fff;text-align:center">Sub-Researcher</div>
+                </div>
+              </div>
             </div>
           </div>
           <div style="font-size:11px;font-weight:700;color:var(--navy)">Use-Case Additions</div>
