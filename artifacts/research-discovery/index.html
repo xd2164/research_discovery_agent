@@ -332,11 +332,173 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
   </div>
   <div class="tnav">
-    <div class="tb on" onclick="stab(this)">&#128202; Market Insights</div>
+    <div class="tb on" onclick="stab(this)">Overview</div>
+    <div class="tb" onclick="stab(this)">&#128202; Market Insights</div>
     <div class="tb" onclick="stab(this)">Deepdive</div>
     <div class="tb" onclick="stab(this)">Architecture</div>
     <div class="tb" onclick="stab(this)">Use Cases</div>
   </div>
+  <!-- Overview tab -->
+  <div class="tc on" style="overflow-y:auto;max-height:calc(100vh - 180px)">
+    <!-- title block -->
+    <div style="margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="font-size:18px;font-weight:800;color:var(--navy);line-height:1.2">Market Intelligence Agent</div>
+        <span style="font-size:11px;font-weight:700;background:#FEF3D7;color:#7A4A0A;padding:3px 9px;border-radius:10px;white-space:nowrap">In Development</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;max-width:820px">An early-stage agentic system that tracks and synthesizes signals from hyperscalers and frontier AI labs to inform sense-making, building on the existing Market Insights work.</div>
+    </div>
+
+    <!-- I² Pillars table -->
+    <div style="margin-bottom:22px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:640px">
+        <thead>
+          <tr style="background:#0A1F3A;color:#fff">
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C;width:80px">I² Pillar</th>
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C">P1. Data Access, &amp; Open Standards</th>
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C">P2. Scalable &amp; Safe AI Workflows</th>
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C">P3. Human Capacity &amp; Trust</th>
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C">P4. Public-Good Alliances</th>
+            <th style="padding:8px 10px;font-weight:700;text-align:left;border:1px solid #1A3A5C">P5. Responsible AI &amp; Governance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#fff;vertical-align:top">
+            <td style="padding:8px 10px;border:1px solid #DDD;font-weight:700;color:var(--navy);font-size:10px">Definition &amp; Focus</td>
+            <td style="padding:8px 10px;border:1px solid #DDD;color:#333;line-height:1.5">The ability to <strong>ensure learner and system data are high-quality, standards-aligned, and interoperable</strong>, enabling secure movement across <strong>tools and platforms</strong> without vendor lock-in.</td>
+            <td style="padding:8px 10px;border:1px solid #DDD;color:#333;line-height:1.5">The extent to <strong>which a platform can support large-scale, education-specific AI agents</strong> with <strong>reliable performance</strong>, sustainable cost, and robust, age-appropriate safety guardrails.</td>
+            <td style="padding:8px 10px;border:1px solid #DDD;color:#333;line-height:1.5">The <strong>strength and equity of supports</strong> that build educators' AI knowledge, confidence, and habits of use, and the extent to which this translates into effective, routine classroom practice.</td>
+            <td style="padding:8px 10px;border:1px solid #DDD;color:#333;line-height:1.5">The depth of a <strong>hyperscaler's alignment with public standards, policies, and co-governance efforts</strong> that advance interoperability, equity, and system-level improvement in education.</td>
+            <td style="padding:8px 10px;border:1px solid #DDD;color:#333;line-height:1.5">The <strong>maturity of a hyperscaler's responsible AI practices</strong>, including transparency, independent oversight, youth-specific safeguards, and <strong>institutional accountability</strong> for AI systems deployed in education.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Agent architecture grid -->
+    <!-- Row 1: Ensemble Signal Extractor + Conversation Analyst -->
+    <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:14px;align-items:start">
+      <!-- Ensemble Signal Extractor -->
+      <div style="border:2px solid #0B9E80;border-radius:10px;overflow:hidden">
+        <div style="background:#0B9E80;padding:9px 14px">
+          <div style="font-size:12px;font-weight:800;color:#fff">Ensemble Signal Extractor <span style="font-weight:400;opacity:.85">(Mixture-of-Agents Approach)</span></div>
+          <div style="font-size:11px;color:rgba(255,255,255,.9);margin-top:3px"><strong style="color:#fff">Purpose:</strong> Uses multiple LLMs with consensus voting to extract accurate, validated market events</div>
+        </div>
+        <div style="padding:12px 14px;background:#F4FDF9;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start">
+          <!-- logos -->
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;padding-top:4px">
+            <div style="font-size:22px">🤖</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">OpenAI</div>
+            <div style="font-size:22px">🤖</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">Anthropic</div>
+            <div style="font-size:22px">🤖</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">Meta</div>
+          </div>
+          <!-- content -->
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:#fff;border:1px solid #A0E8D0;border-radius:7px;padding:9px 11px">
+              <div style="font-size:11px;font-weight:700;color:#065C3A;margin-bottom:3px">Extraction</div>
+              <div style="font-size:11px;color:#333;line-height:1.5">LLMs analyze the same raw content in parallel, producing their own structured event with provider, date, competitive effects, and I² pillar mappings.</div>
+            </div>
+            <div style="background:#fff;border:1px solid #A0E8D0;border-radius:7px;padding:9px 11px">
+              <div style="font-size:11px;font-weight:700;color:#065C3A;margin-bottom:3px">Aggregation</div>
+              <div style="font-size:11px;color:#333;line-height:1.5">Aggregator LLM receives all extractions, cross-validates facts to identify consensus, merges interpretations where models diverge, and synthesizes a final event with a confidence score based on agreement rate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation Analyst -->
+      <div style="border:2px solid #5E52D4;border-radius:10px;overflow:hidden">
+        <div style="background:#5E52D4;padding:9px 14px">
+          <div style="font-size:12px;font-weight:800;color:#fff">Conversation Analyst</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.9);margin-top:3px"><strong style="color:#fff">Purpose:</strong> Answers user questions conversationally with cited evidence</div>
+        </div>
+        <div style="padding:12px 14px;background:#F6F4FF">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="background:#fff;border:1px solid #D4CEFF;border-radius:7px;padding:8px 11px;font-size:11px;color:#3A2FAA;line-height:1.6">
+              <strong>1.)</strong> Detects Query &gt; <strong>2.)</strong> Searches Signals &gt;<br>
+              <strong>3.)</strong> Agent Glossary Lookup &gt; <strong>4.)</strong> Response Generation w/ Citations
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Source Scout + Content Harvester + Competitive Reasoning -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <!-- Source Scout -->
+      <div style="border:2px solid #0B9E80;border-radius:10px;overflow:hidden">
+        <div style="background:#0B9E80;padding:9px 14px">
+          <div style="font-size:12px;font-weight:800;color:#fff">Source Scout</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.9);margin-top:3px"><strong style="color:#fff">Purpose:</strong> Discovers and ranks reliable data sources for market intelligence</div>
+        </div>
+        <div style="padding:12px 14px;background:#F4FDF9">
+          <div style="font-size:11px;font-weight:700;color:#065C3A;margin-bottom:5px">Sources:</div>
+          <ul style="margin:0 0 10px;padding-left:14px;font-size:11px;color:#333;line-height:1.8">
+            <li>Hyperscaler Blogs</li>
+            <li>Proxies &amp; APIs</li>
+            <li>Auto-Search w/ domain queries</li>
+          </ul>
+          <div style="font-size:10px;font-weight:700;color:#065C3A;margin-bottom:6px">Reliability Score for Source Trust:</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="background:#fff;border:1px solid #A0E8D0;border-radius:5px;padding:6px 9px;font-size:11px;color:#065C3A;font-weight:600">Successful Events Extracted</div>
+            <div style="background:#fff;border:1px solid #A0E8D0;border-radius:5px;padding:6px 9px;font-size:11px;color:#065C3A;font-weight:600">Total Events Attempted</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Harvester -->
+      <div style="border:2px solid #374151;border-radius:10px;overflow:hidden">
+        <div style="background:#374151;padding:9px 14px">
+          <div style="font-size:12px;font-weight:800;color:#fff">Content Harvester</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:3px"><strong style="color:#fff">Purpose:</strong> Fetches and filters significant content from identified sources</div>
+        </div>
+        <div style="padding:12px 14px;background:#F9FAFB;display:flex;flex-direction:column;gap:8px">
+          <div style="background:#fff;border:1px solid #DDD;border-radius:7px;padding:9px 11px">
+            <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:3px">Scraping</div>
+            <div style="font-size:11px;color:#555;line-height:1.5">Using the established sources, the Content Harvester initiates scraping and extracts info/PDFs</div>
+          </div>
+          <div style="background:#fff;border:1px solid #DDD;border-radius:7px;padding:9px 11px">
+            <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:3px">LLM Significance Scoring:</div>
+            <div style="font-size:11px;color:#555;line-height:1.5">LLMs score each piece of content (0–10) for market intelligence value:</div>
+            <div style="margin-top:5px;font-size:11px;line-height:1.6;color:#555">
+              <div><strong style="color:#065C3A">Major announcements:</strong> 8–10 (keep)</div>
+              <div><strong style="color:#D4921A">Minor updates:</strong> 4–7 (keep)</div>
+              <div><strong style="color:#C0392B">Noise/spam:</strong> 0–3 (discard)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Competitive Reasoning -->
+      <div style="border:2px solid #5E52D4;border-radius:10px;overflow:hidden">
+        <div style="background:#5E52D4;padding:9px 14px">
+          <div style="font-size:12px;font-weight:800;color:#fff">Competitive Reasoning</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.9);margin-top:3px"><strong style="color:#fff">Purpose:</strong> Performs deep competitive analysis and strategic comparisons</div>
+        </div>
+        <div style="padding:12px 14px;background:#F6F4FF;display:grid;grid-template-columns:1fr 1fr;gap:7px">
+          <div style="background:#fff;border:1px solid #D4CEFF;border-radius:7px;padding:8px 10px">
+            <div style="font-size:10px;font-weight:700;color:#3A2FAA;margin-bottom:3px">Event Impact Analysis</div>
+            <div style="font-size:10px;color:#555;line-height:1.5">Examines how a major event affects market dynamics, competitor behavior, and longer-term implications</div>
+          </div>
+          <div style="background:#fff;border:1px solid #D4CEFF;border-radius:7px;padding:8px 10px">
+            <div style="font-size:10px;font-weight:700;color:#3A2FAA;margin-bottom:3px">Hyperscaler Comparison</div>
+            <div style="font-size:10px;color:#555;line-height:1.5">Compares hyperscalers across key dimensions to reveal strategic differences and competitive advantages</div>
+          </div>
+          <div style="background:#fff;border:1px solid #D4CEFF;border-radius:7px;padding:8px 10px">
+            <div style="font-size:10px;font-weight:700;color:#3A2FAA;margin-bottom:3px">Leadership Ranking</div>
+            <div style="font-size:10px;color:#555;line-height:1.5">Evaluates and ranks providers by capability to surface strengths, weaknesses, and gaps.</div>
+          </div>
+          <div style="background:#fff;border:1px solid #D4CEFF;border-radius:7px;padding:8px 10px">
+            <div style="font-size:10px;font-weight:700;color:#3A2FAA;margin-bottom:3px">Timeline Analysis</div>
+            <div style="font-size:10px;color:#555;line-height:1.5">Analyzes how capabilities evolve over time to identify patterns, turning points, and future direction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / Overview tab -->
   <div class="tc" style="padding:0;height:calc(100vh - 180px)">
     <iframe
       src="https://market-intelligence-gf.streamlit.app/?embed=true"
