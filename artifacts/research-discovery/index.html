@@ -277,7 +277,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     <div class="tb" onclick="stab(this)">Architecture</div>
     <div class="tb" onclick="stab(this)">Use Cases</div>
     <div class="tb" onclick="stab(this)">Reusable Patterns</div>
-    <div class="tb" onclick="stab(this)">&#128269; Try the tool</div>
   </div>
   <div class="tc on">
     <div class="vstrip" style="background:#F0F9FF;border:1px solid #B8DEFF;margin-bottom:16px">
@@ -372,19 +371,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128274;</div><div><div class="pat-title">Provenance-tagged output</div><div class="pat-tag">Reusable · All sub-capabilities</div></div></div><div class="pat-body">Every output includes source IDs, retrieval scores, evidence grades, model version.<div class="pat-chips"><span class="pchip">DynamoDB log</span><span class="pchip">Source tracking</span><span class="pchip">HITL checkpoint</span></div></div></div>
     </div>
   </div>
-  <div class="tc">
-    <div class="proto">
-      <div class="p-in">
-        <div class="plbl">Configure research brief</div>
-        <div><div class="fl2">Topic</div><div class="fh">What do you want to understand?</div><textarea id="r-topic" rows="3" placeholder="e.g. AI-enabled tutoring efficacy in K-12 low-income districts"></textarea></div>
-        <div><div class="fl2">Program context</div><select id="r-prog"><option value="">Select…</option><option>K-12 Education</option><option>Postsecondary &amp; Workforce</option><option>Global Health</option><option>US Poverty</option></select></div>
-        <div><div class="fl2">Brief type</div><select id="r-type"><option value="evidence">Evidence synthesis</option><option value="gaps">Evidence gap map</option><option value="landscape">Field landscape scan</option></select></div>
-        <div><div class="fl2">Context <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="r-ctx" rows="2" placeholder="e.g. Focus on RCTs 2018–2024, LMIC contexts"></textarea></div>
-        <button class="run" style="background:#0B9E80" onclick="runResearch()">&#9654; Generate brief</button>
-      </div>
-      <div class="p-out"><div class="plbl">Output</div><div class="out" id="r-out"><p class="out-ph">Configure and click Generate.</p></div></div>
-    </div>
-  </div>
+
 </div>
 
 <!-- ════ MARKET ════ -->
