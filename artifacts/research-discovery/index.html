@@ -498,63 +498,18 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
   </div>
   <div class="tnav">
-    <div class="tb on" onclick="stab(this)">&#129776; EDUAgent Console</div>
+    <div class="tb on" onclick="stab(this)">&#129776; EDUAgent</div>
     <div class="tb" onclick="stab(this)">Architecture</div>
     <div class="tb" onclick="stab(this)">Use Cases</div>
     <div class="tb" onclick="stab(this)">Reusable Patterns</div>
   </div>
-  <div class="tc on">
-    <div style="background:#0A1F3A;border-radius:10px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #3DDBB0">
-      <div style="font-size:11px;color:#3DDBB0;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px">Core Question</div>
-      <div style="font-size:15px;color:#fff;font-family:Georgia,serif;line-height:1.6;margin-bottom:8px">"When, for whom, and under what conditions does it work?"</div>
-      <div style="font-size:13px;color:rgba(255,255,255,.62);line-height:1.6">EDUAgent treats variation across classrooms, schools, and student populations as signal, not noise — shortening the distance between evidence and action.</div>
-    </div>
-    <div class="g2">
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-        <div style="padding:11px 14px;border-bottom:1px solid var(--border);background:#D6F5EC"><div style="font-size:13px;color:#065C3A;font-family:Georgia,serif">Component 1 — Evidence Ladder</div><div style="font-size:11px;color:#0B9E80">What can be claimed at each rung</div></div>
-        <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed">
-          <tr style="background:#F2FBF8"><th style="padding:6px 10px;text-align:left;font-size:10px;font-weight:700;color:#065C3A;border-bottom:1px solid var(--border)">Rung</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:#065C3A;text-align:left;border-bottom:1px solid var(--border)">Stage</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:#065C3A;text-align:left;border-bottom:1px solid var(--border)">May claim</th></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#E0E0E0;color:#555;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">1</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Monitoring</td><td style="padding:6px 10px;color:var(--muted)">Usage, uptake, feasibility</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:6px 10px"><span style="background:#B2EBD4;color:#065C3A;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">2</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Implementation</td><td style="padding:6px 10px;color:var(--muted)">Can be implemented; fidelity</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#80DECC;color:#044D3A;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">3</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Comparative</td><td style="padding:6px 10px;color:var(--muted)">Favorable vs. comparison</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:#FAFAFA"><td style="padding:6px 10px"><span style="background:#4DB6AC;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">4</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Causal Effectiveness</td><td style="padding:6px 10px;color:var(--muted)">Caused improvement in studied settings</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px"><span style="background:#0B9E80;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">5</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Generalizability</td><td style="padding:6px 10px;color:var(--muted)">Effects hold across settings</td></tr>
-          <tr><td style="padding:6px 10px"><span style="background:#065C3A;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:7px">6</span></td><td style="padding:6px 10px;color:var(--navy);font-weight:600">Personalized</td><td style="padding:6px 10px;color:var(--muted)">Differential benefit for groups</td></tr>
-        </table>
-      </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-        <div style="padding:11px 14px;border-bottom:1px solid var(--border);background:#DFF0FF"><div style="font-size:13px;color:#0E4A8A;font-family:Georgia,serif">Component 2 — Maturity Matrix</div><div style="font-size:11px;color:#1A6BC4">What should be done with the evidence</div></div>
-        <div style="padding:14px">
-          <div style="display:grid;grid-template-columns:64px 1fr 1fr;gap:0;font-size:12px">
-            <div></div>
-            <div style="padding:6px 8px;background:#EEF5FF;border-radius:7px 0 0 0;text-align:center;font-size:10px;font-weight:700;color:#0E4A8A;border:1px solid var(--border);border-right:none">High Generalizability</div>
-            <div style="padding:6px 8px;background:#F5F0FF;border-radius:0 7px 0 0;text-align:center;font-size:10px;font-weight:700;color:#3A2FAA;border:1px solid var(--border)">Low Generalizability</div>
-            <div style="padding:7px 5px;display:flex;align-items:center;justify-content:flex-end;font-size:9px;font-weight:700;color:#0E4A8A;text-align:right;line-height:1.3;border:1px solid var(--border);border-right:none;border-top:none">High Causal</div>
-            <div style="padding:9px;background:#E8F8F2;border:1px solid var(--border);border-right:none;border-top:none"><div style="font-size:11px;color:#065C3A;font-weight:700;margin-bottom:2px">&#9650; Scale &amp; policy</div><div style="font-size:11px;color:var(--muted)">Best bets for broad adoption.</div></div>
-            <div style="padding:9px;background:#F0F6FF;border:1px solid var(--border);border-top:none"><div style="font-size:11px;color:#0E4A8A;font-weight:700;margin-bottom:2px">&#9670; Targeted pilots</div><div style="font-size:11px;color:var(--muted)">Context-bound; constraints needed.</div></div>
-            <div style="padding:7px 5px;display:flex;align-items:center;justify-content:flex-end;font-size:9px;font-weight:700;color:#5E52D4;text-align:right;line-height:1.3;border:1px solid var(--border);border-right:none;border-top:none">Low Causal</div>
-            <div style="padding:9px;background:#FEF3D7;border:1px solid var(--border);border-right:none;border-top:none"><div style="font-size:11px;color:#7A4A0A;font-weight:700;margin-bottom:2px">&#9675; Prioritize testing</div><div style="font-size:11px;color:var(--muted)">Warrant rigorous evaluation.</div></div>
-            <div style="padding:9px;background:#F8F6FF;border:1px solid var(--border);border-top:none;border-radius:0 0 7px 0"><div style="font-size:11px;color:#3A2FAA;font-weight:700;margin-bottom:2px">&#9651; Explore &amp; iterate</div><div style="font-size:11px;color:var(--muted)">Early evidence; design iteration.</div></div>
-          </div>
-          <div style="margin-top:9px;font-size:11px;color:var(--muted);font-style:italic">The ladder defines what can be claimed; the matrix defines what should be done.</div>
-        </div>
-      </div>
-    </div>
-    <div style="background:#1A3A5C;border-radius:10px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:14px">
-      <div><div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:3px">&#129776; EDUAgent is deployed as a Streamlit application</div><div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.5">Full app — agent log, citation graph, evidence ladder viz, investment calibration — runs as a dedicated Streamlit interface. Console below previews via API.</div></div>
-      <div style="flex-shrink:0"><div style="background:#FF4B4B;color:#fff;font-size:12px;font-weight:700;padding:8px 16px;border-radius:7px;display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap">&#9654; Open Streamlit App</div><div style="font-size:10px;color:rgba(255,255,255,.4);text-align:center;margin-top:4px">AWS / Streamlit Cloud</div></div>
-    </div>
-    <div class="proto">
-      <div class="p-in">
-        <div class="plbl">Configure agent task</div>
-        <div><div class="fl2">Research question</div><div class="fh">What should the agent investigate?</div><textarea id="ag-q" rows="3" placeholder="e.g. What does evidence say about AI tutoring in rural contexts, who are practitioners, where are gaps?"></textarea></div>
-        <div><div class="fl2">Agent mode</div><select id="ag-mode"><option value="deep">Deep research — multi-step synthesis</option><option value="edu">EDUAgent — education knowledge graph</option><option value="market">Market intelligence aggregation</option><option value="citation">Citation chaser — evidence ladder</option><option value="investment">Investment calibration</option></select></div>
-        <div><div class="fl2">Evidence standard</div><select id="ag-ev"><option value="all">All available evidence</option><option value="rct">RCTs and quasi-experimental only</option><option value="systematic">Systematic reviews &amp; meta-analyses</option><option value="mixed">Mixed methods + practitioner</option></select></div>
-        <div><div class="fl2">Constraints <span style="font-weight:400;color:var(--muted)">(optional)</span></div><textarea id="ag-c" rows="2" placeholder="e.g. Focus 2020–2025, prioritize LMIC, flag Potemkin risks"></textarea></div>
-        <button class="run" style="background:#1A6BC4" onclick="runAgents()">&#9654; Run EDUAgent</button>
-      </div>
-      <div class="p-out"><div class="plbl">Agent output</div><div class="out" id="ag-out"><p class="out-ph">Configure and click Run.</p></div></div>
-    </div>
+  <div class="tc on" style="padding:0;height:calc(100vh - 180px)">
+    <iframe
+      src="https://eduagent.streamlit.app/?embed=true"
+      style="width:100%;height:100%;border:none;display:block"
+      allow="clipboard-write; clipboard-read"
+      loading="lazy"
+    ></iframe>
   </div>
   <div class="tc">
     <div class="flow-row">
