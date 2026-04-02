@@ -274,6 +274,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
   <div class="tnav">
     <div class="tb on" onclick="stab(this)">&#9672; Synthesis Guide</div>
+    <div class="tb" onclick="stab(this)">Knowledge Graph</div>
   </div>
   <div class="tc on">
     <div class="vstrip" style="background:#F0F9FF;border:1px solid #B8DEFF;margin-bottom:16px">
@@ -317,6 +318,143 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
 
   </div>
+
+  <!-- Knowledge Graph tab -->
+  <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
+
+    <!-- Solution badge + title -->
+    <div style="margin-bottom:16px">
+      <span style="font-size:10px;font-weight:700;background:#0A1F3A;color:#fff;padding:3px 9px;border-radius:4px;letter-spacing:.8px;text-transform:uppercase">Solution</span>
+      <div style="font-size:18px;font-weight:800;color:var(--navy);margin-top:8px;line-height:1.25">Using knowledge graphs to drive testable hypotheses and decisions</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.6;max-width:820px">Using a cyclical architecture between agentic research systems and a knowledge graph, we translate surfaced evidence into structured, governed claims over time.</div>
+    </div>
+
+    <!-- Three-column cycle -->
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin-bottom:20px;background:#F8F9FB;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="background:#fff;border:1.5px solid #B8DEFF;border-radius:8px;padding:11px 13px">
+        <div style="font-size:11px;font-weight:700;color:#0E4A8A;margin-bottom:4px">Agentic Research Systems</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">How do we surface and synthesise relevant evidence across the literature and market to establish a reliable baseline for decision-making?</div>
+      </div>
+      <div style="font-size:18px;color:#5E52D4;text-align:center;line-height:1">⇄</div>
+      <div style="background:#fff;border:1.5px solid #D4CEFF;border-radius:8px;padding:11px 13px">
+        <div style="font-size:11px;font-weight:700;color:#3A2FAA;margin-bottom:4px">Knowledge Graph</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">How do we structure evidence to reveal relationships, dependencies, and emerging patterns across studies and contexts?</div>
+      </div>
+      <div style="font-size:18px;color:#0B9E80;text-align:center;line-height:1">→</div>
+      <div style="background:#fff;border:1.5px solid #A0E8D0;border-radius:8px;padding:11px 13px">
+        <div style="font-size:11px;font-weight:700;color:#065C3A;margin-bottom:4px">Evidence Translation</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">How do we evaluate, compare, and translate open evidence against rigorous standards and historical baselines to govern claims responsibly?</div>
+      </div>
+    </div>
+
+    <!-- Main three-column body -->
+    <div style="display:grid;grid-template-columns:2fr 2fr 2fr;gap:16px;margin-bottom:16px;align-items:start">
+
+      <!-- Left: bullet summary -->
+      <div style="background:#0A1F3A;border-radius:10px;padding:16px">
+        <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:12px">
+          <li style="font-size:12px;color:#E8EEFA;line-height:1.6">Evidence is defined as <strong style="color:#fff">credible, traceable research and signals</strong> structured into <strong style="color:#fff">contextualized claims and relationships</strong>, with strength emerging through consistency across sources.</li>
+          <li style="font-size:12px;color:#E8EEFA;line-height:1.6"><strong style="color:#fff">Time-aware views</strong> surface evidence strength, uncertainty, and change over time, increasing credibility and trustworthiness.</li>
+          <li style="font-size:12px;color:#E8EEFA;line-height:1.6">Interventions are <strong style="color:#fff">positioned by impact and maturity</strong>, rather than averaged into static summaries.</li>
+          <li style="font-size:12px;color:#E8EEFA;line-height:1.6">Real-world constraints (adoption, scale, cost) are integrated into decision-making to improve understanding of market dynamics.</li>
+        </ul>
+      </div>
+
+      <!-- Center: KG node groups -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 13px">
+          <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:5px">Paper Attributes</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.6">Title, year, venue, study design, population, user type, source, URL, citation</div>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 13px">
+          <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:5px">Implementation Objectives</div>
+          <ul style="margin:4px 0 0;padding-left:15px;font-size:11px;color:var(--muted);line-height:1.8">
+            <li>Intelligent Tutoring and Instruction</li>
+            <li>AI-Enable Personalized Advising</li>
+            <li>Institutional Decision-Making</li>
+            <li>AI-Enabled Learner Mobility</li>
+          </ul>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 13px">
+          <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:5px">Focus Outcome Areas</div>
+          <ul style="margin:4px 0 0;padding-left:15px;font-size:11px;color:var(--muted);line-height:1.8">
+            <li>Cognitive (e.g. Math, Literacy, Critical Thinking, Science)</li>
+            <li>Behavioral (e.g. Concentration, Productivity, Participation)</li>
+            <li>Affective (e.g. Motivation, Engagement, Persistence)</li>
+          </ul>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 13px">
+          <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:5px">Empirical Findings</div>
+          <ul style="margin:4px 0 0;padding-left:15px;font-size:11px;color:var(--muted);line-height:1.8">
+            <li>Direction (Positive, Negative, Mixed, No Effect)</li>
+            <li>Results Summary (4-5 sentences)</li>
+            <li>Study Measures · Study Sample Size · Effect Size</li>
+            <li>Student/Participant Makeup (Racial, Gender, Age, Socioeconomic)</li>
+            <li>School/Institution Makeup · Region</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: Evidence ladder -->
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:10px">Evidence Classification · Evidence Type</div>
+        <div style="display:flex;flex-direction:column;gap:0;border-radius:8px;overflow:hidden;border:1.5px solid var(--border)">
+          <!-- Rung 6 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="background:#3A2FAA;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 6: Personalized</div>
+            <div style="background:#5E52D4;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Heterogeneity or Predictive Models</div>
+          </div>
+          <!-- Rung 5 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="background:#4A3FC4;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 5: Generalizability</div>
+            <div style="background:#6A5EDF;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Experimental + Replication</div>
+          </div>
+          <!-- Rung 4 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="background:#5A4FD4;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 4: Causal Effectiveness</div>
+            <div style="background:#7A6EEF;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Experimental</div>
+          </div>
+          <!-- Rung 3 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="background:#6A5FD4;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 3: Comparative</div>
+            <div style="background:#8A7EEF;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Quasi-Experimental</div>
+          </div>
+          <!-- Rung 2 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="background:#7A6FD4;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 2: Implementation</div>
+            <div style="background:#9A8EEF;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Implementation + Qualitative</div>
+          </div>
+          <!-- Rung 1 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr">
+            <div style="background:#8A7FD4;padding:8px 11px;font-size:11px;font-weight:700;color:#fff">Rung 1: Monitoring</div>
+            <div style="background:#AA9EEF;padding:8px 11px;font-size:11px;color:#fff;line-height:1.4">Implementation</div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);text-align:right;margin-top:6px;font-style:italic">↑ Rigor of Evidence</div>
+      </div>
+    </div>
+
+    <!-- Insights Engine Significance footer -->
+    <div style="background:#F5C518;border-radius:10px;padding:14px 18px;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:start">
+      <div style="font-size:12px;font-weight:800;color:#0A1F3A;white-space:nowrap;align-self:center">Insights Engine<br>Significance</div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="flex-shrink:0;width:22px;height:22px;background:#0A1F3A;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#F5C518;margin-top:1px">1</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#0A1F3A;margin-bottom:3px">Moves evidence from retrospective proof to continuous learning.</div>
+          <div style="font-size:11px;color:#3A2A00;line-height:1.5">Shifts the system from static validation toward an adaptive evidence loop that updates as new research, implementation data, and signals emerge</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="flex-shrink:0;width:22px;height:22px;background:#0A1F3A;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#F5C518;margin-top:1px">2</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#0A1F3A;margin-bottom:3px">Connects research, practice, and strategy in one system.</div>
+          <div style="font-size:11px;color:#3A2A00;line-height:1.5">Integrates rigorous studies, real-world implementation signals, and strategic priorities into a shared, decision-relevant evidence backbone.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- / Knowledge Graph tab -->
 
 </div>
 
