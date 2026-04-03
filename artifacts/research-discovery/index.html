@@ -916,15 +916,13 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         <div style="padding:16px">
           <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Global vs. U.S. Watch</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:16px">Model volume and average intelligence score by provider region — computed live from the full dataset</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-            <div>
-              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Model Volume by Region</div>
-              <canvas id="aa-chart-region-count" height="170"></canvas>
-            </div>
-            <div>
-              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Avg Intelligence Score by Region</div>
-              <canvas id="aa-chart-region-intel" height="170"></canvas>
-            </div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Model Volume by Region</div>
+            <canvas id="aa-chart-region-count" height="80"></canvas>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Avg Intelligence Score by Region</div>
+            <canvas id="aa-chart-region-intel" height="80"></canvas>
           </div>
           <div id="aa-region-summary" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px"></div>
         </div>
@@ -1784,14 +1782,22 @@ function renderAACharts(){
         label:'Model Count',
         data:regions.map(r=>regionStats[r].count),
         backgroundColor:regions.map(r=>REGION_COLORS[r]||'#9CA3AF'),
-        borderRadius:5,borderSkipped:false,
+        borderRadius:5,borderSkipped:false,clip:false,
       }]
     },
     options:{
       indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw} models`}}},
+      layout:{padding:{right:24,top:4,bottom:4}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.raw} models`}}
+      },
       scales:{
-        x:{title:{display:true,text:'Number of models',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}},
+        x:{
+          title:{display:true,text:'Number of models',font:{size:10}},
+          grid:{color:'rgba(0,0,0,.05)'},
+          ticks:{font:{size:10}},
+        },
         y:{ticks:{font:{size:10}}}
       }
     }
@@ -1806,14 +1812,23 @@ function renderAACharts(){
         data:regions.map(r=>{const a=regionStats[r].intel;return a.length?(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):null;}),
         backgroundColor:regions.map(r=>(REGION_COLORS[r]||'#9CA3AF')+'CC'),
         borderColor:regions.map(r=>REGION_COLORS[r]||'#9CA3AF'),
-        borderWidth:1.5,borderRadius:5,borderSkipped:false,
+        borderWidth:1.5,borderRadius:5,borderSkipped:false,clip:false,
       }]
     },
     options:{
       indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`Avg intel: ${parseFloat(c.raw).toFixed(1)}`}}},
+      layout:{padding:{right:24,top:4,bottom:4}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`Avg intel: ${parseFloat(c.raw).toFixed(1)}`}}
+      },
       scales:{
-        x:{min:20,title:{display:true,text:'Average intelligence index',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}},
+        x:{
+          min:20,
+          title:{display:true,text:'Average intelligence index',font:{size:10}},
+          grid:{color:'rgba(0,0,0,.05)'},
+          ticks:{font:{size:10}},
+        },
         y:{ticks:{font:{size:10}}}
       }
     }
