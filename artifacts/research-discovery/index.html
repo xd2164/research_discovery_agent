@@ -1463,22 +1463,12 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       loading="lazy"
     ></iframe>
   </div>
-  <div class="tc">
-    <div class="flow-row">
-      <div class="flow-step"><strong>Query</strong>NL question decomposed into sub-queries</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Retrieve</strong>OpenSearch hybrid + Neptune KG traversal</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Grade</strong>Six-rung ladder + MLE rubric</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Reason</strong>Chain-of-thought + Potemkin test</div><div class="flow-arr">→</div>
-      <div class="flow-step"><strong>Output</strong>Graded brief with audit trail</div>
-    </div>
-    <div class="arch-layer">
-      <div class="arch-lhdr"><div class="arch-icon" style="background:#DFF0FF">&#129776;</div><div><div class="arch-ltitle">Agentic Orchestration</div><div class="arch-lsub">Bedrock Agents · Lambda · Step Functions</div></div></div>
-      <div class="arch-comps">
-        <div class="acomp"><div class="acomp-n">Query decomposer</div><div class="acomp-d">Breaks complex questions into 3–5 typed sub-queries using Claude.</div><div class="acomp-chips"><span class="ac" style="background:#D6F5EC;color:#065C3A">Reusable</span></div></div>
-        <div class="acomp"><div class="acomp-n">KG traversal agent</div><div class="acomp-d">Neptune graph queries for connected grants, evidence, and actors via Bedrock tool use.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
-        <div class="acomp"><div class="acomp-n">Citation chaser</div><div class="acomp-d">Follows reference chains from seed papers. Scores each on MLE rubric. Stops at depth 3.</div><div class="acomp-chips"><span class="ac" style="background:#EEECFF;color:#3A2FAA">EDUAgent</span></div></div>
-      </div>
-    </div>
+  <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px);padding:0">
+    <img
+      src="/eduagent-architecture.png"
+      alt="Agentic Orchestration for Evidence-Calibrated Decision-Making"
+      style="width:100%;display:block;border-radius:0"
+    />
   </div>
   <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
 
