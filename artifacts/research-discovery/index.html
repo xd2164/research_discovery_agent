@@ -771,36 +771,32 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         <div style="font-size:11px;color:var(--muted)">· 457 models · 47 creators · live from Artificial Analysis</div>
       </div>
 
-      <!-- Row 1: Intelligence Frontier + Creator Landscape -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-        <!-- Intelligence Frontier -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Intelligence Frontier</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4">Top 15 models by overall intelligence index — revealing who leads the frontier</div>
-          <canvas id="aa-chart-intel" height="220"></canvas>
-        </div>
-        <!-- Creator Landscape -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Creator Capability Landscape</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4">Average Intelligence, Coding, and Math scores across top creators — showing where capability concentrates</div>
-          <canvas id="aa-chart-creator" height="220"></canvas>
-        </div>
+      <!-- Intelligence Frontier -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Intelligence Frontier</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Top 15 models by overall intelligence index — revealing who leads the frontier</div>
+        <canvas id="aa-chart-intel" height="110"></canvas>
       </div>
 
-      <!-- Row 2: Value Frontier + Speed vs Intelligence -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <!-- Value Frontier scatter -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Value Frontier</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4">Intelligence vs output price per 1M tokens — identifying high-capability, cost-efficient models</div>
-          <canvas id="aa-chart-value" height="200"></canvas>
-        </div>
-        <!-- Speed vs Intelligence scatter -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Speed vs Capability</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4">Output tokens/sec vs intelligence — mapping the speed–capability tradeoff space</div>
-          <canvas id="aa-chart-speed" height="200"></canvas>
-        </div>
+      <!-- Creator Capability Landscape -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Creator Capability Landscape</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Average Intelligence, Coding, and Math scores across top creators — showing where capability concentrates</div>
+        <canvas id="aa-chart-creator" height="90"></canvas>
+      </div>
+
+      <!-- Value Frontier -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Value Frontier</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Intelligence vs output price per 1M tokens — identifying high-capability, cost-efficient models</div>
+        <canvas id="aa-chart-value" height="120"></canvas>
+      </div>
+
+      <!-- Speed vs Capability -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Speed vs Capability</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Output tokens/sec vs intelligence — mapping the speed–capability tradeoff space</div>
+        <canvas id="aa-chart-speed" height="120"></canvas>
       </div>
     </div>
 
