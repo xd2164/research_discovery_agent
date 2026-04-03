@@ -777,7 +777,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <!-- Active Alerts -->
       <div style="background:#0A1F3A;border-radius:10px;padding:12px 16px;margin-bottom:18px">
         <div style="font-size:10px;font-weight:700;color:#F5C518;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">&#9889; Active Signals</div>
-        <div id="aa-alerts" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div id="aa-alerts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
           <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
             <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">Intelligence Leader</div>
             <div id="aa-sig-intel" style="font-size:11px;font-weight:700;color:#fff;line-height:1.5">—</div>
@@ -789,6 +789,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
           <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
             <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">Fastest Frontier Model</div>
             <div id="aa-sig-speed" style="font-size:11px;font-weight:700;color:#fff;line-height:1.5">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px;border-left:2px solid #F5C518">
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">&#127758; Top Non-US Model</div>
+            <div id="aa-sig-global" style="font-size:11px;font-weight:700;color:#F5C518;line-height:1.5">—</div>
           </div>
         </div>
       </div>
@@ -866,7 +870,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       </div>
 
       <!-- Module 4: Speed vs Capability -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
           <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 4</div>
           <div>
@@ -886,6 +890,43 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
           <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Speed vs Capability</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Output tokens/sec vs intelligence — mapping the throughput–quality tradeoff space</div>
           <canvas id="aa-chart-speed" height="110"></canvas>
+        </div>
+      </div>
+
+      <!-- Module 5: Global vs. U.S. Watch -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="white-space:nowrap;align-self:center">
+            <div style="font-size:11px;font-weight:800;color:var(--navy)">Module 5</div>
+            <div style="font-size:9px;font-weight:700;color:#F5C518;margin-top:2px">&#127758; Global Lens</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Reveal geographic concentration of AI model supply — where capability is minted and by whom.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">U.S. providers dominate frontier intelligence; Chinese providers are scaling model volume rapidly and closing the capability gap.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Geopolitical concentration signals infrastructure dependency risk; investment in open and multiregion alternatives supports resilience.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Global vs. U.S. Watch</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:16px">Model volume and average intelligence score by provider region — computed live from the full dataset</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Model Volume by Region</div>
+              <canvas id="aa-chart-region-count" height="170"></canvas>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Avg Intelligence Score by Region</div>
+              <canvas id="aa-chart-region-intel" height="170"></canvas>
+            </div>
+          </div>
+          <div id="aa-region-summary" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px"></div>
         </div>
       </div>
 
@@ -1575,6 +1616,13 @@ function renderAACharts(){
   const sigS=document.getElementById('aa-sig-speed');
   if(sigS&&fastest)sigS.innerHTML=`${fastest.name.length>28?fastest.name.slice(0,26)+'…':fastest.name}<br><span style="font-weight:400;font-size:10px;color:rgba(255,255,255,.6)">${fastest.creator} · ${fastest.speed.toFixed(0)} tok/s · Intel ${fastest.intel.toFixed(1)}</span>`;
 
+  // ── 4th Signal: Top Non-US Model ──
+  const US_CREATORS=new Set(['OpenAI','Anthropic','Google','Meta','xAI','Amazon','Cohere','Microsoft','Perplexity','Mistral AI','AI21 Labs']);
+  const nonUS=withIntelAll.filter(m=>!US_CREATORS.has(m.creator));
+  const topNonUS=nonUS[0];
+  const sigG=document.getElementById('aa-sig-global');
+  if(sigG&&topNonUS)sigG.innerHTML=`${topNonUS.name.length>28?topNonUS.name.slice(0,26)+'…':topNonUS.name}<br><span style="font-weight:400;font-size:10px;color:rgba(245,197,24,.7)">${topNonUS.creator} · Score ${topNonUS.intel.toFixed(1)}</span>`;
+
   // ── Creator color palette ──
   const CPAL={'OpenAI':'#0B9E80','Anthropic':'#E0522A','Google':'#1A6BC4','Meta':'#5E52D4','xAI':'#D4921A','Mistral AI':'#C04070','Amazon':'#FF9900','Cohere':'#374151','MiniMax':'#0891B2','Xiaomi':'#DC2626','Z AI':'#7C3AED','Kimi':'#059669','DeepSeek':'#2563EB','Baidu':'#D97706','Samsung':'#1D4ED8'};
   const creatorColor=(name,alpha=1)=>{
@@ -1691,6 +1739,84 @@ function renderAACharts(){
       }
     }
   });
+
+  // ── 5. Global vs. U.S. Watch ──
+  const REGION_MAP={
+    'OpenAI':'United States','Anthropic':'United States','Google':'United States',
+    'Meta':'United States','xAI':'United States','Amazon':'United States',
+    'Cohere':'United States','Microsoft':'United States','Perplexity':'United States',
+    'Mistral AI':'Europe','AI21 Labs':'Israel',
+    'DeepSeek':'China','Baidu':'China','MiniMax':'China','Kimi':'China',
+    'Xiaomi':'China','Z AI':'China','Zhipu AI':'China','01.AI':'China',
+    'Qwen':'China','Alibaba':'China',
+    'Samsung':'South Korea','LG AI Research':'South Korea',
+    'TII':'Middle East','G42':'Middle East',
+  };
+  const regionStats={};
+  aaData.forEach(m=>{
+    const r=REGION_MAP[m.creator]||'Other';
+    if(!regionStats[r])regionStats[r]={count:0,intel:[]};
+    regionStats[r].count++;
+    if(m.intel!==null)regionStats[r].intel.push(m.intel);
+  });
+  const REGION_ORDER=['United States','China','Europe','South Korea','Israel','Middle East','Other'];
+  const regions=REGION_ORDER.filter(r=>regionStats[r]);
+  const REGION_COLORS={'United States':'#1A6BC4','China':'#E0522A','Europe':'#0B9E80','South Korea':'#5E52D4','Israel':'#D4921A','Middle East':'#C04070','Other':'#9CA3AF'};
+
+  mk('aa-chart-region-count',{
+    type:'bar',
+    data:{
+      labels:regions,
+      datasets:[{
+        label:'Model Count',
+        data:regions.map(r=>regionStats[r].count),
+        backgroundColor:regions.map(r=>REGION_COLORS[r]||'#9CA3AF'),
+        borderRadius:5,borderSkipped:false,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw} models`}}},
+      scales:{
+        x:{title:{display:true,text:'Number of models',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}},
+        y:{ticks:{font:{size:10}}}
+      }
+    }
+  });
+
+  mk('aa-chart-region-intel',{
+    type:'bar',
+    data:{
+      labels:regions,
+      datasets:[{
+        label:'Avg Intelligence',
+        data:regions.map(r=>{const a=regionStats[r].intel;return a.length?(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):null;}),
+        backgroundColor:regions.map(r=>(REGION_COLORS[r]||'#9CA3AF')+'CC'),
+        borderColor:regions.map(r=>REGION_COLORS[r]||'#9CA3AF'),
+        borderWidth:1.5,borderRadius:5,borderSkipped:false,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`Avg intel: ${parseFloat(c.raw).toFixed(1)}`}}},
+      scales:{
+        x:{min:20,title:{display:true,text:'Average intelligence index',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}},
+        y:{ticks:{font:{size:10}}}
+      }
+    }
+  });
+
+  // Region summary pills
+  const pills=document.getElementById('aa-region-summary');
+  if(pills){
+    pills.innerHTML=regions.map(r=>{
+      const s=regionStats[r];
+      const avgI=s.intel.length?(s.intel.reduce((a,b)=>a+b,0)/s.intel.length).toFixed(1):'n/a';
+      return `<span style="background:${REGION_COLORS[r]||'#9CA3AF'}18;border:1px solid ${REGION_COLORS[r]||'#9CA3AF'}55;border-radius:6px;padding:4px 10px;font-size:10px;color:#333">
+        <b style="color:${REGION_COLORS[r]||'#555'}">${r}</b> &nbsp;${s.count} models &nbsp;·&nbsp; avg intel ${avgI}
+      </span>`;
+    }).join('');
+  }
 }
 
 function aaSort(col){
