@@ -1480,13 +1480,206 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       </div>
     </div>
   </div>
-  <div class="tc">
-    <div class="pat-grid">
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#EEECFF">&#127381;</div><div><div class="pat-title">Query decomposition</div><div class="pat-tag">EDUAgent · Reusable</div></div></div><div class="pat-body">Decomposes complex questions into typed sub-queries. Each runs independently, merged pre-synthesis.<div class="pat-chips"><span class="pchip">Chain-of-thought</span><span class="pchip">Structured output</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#D6F5EC">&#127968;</div><div><div class="pat-title">Evidence rung filter</div><div class="pat-tag">OpenSearch · EDUAgent</div></div></div><div class="pat-body">Pre-filter on evidence_rung field before vector scoring. Configurable minimum rung per mode.<div class="pat-chips"><span class="pchip">Index filter</span><span class="pchip">Six-rung ladder</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#FEF3D7">&#9888;</div><div><div class="pat-title">Potemkin detection pass</div><div class="pat-tag">EDUAgent · QA</div></div></div><div class="pat-body">Secondary Claude pass checks each claim against retrieved chunks. Flags ungrounded synthesis.<div class="pat-chips"><span class="pchip">Secondary LLM</span><span class="pchip">Claim grounding</span></div></div></div>
-      <div class="pat"><div class="pat-hdr"><div class="pat-icon" style="background:#DFF0FF">&#128279;</div><div><div class="pat-title">Neptune + OpenSearch fusion</div><div class="pat-tag">EDUAgent · Architecture</div></div></div><div class="pat-body">Neptune for entity relationships; OpenSearch for text. Fused at application layer before synthesis.<div class="pat-chips"><span class="pchip">Neptune SPARQL</span><span class="pchip">OpenSearch k-NN</span></div></div></div>
+  <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
+
+    <!-- Header -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1.3px;margin-bottom:3px">EDUAgent · Pattern Catalog</div>
+      <div style="font-size:17px;color:var(--navy);font-weight:700">Reusable Patterns</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;max-width:760px">Four battle-tested engineering patterns extracted from EDUAgent. Each is scoped, documented, and ready to drop into a new agentic pipeline — retrieval, synthesis, quality, or infrastructure.</div>
     </div>
+
+    <!-- Evidence Ladder -->
+    <div style="background:#0A1F3A;border-radius:10px;padding:14px 18px;margin-bottom:20px">
+      <div style="font-size:10px;font-weight:700;color:#F5C518;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">&#9874; The Six-Rung Evidence Ladder — Core Retrieval Primitive</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #E0522A">
+          <div style="font-size:18px;margin-bottom:4px">&#128218;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 1</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">Systematic reviews &amp; meta-analyses</div>
+        </div>
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #D4921A">
+          <div style="font-size:18px;margin-bottom:4px">&#128203;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 2</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">RCTs &amp; controlled trials</div>
+        </div>
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #0B9E80">
+          <div style="font-size:18px;margin-bottom:4px">&#128202;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 3</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">Cohort &amp; observational studies</div>
+        </div>
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #1A6BC4">
+          <div style="font-size:18px;margin-bottom:4px">&#128196;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 4</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">Policy papers &amp; grey literature</div>
+        </div>
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #5E52D4">
+          <div style="font-size:18px;margin-bottom:4px">&#128221;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 5</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">Expert opinion &amp; field reports</div>
+        </div>
+        <div style="background:rgba(255,255,255,.06);border-radius:7px;padding:10px 8px;text-align:center;border-top:2px solid #888">
+          <div style="font-size:18px;margin-bottom:4px">&#128161;</div>
+          <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px">Rung 6</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.4">Anecdotal &amp; practitioner accounts</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:10px">Each document in the index carries an <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px;font-size:9px">evidence_rung</code> field (1–6). Queries apply a minimum-rung filter before k-NN scoring — configurable per use-case mode.</div>
+    </div>
+
+    <!-- Pattern cards 2x2 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+      <!-- Pattern 1: Query Decomposition -->
+      <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#F5F3FF;padding:12px 16px;border-bottom:1.5px solid #DDD8FF">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:9px;font-weight:700;background:#5E52D4;color:#fff;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px">Retrieval Pattern</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:#2D2870">Query Decomposition</div>
+          <div style="font-size:11px;color:#5E52D4;margin-top:2px">Breaks complex questions into typed sub-queries</div>
+        </div>
+        <div style="padding:14px;background:#fff">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">How it works</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#5E52D4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">1</span>
+              LLM classifies the input into query types: <em>causal</em>, <em>descriptive</em>, <em>comparative</em>, <em>predictive</em>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#5E52D4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">2</span>
+              Each sub-query runs independently against the index with its own rung filter
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#5E52D4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">3</span>
+              Results are deduplicated and merged into a ranked evidence pool before synthesis
+            </div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Reuse in</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="background:#EEECFF;color:#3D2FA0;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Any multi-faceted question</span>
+            <span style="background:#EEECFF;color:#3D2FA0;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Long research briefs</span>
+            <span style="background:#EEECFF;color:#3D2FA0;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Structured output</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 2: Evidence Rung Filter -->
+      <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#EDFAF5;padding:12px 16px;border-bottom:1.5px solid #B2E8D8">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:9px;font-weight:700;background:#0B9E80;color:#fff;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px">Index Pattern</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:#065C3A">Evidence Rung Filter</div>
+          <div style="font-size:11px;color:#0B9E80;margin-top:2px">Pre-filter on evidence quality before vector scoring</div>
+        </div>
+        <div style="padding:14px;background:#fff">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">How it works</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#0B9E80;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">1</span>
+              Every document is tagged at ingest with <code style="background:#F0F0F0;padding:1px 4px;border-radius:3px;font-size:10px">evidence_rung</code> (1–6) based on study design
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#0B9E80;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">2</span>
+              OpenSearch applies a hard filter on <code style="background:#F0F0F0;padding:1px 4px;border-radius:3px;font-size:10px">min_rung</code> before k-NN scoring — skipping weak sources entirely
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#0B9E80;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">3</span>
+              <code style="background:#F0F0F0;padding:1px 4px;border-radius:3px;font-size:10px">min_rung</code> is configurable per query mode: <em>deep synthesis</em> ≥ 1, <em>quick scan</em> ≥ 3
+            </div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Reuse in</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="background:#D6F5EC;color:#065C3A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">RAG pipelines</span>
+            <span style="background:#D6F5EC;color:#065C3A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Literature review agents</span>
+            <span style="background:#D6F5EC;color:#065C3A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Policy synthesis</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 3: Potemkin Detection -->
+      <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#FFFBEC;padding:12px 16px;border-bottom:1.5px solid #F0DFA0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:9px;font-weight:700;background:#D4921A;color:#fff;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px">QA Pattern</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:#7A4A0A">Potemkin Detection Pass</div>
+          <div style="font-size:11px;color:#D4921A;margin-top:2px">Secondary LLM pass to catch ungrounded claims</div>
+        </div>
+        <div style="padding:14px;background:#fff">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">How it works</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#D4921A;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">1</span>
+              Primary synthesis runs first and produces a candidate brief with citations
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#D4921A;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">2</span>
+              A second Claude call receives the brief + source chunks and checks each claim for grounding
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#D4921A;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">3</span>
+              Ungrounded or overreaching claims are flagged, softened, or removed before delivery
+            </div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Reuse in</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="background:#FEF3D7;color:#7A4A0A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">High-stakes briefs</span>
+            <span style="background:#FEF3D7;color:#7A4A0A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Citation-critical output</span>
+            <span style="background:#FEF3D7;color:#7A4A0A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Investment memos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 4: Neptune + OpenSearch Fusion -->
+      <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#EBF4FF;padding:12px 16px;border-bottom:1.5px solid #B8D6F5">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:9px;font-weight:700;background:#1A6BC4;color:#fff;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px">Infrastructure Pattern</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:#0D4C9E">Neptune + OpenSearch Fusion</div>
+          <div style="font-size:11px;color:#1A6BC4;margin-top:2px">Graph + vector retrieval fused at application layer</div>
+        </div>
+        <div style="padding:14px;background:#fff">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">How it works</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#1A6BC4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">1</span>
+              Neptune (SPARQL) resolves entity relationships — who funds whom, which orgs co-publish
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#1A6BC4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">2</span>
+              OpenSearch k-NN returns semantically similar document chunks independently
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#333;line-height:1.5">
+              <span style="background:#1A6BC4;color:#fff;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:1px">3</span>
+              Application layer merges both result sets with a weighted rank-fusion before passing to synthesis
+            </div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Reuse in</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="background:#DFF0FF;color:#0E4A8A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Knowledge graph agents</span>
+            <span style="background:#DFF0FF;color:#0E4A8A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Entity-aware RAG</span>
+            <span style="background:#DFF0FF;color:#0E4A8A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">Citation chasing</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Cross-cutting capabilities bar -->
+    <div style="background:#F8F9FB;border:1.5px solid var(--border);border-radius:10px;padding:14px 18px">
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Cross-cutting capabilities — available in any pipeline</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span style="background:#fff;border:1.5px solid #DDD;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--navy)">&#128279; Citation chasing</span>
+        <span style="background:#fff;border:1.5px solid #DDD;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--navy)">&#128196; Structured brief output</span>
+        <span style="background:#fff;border:1.5px solid #DDD;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--navy)">&#127760; Multi-language retrieval</span>
+        <span style="background:#fff;border:1.5px solid #DDD;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--navy)">&#128200; Investment calibration scoring</span>
+        <span style="background:#fff;border:1.5px solid #DDD;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--navy)">&#9881; Configurable synthesis modes</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
