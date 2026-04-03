@@ -565,7 +565,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   <div class="tnav">
     <div class="tb on" onclick="stab(this)">Overview</div>
     <div class="tb" onclick="stab(this)">&#128202; Market Insights</div>
-    <div class="tb" onclick="stab(this)">Deepdive</div>
+    <div class="tb" onclick="stab(this);if(!aaLoaded)loadAAModels()">Deepdive</div>
     <div class="tb" onclick="stab(this)">Architecture</div>
     <div class="tb" onclick="stab(this)">Reusable Patterns</div>
   </div>
@@ -739,20 +739,59 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       loading="lazy"
     ></iframe>
   </div>
-  <div class="tc" style="padding:0;position:relative;height:calc(100vh - 180px)">
-    <div style="position:absolute;top:8px;right:12px;z-index:10;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.92);border:1px solid #ddd;border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted);box-shadow:0 1px 4px rgba(0,0,0,.08)">
-      <span style="width:7px;height:7px;border-radius:50%;background:#0B9E80;display:inline-block;animation:pulse 2s infinite"></span>
-      Live · auto-refreshes in <span id="ai-mkt-countdown" style="font-weight:700;color:#0B9E80;margin:0 2px">5:00</span>
-      <button onclick="refreshAIMkt()" style="background:#0B9E80;color:#fff;border:none;border-radius:10px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:4px">↺ Now</button>
+  <!-- Deepdive: Live AA models table -->
+  <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)" id="aa-pane">
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--navy)">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0B9E80;display:inline-block;animation:pulse 2s infinite"></span>
+        Live · AI Model Intelligence via Artificial Analysis
+      </div>
+      <div style="flex:1;min-width:160px">
+        <input id="aa-search" oninput="aaFilter()" placeholder="Filter by model or creator…" style="width:100%;border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;outline:none;box-sizing:border-box">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="aa-ts" style="font-size:10px;color:var(--muted)"></span>
+        <button onclick="loadAAModels()" style="background:#0B9E80;color:#fff;border:none;border-radius:10px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer">↺ Refresh</button>
+      </div>
     </div>
-    <iframe
-      id="ai-mkt-iframe"
-      src="https://xd2164.github.io/AI-Market-Intelligence-Dashboard/market_demo.html"
-      style="width:100%;height:100%;border:none;display:block;border-radius:0"
-      title="AI Market Intelligence Dashboard"
-      allow="clipboard-write; clipboard-read"
-      loading="lazy"
-    ></iframe>
+
+    <!-- loading -->
+    <div id="aa-loading" style="display:flex;align-items:center;gap:10px;padding:40px 20px;color:var(--muted);font-size:13px">
+      <div class="spin" style="border-color:rgba(0,0,0,.12);border-top-color:#0B9E80"></div> Loading model data from Artificial Analysis…
+    </div>
+
+    <!-- error -->
+    <div id="aa-error" style="display:none;padding:20px;background:#FFF5F3;border:1.5px solid #F5C8C0;border-radius:8px;font-size:12px;color:#C0392B"></div>
+
+    <!-- column legend -->
+    <div id="aa-legend" style="display:none;margin-bottom:8px;display:none;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--muted)">
+      <span>&#9650;&#9660; click column header to sort</span>
+      <span style="background:#E8FFF5;color:#065C3A;border-radius:3px;padding:1px 6px">Intel</span> Intelligence Index &nbsp;
+      <span style="background:#EFF6FF;color:#0E4A8A;border-radius:3px;padding:1px 6px">Code</span> Coding Index &nbsp;
+      <span style="background:#F6F4FF;color:#3A2FAA;border-radius:3px;padding:1px 6px">Math</span> Math Index
+    </div>
+
+    <!-- table wrapper -->
+    <div id="aa-table-wrap" style="display:none;overflow-x:auto">
+      <table id="aa-table" style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead>
+          <tr style="background:#F5F5F5;text-align:left">
+            <th onclick="aaSort('name')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;white-space:nowrap;min-width:160px">Model &#9650;&#9660;</th>
+            <th onclick="aaSort('creator')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;white-space:nowrap">Creator &#9650;&#9660;</th>
+            <th onclick="aaSort('intel')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">Intel &#9650;&#9660;</th>
+            <th onclick="aaSort('code')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">Code &#9650;&#9660;</th>
+            <th onclick="aaSort('math')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">Math &#9650;&#9660;</th>
+            <th onclick="aaSort('input_price')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">$/1M in &#9650;&#9660;</th>
+            <th onclick="aaSort('output_price')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">$/1M out &#9650;&#9660;</th>
+            <th onclick="aaSort('speed')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">Speed tok/s &#9650;&#9660;</th>
+            <th onclick="aaSort('ttft')" style="padding:8px 10px;border:1px solid #DDD;cursor:pointer;text-align:center;white-space:nowrap">TTFT s &#9650;&#9660;</th>
+          </tr>
+        </thead>
+        <tbody id="aa-tbody"></tbody>
+      </table>
+    </div>
+    <div id="aa-count" style="display:none;margin-top:8px;font-size:10px;color:var(--muted);text-align:right"></div>
   </div>
   <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
     <!-- page title -->
@@ -1336,6 +1375,99 @@ const teal='#0B9E80',blue='#1A6BC4',purple='#5E52D4',gold='#D4921A',coral='#E052
 const ta=a=>`rgba(11,158,128,${a})`,ba=a=>`rgba(26,107,196,${a})`,pa=a=>`rgba(94,82,212,${a})`;
 const leg={position:'bottom',labels:{font:{size:11},padding:10,boxWidth:10}};
 const grid={color:'rgba(0,0,0,.05)'};
+
+// ══ ARTIFICIAL ANALYSIS — LIVE MODEL TABLE ══
+let aaData=[];let aaSortCol='intel';let aaSortAsc=false;let aaLoaded=false;
+
+async function loadAAModels(){
+  const loading=document.getElementById('aa-loading');
+  const error=document.getElementById('aa-error');
+  const wrap=document.getElementById('aa-table-wrap');
+  const legend=document.getElementById('aa-legend');
+  const count=document.getElementById('aa-count');
+  if(loading)loading.style.display='flex';
+  if(error)error.style.display='none';
+  if(wrap)wrap.style.display='none';
+  if(legend)legend.style.display='none';
+  if(count)count.style.display='none';
+  try{
+    const r=await fetch(window.location.origin+'/api/aa/models');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const json=await r.json();
+    aaData=(json.data||[]).map(m=>({
+      id:m.id,
+      name:m.name||'—',
+      creator:m.model_creator?.name||'—',
+      release:m.release_date||'',
+      intel:m.evaluations?.artificial_analysis_intelligence_index??null,
+      code:m.evaluations?.artificial_analysis_coding_index??null,
+      math:m.evaluations?.artificial_analysis_math_index??null,
+      input_price:m.pricing?.price_1m_input_tokens??null,
+      output_price:m.pricing?.price_1m_output_tokens??null,
+      speed:m.median_output_tokens_per_second??null,
+      ttft:m.median_time_to_first_token_seconds??null,
+    }));
+    aaLoaded=true;
+    const ts=document.getElementById('aa-ts');
+    if(ts)ts.textContent='Updated '+new Date().toLocaleTimeString();
+    aaRender();
+    if(loading)loading.style.display='none';
+    if(wrap)wrap.style.display='block';
+    if(legend)legend.style.display='flex';
+    if(count)count.style.display='block';
+  }catch(e){
+    if(loading)loading.style.display='none';
+    if(error){error.style.display='block';error.textContent='Failed to load model data: '+e.message;}
+  }
+}
+
+function aaSort(col){
+  if(aaSortCol===col)aaSortAsc=!aaSortAsc;
+  else{aaSortCol=col;aaSortAsc=false;}
+  aaRender();
+}
+
+function aaFilter(){aaRender();}
+
+function aaRender(){
+  const q=(document.getElementById('aa-search')?.value||'').toLowerCase();
+  let rows=aaData.filter(m=>!q||m.name.toLowerCase().includes(q)||m.creator.toLowerCase().includes(q));
+  rows.sort((a,b)=>{
+    let av=a[aaSortCol],bv=b[aaSortCol];
+    if(av===null&&bv===null)return 0;
+    if(av===null)return 1;if(bv===null)return -1;
+    if(typeof av==='string')return aaSortAsc?av.localeCompare(bv):bv.localeCompare(av);
+    return aaSortAsc?av-bv:bv-av;
+  });
+  const tbody=document.getElementById('aa-tbody');
+  if(!tbody)return;
+  const fmt=(v,dp=1)=>v===null||v===undefined?'<span style="color:#BBB">—</span>':(+v).toFixed(dp);
+  const badge=(v,bg,fg)=>v===null?'<span style="color:#BBB">—</span>':`<span style="background:${bg};color:${fg};border-radius:4px;padding:2px 6px;font-weight:700">${(+v).toFixed(1)}</span>`;
+  const priceColor=(v)=>{
+    if(v===null)return '#BBB';
+    if(v===0)return '#0B9E80';
+    if(v<1)return '#065C3A';
+    if(v<10)return '#7A4A0A';
+    return '#C0392B';
+  };
+  tbody.innerHTML=rows.map((m,i)=>`
+    <tr style="background:${i%2===0?'#fff':'#FAFAFA'};transition:background .15s" onmouseover="this.style.background='#F0F8FF'" onmouseout="this.style.background='${i%2===0?'#fff':'#FAFAFA'}'">
+      <td style="padding:7px 10px;border:1px solid #EEE">
+        <div style="font-weight:700;color:var(--navy)">${m.name}</div>
+        ${m.release?`<div style="font-size:9px;color:var(--muted);margin-top:1px">${m.release}</div>`:''}
+      </td>
+      <td style="padding:7px 10px;border:1px solid #EEE;white-space:nowrap;color:#555">${m.creator}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center">${badge(m.intel,'#E8FFF5','#065C3A')}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center">${badge(m.code,'#EFF6FF','#0E4A8A')}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center">${badge(m.math,'#F6F4FF','#3A2FAA')}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center;font-weight:600;color:${priceColor(m.input_price)}">${m.input_price===null?'<span style="color:#BBB">—</span>':'$'+fmt(m.input_price,3)}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center;font-weight:600;color:${priceColor(m.output_price)}">${m.output_price===null?'<span style="color:#BBB">—</span>':'$'+fmt(m.output_price,3)}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center;color:#555">${fmt(m.speed,0)}</td>
+      <td style="padding:7px 10px;border:1px solid #EEE;text-align:center;color:#555">${fmt(m.ttft,2)}</td>
+    </tr>`).join('');
+  const count=document.getElementById('aa-count');
+  if(count)count.textContent=rows.length+' of '+aaData.length+' models';
+}
 
 // ══ API CALLS ══
 async function callClaude(prompt,outId){
