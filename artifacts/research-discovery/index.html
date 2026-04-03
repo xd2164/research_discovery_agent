@@ -1586,7 +1586,13 @@ async function loadAAModels(){
     if(count)count.style.display='block';
   }catch(e){
     if(loading)loading.style.display='none';
-    if(error){error.style.display='block';error.textContent='Failed to load model data: '+e.message;}
+    const is429=e.message&&e.message.includes('429');
+    if(error){
+      error.style.display='block';
+      error.innerHTML=is429
+        ?'<b>Rate limit reached</b> — the data provider briefly throttled the request. Your data will load from cache momentarily. &nbsp;<button onclick="loadAAModels()" style="background:#C0392B;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer">↺ Retry</button>'
+        :'<b>Could not load model data:</b> '+e.message+' &nbsp;<button onclick="loadAAModels()" style="background:#C0392B;color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer">↺ Retry</button>';
+    }
   }
 }
 
