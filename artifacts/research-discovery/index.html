@@ -1576,10 +1576,17 @@ async function loadAAModels(){
       ttft:m.median_time_to_first_token_seconds??null,
     }));
     aaLoaded=true;
+    const isFallback=json._source==='fallback';
     const ts=document.getElementById('aa-ts');
-    if(ts)ts.textContent='Updated '+new Date().toLocaleTimeString();
+    if(ts)ts.textContent=(isFallback?'⚠ Sample data (API rate-limited) · ':'')+'Updated '+new Date().toLocaleTimeString();
+    if(isFallback)aaLoaded=false; // allow retry when rate limit clears
     aaRender();
     renderAACharts();
+    // update meta to flag fallback
+    if(isFallback){
+      const meta=document.getElementById('aa-meta');
+      if(meta)meta.innerHTML='<span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">SAMPLE DATA</span> &nbsp;Live API temporarily rate-limited · <button onclick="loadAAModels()" style="background:none;border:none;color:var(--teal);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline">↺ retry live data</button>';
+    }
     if(loading)loading.style.display='none';
     if(wrap)wrap.style.display='block';
     if(legend)legend.style.display='flex';
