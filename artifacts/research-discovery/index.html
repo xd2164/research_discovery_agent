@@ -1773,7 +1773,8 @@ function renderAACharts(){
     if(m.intel!==null)regionStats[r].intel.push(m.intel);
   });
   const REGION_ORDER=['United States','China','Europe','South Korea','Israel','Middle East','Other'];
-  const regions=REGION_ORDER.filter(r=>regionStats[r]);
+  const regions=REGION_ORDER.filter(r=>regionStats[r])
+    .sort((a,b)=>regionStats[b].count-regionStats[a].count);
   const REGION_COLORS={'United States':'#1A6BC4','China':'#E0522A','Europe':'#0B9E80','South Korea':'#5E52D4','Israel':'#D4921A','Middle East':'#C04070','Other':'#9CA3AF'};
 
   // ── Module 5: Global vs. U.S. Watch — two full-width Chart.js charts ──
