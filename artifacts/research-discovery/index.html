@@ -766,38 +766,129 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
     <!-- ── CHARTS SECTION ──────────────────────────── -->
     <div id="aa-charts" style="display:none;margin-bottom:20px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <div style="font-size:13px;font-weight:800;color:var(--navy)">Foundational AI Capability Landscape</div>
-        <div style="font-size:11px;color:var(--muted)">· 457 models · 47 creators · live from Artificial Analysis</div>
+
+      <!-- Page header -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Market Deepdive · Foundational AI Capabilities</div>
+        <div style="font-size:17px;font-weight:800;color:var(--navy)">AI Model Intelligence Landscape</div>
+        <div id="aa-meta" style="font-size:11px;color:var(--muted);margin-top:2px">Live via Artificial Analysis · loading…</div>
       </div>
 
-      <!-- Intelligence Frontier -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Intelligence Frontier</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Top 15 models by overall intelligence index — revealing who leads the frontier</div>
-        <canvas id="aa-chart-intel" height="110"></canvas>
+      <!-- Active Alerts -->
+      <div style="background:#0A1F3A;border-radius:10px;padding:12px 16px;margin-bottom:18px">
+        <div style="font-size:10px;font-weight:700;color:#F5C518;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">&#9889; Active Signals</div>
+        <div id="aa-alerts" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">Intelligence Leader</div>
+            <div id="aa-sig-intel" style="font-size:11px;font-weight:700;color:#fff;line-height:1.5">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">Best Value (Intel / $)</div>
+            <div id="aa-sig-value" style="font-size:11px;font-weight:700;color:#fff;line-height:1.5">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px">Fastest Frontier Model</div>
+            <div id="aa-sig-speed" style="font-size:11px;font-weight:700;color:#fff;line-height:1.5">—</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Creator Capability Landscape -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Creator Capability Landscape</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Average Intelligence, Coding, and Math scores across top creators — showing where capability concentrates</div>
-        <canvas id="aa-chart-creator" height="90"></canvas>
+      <!-- Module 1: Intelligence Frontier -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 1</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Show which models lead the intelligence benchmark and which providers dominate the frontier.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Frontier is dominated by 3–4 hyperscalers; newer entrants are beginning to close the gap.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Understanding frontier concentration helps calibrate investment in AI research tools and provider risk.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Intelligence Frontier</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Top 15 models by overall intelligence index — colour-coded by creator</div>
+          <canvas id="aa-chart-intel" height="100"></canvas>
+        </div>
       </div>
 
-      <!-- Value Frontier -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Value Frontier</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Intelligence vs output price per 1M tokens — identifying high-capability, cost-efficient models</div>
-        <canvas id="aa-chart-value" height="120"></canvas>
+      <!-- Module 2: Creator Capability Landscape -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 2</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Compare average Intelligence, Coding, and Math scores across the top 10 providers.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Providers specialise — different leaders emerge by dimension, revealing lock-in and partnership risk.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Pillar gaps signal where a multi-provider strategy reduces dependency and supports open, interoperable systems.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Creator Capability Landscape</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Average Intelligence · Coding · Math by creator — top 10 providers ranked by intelligence</div>
+          <canvas id="aa-chart-creator" height="85"></canvas>
+        </div>
       </div>
 
-      <!-- Speed vs Capability -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px">
-        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Speed vs Capability</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.4">Output tokens/sec vs intelligence — mapping the speed–capability tradeoff space</div>
-        <canvas id="aa-chart-speed" height="120"></canvas>
+      <!-- Module 3: Value Frontier -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 3</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Map intelligence performance against output cost to surface disproportionate value models.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">High-capability models at low cost exist but are concentrated in a few providers; frontier models carry premium pricing.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Cost-efficient models may be more accessible for grantees; investment should assess total cost of capability, not raw benchmarks.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Value Frontier</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Intelligence index vs output price per 1M tokens (log scale) — hover for model detail</div>
+          <canvas id="aa-chart-value" height="110"></canvas>
+        </div>
       </div>
+
+      <!-- Module 4: Speed vs Capability -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 4</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Understand the speed–capability tradeoff across providers and model tiers.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Speed and intelligence are in tension — the most capable models are slower; fast models trade depth for throughput.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Real-time applications require different model choices than deep research synthesis; procurement must match use case to model tier.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Speed vs Capability</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Output tokens/sec vs intelligence — mapping the throughput–quality tradeoff space</div>
+          <canvas id="aa-chart-speed" height="110"></canvas>
+        </div>
+      </div>
+
     </div>
 
     <!-- column legend -->
@@ -1460,13 +1551,29 @@ async function loadAAModels(){
 
 function renderAACharts(){
   const chartsDiv=document.getElementById('aa-charts');
-  if(chartsDiv){
-    chartsDiv.style.display='block';
-    // update count line dynamically
-    const creators=new Set(aaData.map(m=>m.creator)).size;
-    const subtitle=chartsDiv.querySelector('div>div:last-child');
-    if(subtitle)subtitle.textContent='· '+aaData.length+' models · '+creators+' creators · live from Artificial Analysis';
-  }
+  if(chartsDiv) chartsDiv.style.display='block';
+
+  // ── Meta line ──
+  const creators=new Set(aaData.map(m=>m.creator)).size;
+  const meta=document.getElementById('aa-meta');
+  if(meta)meta.textContent=aaData.length+' models · '+creators+' creators · live via Artificial Analysis · '+new Date().toLocaleTimeString();
+
+  // ── Active Signals ──
+  const withIntelAll=aaData.filter(m=>m.intel!==null).sort((a,b)=>b.intel-a.intel);
+  const leader=withIntelAll[0];
+  const sigI=document.getElementById('aa-sig-intel');
+  if(sigI&&leader)sigI.innerHTML=`${leader.name}<br><span style="font-weight:400;font-size:10px;color:rgba(255,255,255,.6)">${leader.creator} · Score ${leader.intel.toFixed(1)}</span>`;
+
+  const withValue=aaData.filter(m=>m.intel!==null&&m.output_price!==null&&m.output_price>0)
+    .map(m=>({...m,ratio:m.intel/m.output_price})).sort((a,b)=>b.ratio-a.ratio);
+  const best=withValue[0];
+  const sigV=document.getElementById('aa-sig-value');
+  if(sigV&&best)sigV.innerHTML=`${best.name.length>28?best.name.slice(0,26)+'…':best.name}<br><span style="font-weight:400;font-size:10px;color:rgba(255,255,255,.6)">${best.creator} · Intel ${best.intel.toFixed(1)} @ $${best.output_price}/1M</span>`;
+
+  const withSpeed=withIntelAll.filter(m=>m.speed!==null&&m.speed>0&&m.intel>=30).sort((a,b)=>b.speed-a.speed);
+  const fastest=withSpeed[0];
+  const sigS=document.getElementById('aa-sig-speed');
+  if(sigS&&fastest)sigS.innerHTML=`${fastest.name.length>28?fastest.name.slice(0,26)+'…':fastest.name}<br><span style="font-weight:400;font-size:10px;color:rgba(255,255,255,.6)">${fastest.creator} · ${fastest.speed.toFixed(0)} tok/s · Intel ${fastest.intel.toFixed(1)}</span>`;
 
   // ── Creator color palette ──
   const CPAL={'OpenAI':'#0B9E80','Anthropic':'#E0522A','Google':'#1A6BC4','Meta':'#5E52D4','xAI':'#D4921A','Mistral AI':'#C04070','Amazon':'#FF9900','Cohere':'#374151','MiniMax':'#0891B2','Xiaomi':'#DC2626','Z AI':'#7C3AED','Kimi':'#059669','DeepSeek':'#2563EB','Baidu':'#D97706','Samsung':'#1D4ED8'};
