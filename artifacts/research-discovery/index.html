@@ -558,8 +558,8 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
   <div class="tnav">
     <div class="tb on" onclick="stab(this)">Overview</div>
-    <div class="tb" onclick="stab(this)">&#128202; Market Insights</div>
     <div class="tb" onclick="stab(this);if(!aaLoaded)loadAAModels()">Deepdive</div>
+    <div class="tb" onclick="stab(this)">&#128202; Market Insights</div>
     <div class="tb" onclick="stab(this)">Architecture</div>
     <div class="tb" onclick="stab(this)">Reusable Patterns</div>
   </div>
@@ -724,15 +724,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
   </div>
   <!-- / Overview tab -->
-  <div class="tc" style="padding:0;height:calc(100vh - 180px)">
-    <iframe
-      src="https://market-intelligence-gf.streamlit.app/?embed=true"
-      style="width:100%;height:100%;border:none;display:block;border-radius:0"
-      title="Market Intelligence"
-      allow="clipboard-write; clipboard-read"
-      loading="lazy"
-    ></iframe>
-  </div>
   <!-- Deepdive: Live AA models table -->
   <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)" id="aa-pane">
     <!-- toolbar -->
@@ -958,6 +949,16 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       </table>
     </div>
     <div id="aa-count" style="display:none;margin-top:8px;font-size:10px;color:var(--muted);text-align:right"></div>
+  </div>
+  <!-- Market Insights iframe -->
+  <div class="tc" style="padding:0;height:calc(100vh - 180px)">
+    <iframe
+      src="https://market-intelligence-gf.streamlit.app/?embed=true"
+      style="width:100%;height:100%;border:none;display:block;border-radius:0"
+      title="Market Intelligence"
+      allow="clipboard-write; clipboard-read"
+      loading="lazy"
+    ></iframe>
   </div>
   <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
     <!-- page title -->
