@@ -561,6 +561,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     <div class="tb" onclick="stab(this);if(!aaLoaded)loadAAModels()">Deepdive</div>
     <div class="tb" onclick="stab(this)">&#128202; Market Insights</div>
     <div class="tb" onclick="stab(this)">Architecture</div>
+    <div class="tb" onclick="stab(this)">Reusable Patterns</div>
   </div>
   <!-- Overview tab -->
   <div class="tc on" style="overflow-y:auto;max-height:calc(100vh - 180px)">
@@ -1103,6 +1104,169 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
+    </div>
+  </div>
+  <!-- Use Cases tab -->
+  <div class="tc" style="overflow-y:auto;max-height:calc(100vh - 180px)">
+    <div style="margin-bottom:18px">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1.3px;margin-bottom:3px">Market Insights Initiative</div>
+      <div style="font-size:17px;color:var(--navy);font-weight:700">User Journeys</div>
+    </div>
+
+    <!-- Journey 1 -->
+    <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px">
+      <div style="background:#0A1F3A;padding:12px 16px">
+        <div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">User Journey #1</div>
+        <div style="font-size:14px;color:#fff;font-weight:700">Static Gates Information</div>
+      </div>
+      <div style="padding:14px;background:#F8F9FB">
+        <!-- user question -->
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:14px">
+          <div style="font-size:18px;flex-shrink:0;margin-top:1px">&#128100;</div>
+          <div style="font-size:13px;color:var(--navy);line-height:1.5">Are any of these hyperscalers currently working with priority LMIC governments that are of interest to us?</div>
+        </div>
+        <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;align-items:start">
+          <!-- left: flow -->
+          <div>
+            <!-- query manager box -->
+            <div style="border:1.5px solid #CCC;border-radius:8px;background:#fff;padding:12px 14px;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center">Market Agent Query Manager</div>
+              <div style="font-size:12px;color:var(--muted);text-align:center;line-height:1.6">• Clarifies Prompt<br>• <strong>Sends to Research leads</strong></div>
+              <div style="background:#E0522A;color:#fff;font-size:11px;padding:5px 8px;border-radius:5px;margin-top:8px;text-align:center">"hyperscalers" = Meta, Google, OpenAI, etc</div>
+              <div style="background:#E0522A;color:#fff;font-size:11px;padding:5px 8px;border-radius:5px;margin-top:5px;text-align:center">"priority LMIC gov" = Kenya, Rwanda, India…</div>
+            </div>
+            <!-- sends / obtains labels -->
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:0 10px;margin-bottom:6px">
+              <span>Sends refined prompt and query</span><span>Obtains research/signal reports</span>
+            </div>
+            <!-- RL / RT grid -->
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">OpenAI RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Anthropic RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Google RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Meta RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">MS RL</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">OpenAI RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Anthropic RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Google RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Meta RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">MS RT</div>
+            </div>
+          </div>
+          <!-- right: data schema -->
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#E0522A;color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:6px 6px 0 0;text-align:center">Data Schema Information</div>
+            <div style="background:#B2EBD4;border-radius:0 0 6px 6px;padding:11px;margin-top:-10px">
+              <div style="font-size:12px;color:#065C3A;font-weight:700;margin-bottom:5px">Data is:</div>
+              <div style="font-size:12px;color:#065C3A;line-height:1.6">• Manually updated by a glossary<br>• Static</div>
+              <div style="font-size:12px;color:#065C3A;margin-top:7px;line-height:1.5">Stakeholders update static md or yaml files with need-to-know Gates information</div>
+              <div style="font-size:11px;color:#065C3A;margin-top:7px;line-height:1.5"><strong>Pros:</strong> Keep the information tight; latency low<br><strong>Cons:</strong> Needs constant update with new information</div>
+            </div>
+            <div style="background:#B2EBD4;border-radius:6px;padding:11px">
+              <div style="font-size:12px;color:#065C3A;font-weight:700;margin-bottom:5px">Data is:</div>
+              <div style="font-size:12px;color:#065C3A;line-height:1.6">• Autonomous<br>• Separate from gates information</div>
+              <div style="font-size:12px;color:#065C3A;margin-top:7px;line-height:1.5">Stakeholders adjust agent behavior for proper signaling, but do not affect the actual information retrieved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Journey 2 -->
+    <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px">
+      <div style="background:#1A3A5C;padding:12px 16px">
+        <div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">User Journey #2</div>
+        <div style="font-size:14px;color:#fff;font-weight:700">Dynamic Gates Information</div>
+      </div>
+      <div style="padding:14px;background:#F8F9FB">
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:14px">
+          <div style="font-size:18px;flex-shrink:0;margin-top:1px">&#128100;</div>
+          <div style="font-size:13px;color:var(--navy);line-height:1.5">Are any of these hyperscalers currently working with priority LMIC governments that are of interest to us?</div>
+        </div>
+        <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;align-items:start">
+          <div>
+            <div style="border:1.5px solid #CCC;border-radius:8px;background:#fff;padding:12px 14px;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center">Market Agent Query Manager</div>
+              <div style="font-size:12px;color:var(--muted);text-align:center;line-height:1.6">• Clarifies Prompt<br>• <strong>Sends to Research leads</strong><br>• <strong>Has Sub-Agents to Review Gates Information (investments)</strong></div>
+              <div style="background:#E0522A;color:#fff;font-size:11px;padding:5px 8px;border-radius:5px;margin-top:8px;text-align:center">AI Strategy Review Tool: Retrieves Strategy Priorities/Investments</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:0 10px;margin-bottom:6px">
+              <span>Sends refined prompt, query, RT Gates context</span><span>Obtains research/signal reports</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">OpenAI RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Anthropic RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Google RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Meta RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">MS RL</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">OpenAI RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Anthropic RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Google RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Meta RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">MS RT</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#E0522A;color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:6px 6px 0 0;text-align:center">Data Schema Information</div>
+            <div style="background:#B2EBD4;border-radius:0 0 6px 6px;padding:11px;margin-top:-10px">
+              <div style="font-size:12px;color:#065C3A;font-weight:700;margin-bottom:5px">Data is:</div>
+              <div style="font-size:12px;color:#065C3A;line-height:1.6">• Dynamic and connected to external tools</div>
+              <div style="font-size:12px;color:#065C3A;margin-top:7px;line-height:1.5">Stakeholders must integrate external tools and maintain their upkeep to ensure the system works well</div>
+              <div style="font-size:11px;color:#065C3A;margin-top:7px;line-height:1.5"><strong>Pros:</strong> Real-Time information updated<br><strong>Cons:</strong> Additional tool upkeep; increased latency in agent response</div>
+            </div>
+            <div style="background:#B2EBD4;border-radius:6px;padding:11px">
+              <div style="font-size:12px;color:#065C3A;font-weight:700;margin-bottom:5px">Data is:</div>
+              <div style="font-size:12px;color:#065C3A;line-height:1.6">• Autonomous<br>• Separate from gates information</div>
+              <div style="font-size:12px;color:#065C3A;margin-top:7px;line-height:1.5">Stakeholders adjust agent behavior for proper signaling, but do not affect the actual information retrieved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Journey 3 -->
+    <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:4px">
+      <div style="background:#065C3A;padding:12px 16px">
+        <div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">User Journey #3</div>
+        <div style="font-size:14px;color:#fff;font-weight:700">Vertical Integration</div>
+      </div>
+      <div style="padding:14px;background:#F8F9FB">
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:14px">
+          <div style="font-size:18px;flex-shrink:0;margin-top:1px">&#128100;</div>
+          <div style="font-size:13px;color:var(--navy);line-height:1.5">Are any of these hyperscalers currently working in health delivery around maternal health in LMIC settings?</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:14px;align-items:start">
+          <!-- left: vertical integration box + query manager -->
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="border:1.5px solid #CCC;border-radius:8px;background:#fff;padding:12px 14px">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center">Market Agent Query Manager</div>
+              <div style="font-size:12px;color:var(--muted);text-align:center;line-height:1.6">• Clarifies Prompt<br>• <strong>Sends to Research leads</strong><br>• <strong>Has Sub-Agents to Review Gates Information (investments)</strong></div>
+              <div style="background:#E0522A;color:#fff;font-size:11px;padding:5px 8px;border-radius:5px;margin-top:8px;text-align:center">AI Strategy Review Tool: Retrieves Strategy Priorities/Investments</div>
+            </div>
+            <div style="border:2px solid #CCC;border-radius:8px;background:#fff;padding:20px 14px;display:flex;align-items:center;justify-content:center;min-height:80px">
+              <div style="font-size:14px;font-weight:700;color:var(--navy);text-align:center">Vertical Integration</div>
+            </div>
+          </div>
+          <!-- right: RL/RT grid -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:0 10px;margin-bottom:6px">
+              <span>Sends refined prompt, query, RT Gates context</span><span>Obtains research/signal reports</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">OpenAI RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Anthropic RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Google RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">Meta RL</div>
+              <div style="border:1.5px solid #CCC;border-radius:6px;padding:7px 4px;background:#fff;text-align:center;font-size:10px;font-weight:700;color:var(--navy)">MS RL</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">OpenAI RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Anthropic RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Google RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">Meta RT</div>
+              <div style="border:1.5px solid #DDD;border-radius:6px;padding:7px 4px;background:#F5F5F5;text-align:center;font-size:10px;color:var(--muted)">MS RT</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
