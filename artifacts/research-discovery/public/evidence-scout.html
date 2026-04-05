@@ -411,11 +411,11 @@ async function runEvidenceStrength() {
   cards.innerHTML = EV_DIMS.map(dim => {
     const dimSc = (_evScores[dim.key] ? Object.values(_evScores[dim.key]).reduce((a, v) => a + (v.score || 0), 0) / dim.indicators.length : 0);
     const pct = dimSc / 5 * 100;
-    return `<div style="background:var(--surf);border:1px solid var(--border);border-left:3px solid ${dim.color};border-radius:8px;overflow:hidden">
-      <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-        <span style="font-size:12px;font-weight:700;color:var(--navy)">${dim.icon} ${dim.label}</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:80px;height:4px;border-radius:2px;background:var(--border)"><div id="evdb_${dim.key}" style="height:4px;border-radius:2px;background:${dim.color};width:${pct}%;transition:width .4s"></div></div>
+    return `<div style="background:var(--surf);border:1px solid var(--border);border-left:3px solid ${dim.color};border-radius:8px;">
+      <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;user-select:none" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <span style="font-size:12px;font-weight:700;color:var(--navy);min-width:0;flex:1">${dim.icon} ${dim.label}</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <div style="width:60px;height:4px;border-radius:2px;background:var(--border)"><div id="evdb_${dim.key}" style="height:4px;border-radius:2px;background:${dim.color};width:${pct}%;transition:width .4s"></div></div>
           <span id="evds_${dim.key}" style="font-size:12px;font-weight:800;color:${dim.color};min-width:28px;text-align:right">${dimSc.toFixed(1)}</span>
           <span style="font-size:10px;color:var(--muted);font-weight:400">/5 ▾</span>
         </div>
@@ -427,15 +427,15 @@ async function runEvidenceStrength() {
           const wid = _evGetWeightId(dim.key, ind.key);
           const scColor = ['', '#E0522A', '#D4921A', '#5E52D4', '#1A6BC4', '#0B9E80'][Math.min(sc, 5)] || '#888';
           return `<div style="border-top:1px solid var(--border);padding:7px 0">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
-              <span style="font-size:11px;font-weight:600;color:var(--navy)">${ind.label}</span>
-              <span style="font-size:12px;font-weight:800;color:${scColor}">${sc}<span style="font-size:9px;color:var(--muted);font-weight:400">/5</span></span>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px">
+              <span style="font-size:11px;font-weight:600;color:var(--navy);min-width:0;flex:1;line-height:1.4">${ind.label}</span>
+              <span style="font-size:12px;font-weight:800;color:${scColor};flex-shrink:0;white-space:nowrap">${sc}<span style="font-size:9px;color:var(--muted);font-weight:400">/5</span></span>
             </div>
-            <div style="font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:5px">${rat}</div>
-            <div style="display:flex;align-items:center;gap:7px">
-              <span style="font-size:9px;color:var(--muted);white-space:nowrap">Weight</span>
-              <input type="range" id="${wid}" min="0" max="2" step="0.1" value="1" style="flex:1;accent-color:${dim.color};height:3px;cursor:pointer" oninput="recalcEvidence()">
-              <span id="${wid}_lbl" style="font-size:9px;font-weight:700;color:${dim.color};min-width:28px">1.0×</span>
+            <div style="font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:5px;word-break:break-word">${rat}</div>
+            <div style="display:flex;align-items:center;gap:7px;min-width:0">
+              <span style="font-size:9px;color:var(--muted);white-space:nowrap;flex-shrink:0">Weight</span>
+              <input type="range" id="${wid}" min="0" max="2" step="0.1" value="1" style="flex:1;min-width:0;accent-color:${dim.color};height:3px;cursor:pointer" oninput="recalcEvidence()">
+              <span id="${wid}_lbl" style="font-size:9px;font-weight:700;color:${dim.color};min-width:32px;flex-shrink:0;text-align:right">1.0×</span>
             </div>
           </div>`;
         }).join('')}
