@@ -156,6 +156,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
     <textarea id="ax-q" rows="4" placeholder="e.g. What are the effect sizes? Does this apply to LMIC contexts? How does this compare to similar interventions?" style="width:100%;box-sizing:border-box;margin:0 0 8px 0;resize:vertical;min-height:90px"></textarea>
     <button class="run" style="background:#1A6BC4;padding:9px 20px" onclick="runArxivQ()">&#128172; Ask Claude</button>
+    <div id="ax-qa-out" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#1A6BC4;margin-bottom:6px">Claude's Answer</div>
+      <div class="p-out" style="min-height:80px"><div class="out" id="ax-qa-text"></div></div>
+    </div>
   </div>
 
   <!-- Concept Knowledge Graph -->
@@ -274,8 +278,10 @@ async function runArxiv() {
 async function runArxivQ() {
   if (!axPaper) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please fetch a paper first.</p>'; return; }
   const q = document.getElementById('ax-q').value.trim();
-  if (!q) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please enter a question.</p>'; return; }
-  await callClaude(`You are EDUAgent, a research Q&A assistant for the Gates Foundation. Answer this question about the arXiv paper below.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0, 3).join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nQuestion: ${q}\n\nAnswer concisely and ground your response in the abstract. Flag clearly if the question goes beyond what the abstract can confirm.`, 'ax-out');
+  if (!q) return;
+  const panel = document.getElementById('ax-qa-out');
+  if (panel) panel.style.display = 'block';
+  await callClaude(`You are EDUAgent, a research Q&A assistant for the Gates Foundation. Answer this question about the arXiv paper below.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0, 3).join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nQuestion: ${q}\n\nAnswer concisely and ground your response in the abstract. Flag clearly if the question goes beyond what the abstract can confirm.`, 'ax-qa-text');
 }
 
 // ── Evidence Strength Scorecard ──
