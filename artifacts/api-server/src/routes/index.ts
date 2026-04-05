@@ -1,10 +1,14 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
 import aaRouter from "./artificialAnalysis";
+import claudeRouter from "./claude";
+import arxivRouter from "./arxiv";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(aaRouter);
+router.use(claudeRouter);
+router.use(arxivRouter);
 
 export default router;

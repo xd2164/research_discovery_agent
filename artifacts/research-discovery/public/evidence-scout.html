@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence Scout — EDUAgent</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A2240;--teal:#0B9E80;--blue:#1A6BC4;--purple:#5E52D4;
+  --gold:#D4921A;--coral:#E0522A;
+  --pl:#EEECFF;
+  --text:#0D1B2A;--muted:#596577;--border:#D8E3F0;--surf:#F2F7FD;--white:#fff;
+}
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);font-size:14px}
+
+/* ── shared inputs ── */
+select,textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--surf);resize:none;outline:none}
+select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(--white)}
+.run{padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.run:hover:not(:disabled){opacity:.86}
+.out{overflow-y:auto;font-size:13px;color:var(--text);line-height:1.7}
+.out-ph{color:var(--muted);font-style:italic;font-size:13px}
+.out-h{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:10px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.p-out{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column}
+.spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.12);border-top-color:#1A6BC4;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── page wrapper ── */
+.es-wrap{max-width:1100px;margin:0 auto;padding:24px}
+
+/* ── top banner ── */
+.es-banner{background:#0A1F3A;border-radius:10px;padding:14px 18px;margin-bottom:18px;border-left:4px solid #5E52D4}
+.es-banner-eyebrow{font-size:11px;color:#A29BFE;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.es-banner-desc{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5}
+
+/* ── step number ── */
+.step-num{width:20px;height:20px;border-radius:50%;color:#fff;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="es-wrap">
+
+  <!-- Banner -->
+  <div class="es-banner">
+    <div class="es-banner-eyebrow">EDUAgent — Evidence Scout</div>
+    <div class="es-banner-desc">Fetch any arXiv paper, generate a structured evidence brief, score 18 quality indicators across 6 dimensions, and ask Claude follow-up questions — all in one workflow.</div>
+  </div>
+
+  <!-- ① LOOKUP BAR -->
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px">
+    <div style="display:flex;gap:3px;align-items:center;margin-bottom:10px">
+      <span class="step-num" style="background:#5E52D4">1</span>
+      <span style="font-size:11px;font-weight:700;color:var(--navy);margin-left:6px">Find a paper</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:4px">— paste an arXiv ID or URL</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">e.g. 2501.15552 or https://arxiv.org/abs/2501.15552</div>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="ax-id" placeholder="arXiv ID or URL" style="flex:1">
+          <button onclick="fetchArxiv()" style="padding:8px 16px;background:#5E52D4;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Fetch paper</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;font-size:10px;padding-top:18px">
+        <span style="color:var(--muted);font-weight:600">Quick load:</span>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button onclick="document.getElementById('ax-id').value='2501.15552';fetchArxiv()" style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--pl);color:#3A2FAA;border:none;cursor:pointer;font-weight:600">EDUAgent</button>
+          <button onclick="document.getElementById('ax-id').value='2306.11644';fetchArxiv()" style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--pl);color:#3A2FAA;border:none;cursor:pointer;font-weight:600">AI Tutors</button>
+          <button onclick="document.getElementById('ax-id').value='2405.14333';fetchArxiv()" style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--pl);color:#3A2FAA;border:none;cursor:pointer;font-weight:600">Learning Equity</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② PAPER METADATA + ACTIONS -->
+  <div id="ax-meta" style="background:var(--white);border:1px solid var(--border);border-left:3px solid #5E52D4;border-radius:10px;padding:12px 16px;margin-bottom:14px">
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px">
+        <div id="ax-meta-placeholder" style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-style:italic;min-height:38px">
+          <span style="font-size:18px;opacity:.4">📄</span>
+          Fetch a paper above — its title, authors and categories will appear here
+        </div>
+        <div id="ax-meta-info" style="display:none">
+          <div id="ax-meta-title" style="color:var(--navy);font-weight:700;font-size:13px;line-height:1.4;margin-bottom:4px"></div>
+          <div id="ax-meta-authors" style="color:var(--muted);font-size:11px;margin-bottom:6px"></div>
+          <div id="ax-meta-cats" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:7px;flex-shrink:0;align-self:center;flex-wrap:wrap">
+        <div style="display:flex;gap:3px;align-items:center;margin-right:4px">
+          <span class="step-num" style="background:#5E52D4">2</span>
+          <span style="font-size:11px;font-weight:700;color:var(--navy);margin-left:4px">Analyse</span>
+        </div>
+        <button id="ax-btn-summarize" class="run" style="background:#5E52D4;padding:7px 14px;opacity:.45;cursor:not-allowed" disabled onclick="runArxiv()">&#9654; Summarize</button>
+        <button id="ax-btn-evidence" class="run" style="background:#0B6E4F;padding:7px 14px;opacity:.45;cursor:not-allowed" disabled onclick="runEvidenceStrength()">&#128202; Evidence Score</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ OUTPUTS: Summary (left) + Evidence Scorecard (right) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;margin-bottom:14px">
+
+    <!-- Summary output -->
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span class="step-num" style="width:18px;height:18px;font-size:9px;background:#5E52D4">3a</span>
+        <span style="font-size:11px;font-weight:700;color:var(--navy)">Paper Summary</span>
+      </div>
+      <div class="p-out" style="flex:1;min-height:340px">
+        <div class="out" id="ax-out" style="flex:1"><p class="out-ph">Fetch a paper and click <strong>Summarize</strong> to generate a brief.</p></div>
+      </div>
+    </div>
+
+    <!-- Evidence Scorecard -->
+    <div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span class="step-num" style="width:18px;height:18px;font-size:9px;background:#0B6E4F">3b</span>
+        <span style="font-size:11px;font-weight:700;color:var(--navy)">Evidence Scorecard</span>
+      </div>
+      <div id="ax-ev-idle" style="display:flex;align-items:center;justify-content:center;min-height:340px;background:var(--surf);border:1px dashed var(--border);border-radius:10px;color:var(--muted);font-size:12px;font-style:italic;flex-direction:column;gap:8px">
+        <span style="font-size:24px">📊</span>
+        Click <strong style="color:#0B6E4F;font-style:normal">Evidence Score</strong> to assess this paper
+      </div>
+      <div id="ax-ev-panel" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <div id="ax-ev-tier" style="display:none"></div>
+            <div id="ax-ev-loading" style="display:none;align-items:center;gap:6px;color:var(--muted);font-style:italic;font-size:11px"><div class="spin" style="border-top-color:#0B6E4F"></div>Scoring 18 indicators…</div>
+          </div>
+          <div style="display:flex;gap:5px">
+            <button onclick="resetEvWeights()" style="font-size:10px;padding:4px 9px;border-radius:7px;background:var(--white);color:#0B6E4F;border:1.5px solid #0B9E80;cursor:pointer;font-weight:700">Reset weights</button>
+            <button onclick="runEvidenceStrength()" style="font-size:10px;padding:4px 9px;border-radius:7px;background:#0B6E4F;color:#fff;border:none;cursor:pointer;font-weight:700">&#8635; Re-score</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+            <div style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;flex:1;min-width:180px">
+              <canvas id="ax-ev-radar" width="220" height="220" style="max-width:220px;max-height:220px"></canvas>
+            </div>
+            <div id="ax-ev-verdict" style="display:none;flex:1;min-width:160px;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:10px;font-size:11px;color:var(--text);line-height:1.6"></div>
+          </div>
+          <div id="ax-ev-cards" style="display:flex;flex-direction:column;gap:7px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ Q&A -->
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+      <span class="step-num" style="background:#1A6BC4">4</span>
+      <span style="font-size:11px;font-weight:700;color:var(--navy);margin-left:4px">Ask Claude about this paper</span>
+      <span style="font-size:11px;color:var(--muted)">— or click a node in the graph to pre-fill</span>
+    </div>
+    <textarea id="ax-q" rows="4" placeholder="e.g. What are the effect sizes? Does this apply to LMIC contexts? How does this compare to similar interventions?" style="width:100%;box-sizing:border-box;margin:0 0 8px 0;resize:vertical;min-height:90px"></textarea>
+    <button class="run" style="background:#1A6BC4;padding:9px 20px" onclick="runArxivQ()">&#128172; Ask Claude</button>
+  </div>
+
+  <!-- Concept Knowledge Graph -->
+  <div id="ax-graph-panel" style="margin-bottom:20px;display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5E52D4;font-weight:700;margin-bottom:2px">Concept Knowledge Graph</div>
+        <div style="font-size:11px;color:var(--muted)">AI-extracted concepts — drag to rearrange · hover for context · <strong style="color:#5E52D4">click a node to ask Claude about it</strong></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <button onclick="resetGraphLayout()" style="font-size:11px;padding:5px 13px;border-radius:8px;background:var(--white);color:#5E52D4;border:1.5px solid #5E52D4;cursor:pointer;font-weight:700">&#8635; Reset Layout</button>
+        <button onclick="buildConceptGraph()" id="ax-graph-btn" style="font-size:11px;padding:5px 13px;border-radius:8px;background:#5E52D4;color:#fff;border:none;cursor:pointer;font-weight:700">&#9654; Re-generate</button>
+      </div>
+    </div>
+    <div style="background:var(--surf);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:relative">
+      <canvas id="ax-graph-canvas" width="900" height="520" style="width:100%;height:520px;display:block;cursor:grab;border-radius:0 0 8px 8px"></canvas>
+      <div id="ax-graph-status" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);font-style:italic;pointer-events:none"></div>
+      <div id="ax-graph-tooltip" style="position:absolute;display:none;background:rgba(20,18,50,0.93);color:#fff;border-radius:8px;padding:8px 12px;font-size:11px;max-width:220px;pointer-events:none;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,0.3);line-height:1.5"></div>
+    </div>
+    <div id="ax-graph-nudge" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:#EEECFF;border:1px solid #C5C0F0;font-size:11px;font-weight:600;color:#3A2FAA"></div>
+    <div style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)">
+      <span style="display:flex;align-items:flex-start;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#5E52D4;display:inline-block;flex-shrink:0;margin-top:1px"></span><span><strong style="color:#5E52D4">Core idea</strong> — the central concept the paper is built around</span></span>
+      <span style="display:flex;align-items:flex-start;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#1A6BC4;display:inline-block;flex-shrink:0;margin-top:1px"></span><span><strong style="color:#1A6BC4">Method</strong> — technique or approach used to generate learning evidence</span></span>
+      <span style="display:flex;align-items:flex-start;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#0B9E80;display:inline-block;flex-shrink:0;margin-top:1px"></span><span><strong style="color:#0B9E80">Finding</strong> — result or outcome with implications for learning</span></span>
+      <span style="display:flex;align-items:flex-start;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#D4921A;display:inline-block;flex-shrink:0;margin-top:1px"></span><span><strong style="color:#D4921A">Gap</strong> — open question or limitation the field still needs to address</span></span>
+      <span style="display:flex;align-items:flex-start;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#E0522A;display:inline-block;flex-shrink:0;margin-top:1px"></span><span><strong style="color:#E0522A">Application</strong> — real-world domain where findings can be put to use</span></span>
+    </div>
+  </div>
+
+  <!-- Related Papers -->
+  <div id="ax-related-panel" style="margin-bottom:20px;display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#1A6BC4;font-weight:700;margin-bottom:2px">Related Papers</div>
+        <div style="font-size:11px;color:var(--muted)">Pulled from arXiv by relevance — click any card to load it</div>
+      </div>
+      <button onclick="loadRelatedPapers()" style="font-size:11px;padding:5px 13px;border-radius:8px;background:#1A6BC4;color:#fff;border:none;cursor:pointer;font-weight:700">&#8635; Refresh</button>
+    </div>
+    <div id="ax-related-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
+  </div>
+
+</div><!-- /es-wrap -->
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// CONFIGURATION — update this URL to match your backend
+// ─────────────────────────────────────────────────────────────
+const API_BASE = '';   // e.g. 'https://your-api.example.com' or leave '' for same-origin
+
+// ── Claude helper ──
+async function callClaude(prompt, outId) {
+  const out = document.getElementById(outId); if (!out) return;
+  out.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px"><div class="spin"></div>Generating…</div>';
+  try {
+    const r = await fetch(API_BASE + '/api/claude', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
+    const d = await r.json();
+    renderOut(out, d.content?.find(b => b.type === 'text')?.text || 'No response.');
+  } catch (e) { out.innerHTML = '<p style="color:#E0522A;font-size:13px">Connection error. Please try again.</p>'; }
+}
+
+function renderOut(el, text) {
+  const lines = text.split('\n'); let html = '', inL = false, inS = false;
+  lines.forEach(l => {
+    if (!l.trim()) { if (inL) { html += '</ul>'; inL = false } return }
+    if (l.startsWith('## ') || (l.startsWith('**') && l.endsWith('**'))) {
+      if (inL) { html += '</ul>'; inL = false } if (inS) html += '</div>';
+      html += `<div><div class="out-h">${l.replace(/^##\s*/, '').replace(/\*\*/g, '')}</div>`; inS = true;
+    } else if (l.match(/^[-•*]\s/)) {
+      if (!inL) { html += '<ul style="padding-left:13px;margin:4px 0 8px;display:flex;flex-direction:column;gap:3px">'; inL = true }
+      html += `<li style="font-size:13px;line-height:1.6;color:var(--text)">${l.replace(/^[-•*]\s/, '')}</li>`;
+    } else {
+      if (inL) { html += '</ul>'; inL = false }
+      html += `<p style="font-size:13px;line-height:1.7;margin-bottom:4px">${l}</p>`;
+    }
+  });
+  if (inL) html += '</ul>'; if (inS) html += '</div>';
+  el.innerHTML = html || `<p style="font-size:13px">${text}</p>`;
+}
+
+// ── arXiv fetch + analysis ──
+let axPaper = null;
+
+async function fetchArxiv() {
+  const raw = document.getElementById('ax-id').value.trim();
+  const id = raw.replace(/https?:\/\/.*?abs\//, '').replace(/v\d+$/, '').trim();
+  if (!id) return;
+  const out = document.getElementById('ax-out');
+  const placeholder = document.getElementById('ax-meta-placeholder');
+  const info = document.getElementById('ax-meta-info');
+  const btnSum = document.getElementById('ax-btn-summarize');
+  const btnEv = document.getElementById('ax-btn-evidence');
+  out.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px"><div class="spin" style="border-top-color:#5E52D4"></div>Fetching paper from arXiv…</div>';
+  try {
+    const r = await fetch(API_BASE + `/api/arxiv?id=${encodeURIComponent(id)}`);
+    const d = await r.json();
+    if (d.error) { out.innerHTML = `<p style="color:#E0522A;font-size:13px">${d.error}</p>`; return; }
+    axPaper = d;
+    document.getElementById('ax-meta-title').textContent = d.title;
+    document.getElementById('ax-meta-authors').textContent = d.authors.slice(0, 5).join(', ') + (d.authors.length > 5 ? ' et al.' : '');
+    document.getElementById('ax-meta-cats').innerHTML = d.categories.slice(0, 4).map(c => `<span style="font-size:10px;padding:2px 6px;border-radius:6px;background:var(--pl);color:#3A2FAA">${c}</span>`).join('');
+    if (placeholder) placeholder.style.display = 'none';
+    if (info) info.style.display = 'block';
+    if (btnSum) { btnSum.disabled = false; btnSum.style.opacity = '1'; btnSum.style.cursor = 'pointer'; }
+    if (btnEv) { btnEv.disabled = false; btnEv.style.opacity = '1'; btnEv.style.cursor = 'pointer'; }
+    out.innerHTML = '<p class="out-ph">Paper loaded — <strong>' + d.title.slice(0, 60) + '…</strong><br><br>Click <em>Summarize</em> or <em>Evidence Score</em> to analyse.</p>';
+    buildConceptGraph();
+    loadRelatedPapers();
+  } catch (e) { out.innerHTML = '<p style="color:#E0522A;font-size:13px">Could not fetch paper. Check the arXiv ID and try again.</p>'; }
+}
+
+async function runArxiv() {
+  if (!axPaper) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please fetch a paper first.</p>'; return; }
+  await callClaude(`You are EDUAgent, a research synthesis assistant for the Bill & Melinda Gates Foundation.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0, 5).join(', ')}\narXiv ID: ${axPaper.id}\nPublished: ${axPaper.published}\nCategories: ${axPaper.categories.join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nGenerate a structured evidence brief for a Gates Foundation program officer.\n\nUse ## headings:\n## Paper overview\n## Key findings\n## Evidence quality (six-rung ladder)\n## Relevance to Gates Foundation\n## Gaps and caveats\n## Recommended next steps`, 'ax-out');
+}
+
+async function runArxivQ() {
+  if (!axPaper) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please fetch a paper first.</p>'; return; }
+  const q = document.getElementById('ax-q').value.trim();
+  if (!q) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please enter a question.</p>'; return; }
+  await callClaude(`You are EDUAgent, a research Q&A assistant for the Gates Foundation. Answer this question about the arXiv paper below.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0, 3).join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nQuestion: ${q}\n\nAnswer concisely and ground your response in the abstract. Flag clearly if the question goes beyond what the abstract can confirm.`, 'ax-out');
+}
+
+// ── Evidence Strength Scorecard ──
+const EV_DIMS = [
+  { key: 'studyRigor', label: 'Study Rigor', icon: '🔬', color: '#0B9E80', indicators: [
+    { key: 'designType', label: 'Study design', desc: '5=RCT/meta-analysis · 3=observational · 1=opinion/theoretical' },
+    { key: 'controls', label: 'Methodological controls', desc: '5=blinding+randomization+confounders · 3=some controls · 1=none' },
+    { key: 'stats', label: 'Statistical rigor', desc: '5=appropriate methods+power+corrections · 3=basic stats · 1=absent' },
+  ]},
+  { key: 'sampleScale', label: 'Sample & Scale', icon: '👥', color: '#1A6BC4', indicators: [
+    { key: 'size', label: 'Sample size', desc: '5=large adequate N · 3=moderate · 1=tiny/unclear' },
+    { key: 'represent', label: 'Representativeness', desc: '5=diverse multi-demographic · 3=single group · 1=non-representative' },
+    { key: 'sites', label: 'Setting diversity', desc: '5=multi-site multi-country · 3=single site · 1=lab only' },
+  ]},
+  { key: 'effectPrecision', label: 'Effect Precision', icon: '🎯', color: '#5E52D4', indicators: [
+    { key: 'magnitude', label: 'Effect size', desc: '5=large meaningful ES reported · 3=direction only · 1=absent' },
+    { key: 'ci', label: 'Confidence intervals', desc: '5=CI reported + meaningful · 3=p-values only · 1=not reported' },
+    { key: 'outcomes', label: 'Outcome validity', desc: '5=validated pre-registered instruments · 3=standard measures · 1=ad-hoc' },
+  ]},
+  { key: 'replication', label: 'Replication Support', icon: '🔁', color: '#7B5EA7', indicators: [
+    { key: 'direct', label: 'Direct replications', desc: '5=multiple independent replications · 3=one replication · 1=none' },
+    { key: 'conceptual', label: 'Conceptual replications', desc: '5=varied methods same construct · 3=some related work · 1=novel only' },
+    { key: 'metasupport', label: 'Meta-analytic support', desc: '5=reviews/meta-analyses agree · 3=some synthesis support · 1=no synthesis' },
+  ]},
+  { key: 'equityFit', label: 'Equity & Context Fit', icon: '🌍', color: '#D4921A', indicators: [
+    { key: 'population', label: 'Population focus', desc: '5=directly targets LMIC/low-income · 3=partially relevant · 1=not applicable' },
+    { key: 'adaptation', label: 'Contextual fit', desc: '5=culturally adapted + validated · 3=adaptable · 1=no adaptation pathway' },
+    { key: 'equityOutcomes', label: 'Equity outcomes', desc: '5=disparities measured + addressed · 3=mentioned · 1=not considered' },
+  ]},
+  { key: 'actionability', label: 'Actionability', icon: '⚡', color: '#E0522A', indicators: [
+    { key: 'implementation', label: 'Implementation evidence', desc: '5=real-world tested at scale · 3=pilot tested · 1=theoretical only' },
+    { key: 'costEffective', label: 'Cost-effectiveness', desc: '5=economic data reported · 3=cost mentioned · 1=absent' },
+    { key: 'scalability', label: 'Scale-up feasibility', desc: '5=clear pathway + barriers mapped · 3=some evidence · 1=no pathway' },
+  ]},
+];
+
+const EV_TIERS = [
+  { min: 23, max: 30, label: 'Tier 1 — Strong Evidence', bg: '#D6F5EC', color: '#065C3A', border: '#0B9E80' },
+  { min: 16, max: 22, label: 'Tier 2 — Moderate Evidence', bg: '#DFF0FF', color: '#0A3C6E', border: '#1A6BC4' },
+  { min: 9, max: 15, label: 'Tier 3 — Emerging Evidence', bg: '#FFF3DC', color: '#6B4A00', border: '#D4921A' },
+  { min: 1, max: 8, label: 'Tier 4 — Foundational', bg: '#FFE8DC', color: '#7A2A10', border: '#E0522A' },
+];
+let _evChart = null, _evScores = {}, _evWeights = {};
+
+function _evGetWeightId(dk, ik) { return `ew_${dk}_${ik}`; }
+function _evWeight(dk, ik) { return parseFloat(document.getElementById(_evGetWeightId(dk, ik))?.value ?? 1); }
+
+function recalcEvidence() {
+  if (!Object.keys(_evScores).length) return;
+  const dimScores = EV_DIMS.map(dim => {
+    const inds = dim.indicators;
+    const ws = inds.map(ind => _evWeight(dim.key, ind.key));
+    const totalW = ws.reduce((a, b) => a + b, 0) || 1;
+    const weighted = inds.reduce((s, ind, i) => s + ((_evScores[dim.key]?.[ind.key]?.score || 0) * ws[i]), 0);
+    return Math.round((weighted / totalW) * 10) / 10;
+  });
+  if (_evChart) { _evChart.data.datasets[0].data = dimScores; _evChart.update('none'); }
+  EV_DIMS.forEach((dim, i) => {
+    const el = document.getElementById(`evds_${dim.key}`); if (el) el.textContent = dimScores[i].toFixed(1);
+    const bar = document.getElementById(`evdb_${dim.key}`); if (bar) bar.style.width = (dimScores[i] / 5 * 100) + '%';
+  });
+  EV_DIMS.forEach(dim => dim.indicators.forEach(ind => {
+    const wid = _evGetWeightId(dim.key, ind.key);
+    const lbl = document.getElementById(wid + '_lbl');
+    const val = document.getElementById(wid)?.value;
+    if (lbl && val != null) lbl.textContent = parseFloat(val).toFixed(1) + '×';
+  }));
+  const total = dimScores.reduce((a, b) => a + b, 0);
+  const tier = EV_TIERS.find(t => total >= t.min && total <= t.max) || EV_TIERS[3];
+  const tierEl = document.getElementById('ax-ev-tier');
+  if (tierEl) { tierEl.textContent = tier.label + ` (${total.toFixed(1)}/30)`; tierEl.style.cssText = `font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:${tier.bg};color:${tier.color};border:1.5px solid ${tier.border};display:inline-block`; }
+}
+
+function resetEvWeights() {
+  EV_DIMS.forEach(dim => dim.indicators.forEach(ind => {
+    const el = document.getElementById(_evGetWeightId(dim.key, ind.key));
+    if (el) { el.value = 1; const lbl = document.getElementById(el.id + '_lbl'); if (lbl) lbl.textContent = '1.0×'; }
+  }));
+  recalcEvidence();
+}
+
+async function runEvidenceStrength() {
+  if (!axPaper) { document.getElementById('ax-out').innerHTML = '<p style="color:#D4921A;font-size:13px">Please fetch a paper first.</p>'; return; }
+  const panel = document.getElementById('ax-ev-panel');
+  const idle = document.getElementById('ax-ev-idle');
+  const loading = document.getElementById('ax-ev-loading');
+  const cards = document.getElementById('ax-ev-cards');
+  const verdict = document.getElementById('ax-ev-verdict');
+  const tierEl = document.getElementById('ax-ev-tier');
+  if (idle) idle.style.display = 'none';
+  panel.style.display = 'block';
+  loading.style.display = 'flex';
+  cards.innerHTML = '';
+  verdict.style.display = 'none';
+  tierEl.style.display = 'none';
+  if (_evChart) { _evChart.destroy(); _evChart = null; }
+  _evScores = {}; _evWeights = {};
+
+  const indLines = EV_DIMS.map(dim => dim.indicators.map(ind => `  "${dim.key}.${ind.key}": {"score":0,"rationale":"one sentence"}`).join(',\n')).join(',\n');
+  const guideLines = EV_DIMS.map(dim => dim.indicators.map(ind => `- ${dim.key}.${ind.key}: ${ind.desc}`).join('\n')).join('\n');
+  let raw = '';
+  try {
+    const r = await fetch(API_BASE + '/api/claude', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `You are an evidence analyst for the Gates Foundation. Score this paper on 18 indicators. Return ONLY valid JSON.\n\nPaper: "${axPaper.title}"\nAbstract: ${axPaper.abstract}\n\nReturn this exact JSON (scores are integers 1–5):\n{\n${indLines},\n  "verdict":"Two-sentence investment readiness verdict for a program officer.",\n  "investmentSignal":"Strong|Moderate|Cautious|Insufficient"\n}\n\nScoring guide:\n${guideLines}\n\nOutput only the JSON object.` }) });
+    const d = await r.json();
+    raw = (d.text || d.content?.find(b => b.type === 'text')?.text || '').trim();
+    const m = raw.match(/\{[\s\S]*\}/); if (!m) throw new Error('no JSON');
+    const flat = JSON.parse(m[0]);
+    EV_DIMS.forEach(dim => dim.indicators.forEach(ind => {
+      if (!_evScores[dim.key]) _evScores[dim.key] = {};
+      _evScores[dim.key][ind.key] = flat[`${dim.key}.${ind.key}`] || { score: 3, rationale: 'Not determined from abstract.' };
+    }));
+    _evScores._verdict = flat.verdict || '';
+    _evScores._signal = flat.investmentSignal || '';
+  } catch (e) { loading.style.display = 'none'; cards.innerHTML = '<p style="color:#E0522A;font-size:12px">Scoring failed — try again.</p>'; return; }
+
+  loading.style.display = 'none';
+  const dimScores = EV_DIMS.map(dim => {
+    const s = dim.indicators.reduce((a, ind) => a + (_evScores[dim.key]?.[ind.key]?.score || 0), 0) / dim.indicators.length;
+    return Math.round(s * 10) / 10;
+  });
+  const radarCtx = document.getElementById('ax-ev-radar').getContext('2d');
+  _evChart = new Chart(radarCtx, {
+    type: 'radar',
+    data: { labels: EV_DIMS.map(d => d.label), datasets: [{ label: 'Evidence', data: dimScores, backgroundColor: 'rgba(11,110,79,0.12)', borderColor: '#0B9E80', borderWidth: 2, pointBackgroundColor: EV_DIMS.map(d => d.color), pointRadius: 5, pointHoverRadius: 7 }] },
+    options: { responsive: false, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, font: { size: 9 }, color: '#aaa' }, pointLabels: { font: { size: 9, weight: 'bold' }, color: '#1A1A3A' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.09)' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.raw}/5` } } } },
+  });
+
+  cards.innerHTML = EV_DIMS.map(dim => {
+    const dimSc = (_evScores[dim.key] ? Object.values(_evScores[dim.key]).reduce((a, v) => a + (v.score || 0), 0) / dim.indicators.length : 0);
+    const pct = dimSc / 5 * 100;
+    return `<div style="background:var(--surf);border:1px solid var(--border);border-left:3px solid ${dim.color};border-radius:8px;overflow:hidden">
+      <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <span style="font-size:12px;font-weight:700;color:var(--navy)">${dim.icon} ${dim.label}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:80px;height:4px;border-radius:2px;background:var(--border)"><div id="evdb_${dim.key}" style="height:4px;border-radius:2px;background:${dim.color};width:${pct}%;transition:width .4s"></div></div>
+          <span id="evds_${dim.key}" style="font-size:12px;font-weight:800;color:${dim.color};min-width:28px;text-align:right">${dimSc.toFixed(1)}</span>
+          <span style="font-size:10px;color:var(--muted);font-weight:400">/5 ▾</span>
+        </div>
+      </div>
+      <div style="padding:0 12px 10px">
+        ${dim.indicators.map(ind => {
+          const sc = _evScores[dim.key]?.[ind.key]?.score || 0;
+          const rat = _evScores[dim.key]?.[ind.key]?.rationale || '';
+          const wid = _evGetWeightId(dim.key, ind.key);
+          const scColor = ['', '#E0522A', '#D4921A', '#5E52D4', '#1A6BC4', '#0B9E80'][Math.min(sc, 5)] || '#888';
+          return `<div style="border-top:1px solid var(--border);padding:7px 0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+              <span style="font-size:11px;font-weight:600;color:var(--navy)">${ind.label}</span>
+              <span style="font-size:12px;font-weight:800;color:${scColor}">${sc}<span style="font-size:9px;color:var(--muted);font-weight:400">/5</span></span>
+            </div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:5px">${rat}</div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:9px;color:var(--muted);white-space:nowrap">Weight</span>
+              <input type="range" id="${wid}" min="0" max="2" step="0.1" value="1" style="flex:1;accent-color:${dim.color};height:3px;cursor:pointer" oninput="recalcEvidence()">
+              <span id="${wid}_lbl" style="font-size:9px;font-weight:700;color:${dim.color};min-width:28px">1.0×</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  const sig = _evScores._signal || '';
+  const sigColors = { Strong: '#065C3A', Moderate: '#0A3C6E', Cautious: '#6B4A00', Insufficient: '#7A2A10' };
+  const sigBg = { Strong: '#D6F5EC', Moderate: '#DFF0FF', Cautious: '#FFF3DC', Insufficient: '#FFE8DC' };
+  if (_evScores._verdict) {
+    verdict.innerHTML = `<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;font-weight:700">Investment Readiness Verdict</div>
+    <div style="font-size:11px;line-height:1.65;margin-bottom:8px">${_evScores._verdict}</div>
+    ${sig ? `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:${sigBg[sig] || '#f5f5f5'}"><span style="font-size:10px;color:var(--muted)">Signal:</span><span style="font-size:11px;font-weight:800;color:${sigColors[sig] || '#333'}">${sig}</span></div>` : ''}`;
+    verdict.style.display = 'block';
+  }
+  const total = dimScores.reduce((a, b) => a + b, 0);
+  const tier = EV_TIERS.find(t => total >= t.min && total <= t.max) || EV_TIERS[3];
+  tierEl.textContent = tier.label + ` (${total.toFixed(1)}/30)`;
+  tierEl.style.cssText = `font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:${tier.bg};color:${tier.color};border:1.5px solid ${tier.border};display:inline-block`;
+}
+
+// ── Related Papers ──
+async function loadRelatedPapers() {
+  if (!axPaper) return;
+  const panel = document.getElementById('ax-related-panel');
+  const list = document.getElementById('ax-related-list');
+  panel.style.display = 'block';
+  list.innerHTML = '<div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:12px"><div class="spin" style="border-top-color:#1A6BC4"></div>Searching arXiv for related papers…</div>';
+  const titleWords = axPaper.title.split(/\s+/).filter(w => w.length > 4).slice(0, 5).join(' ');
+  const cat = axPaper.categories[0] || '';
+  const q = cat ? `ti:${titleWords} AND cat:${cat}` : `ti:${titleWords}`;
+  try {
+    const r = await fetch(API_BASE + `/api/arxiv/search?q=${encodeURIComponent(q)}&max=6`);
+    const d = await r.json();
+    const papers = (d.papers || []).filter(p => p.id !== axPaper.id);
+    if (!papers.length) { list.innerHTML = '<p style="color:var(--muted);font-size:12px;grid-column:1/-1">No related papers found.</p>'; return; }
+    list.innerHTML = papers.map(p => `
+      <div onclick="document.getElementById('ax-id').value='${p.id}';fetchArxiv()" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s" onmouseover="this.style.borderColor='#1A6BC4';this.style.boxShadow='0 2px 10px rgba(26,107,196,.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+        <div style="font-size:11px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:5px">${p.title.slice(0, 90)}${p.title.length > 90 ? '…' : ''}</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:5px">${p.authors.slice(0, 2).join(', ')}${p.authors.length > 2 ? ' et al.' : ''} · ${p.published.slice(0, 7)}</div>
+        <div style="font-size:10px;color:var(--text);line-height:1.5;margin-bottom:6px">${p.abstract.slice(0, 130)}…</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+          <div style="display:flex;gap:3px;flex-wrap:wrap">${p.categories.slice(0, 2).map(c => `<span style="font-size:9px;padding:1px 5px;border-radius:5px;background:var(--pl);color:#3A2FAA">${c}</span>`).join('')}</div>
+          <span style="font-size:9px;color:#1A6BC4;font-weight:700">Load ↗</span>
+        </div>
+      </div>`).join('');
+  } catch (e) { list.innerHTML = '<p style="color:#E0522A;font-size:12px;grid-column:1/-1">Could not load related papers.</p>'; }
+}
+
+// ── Concept Knowledge Graph ──
+const NODE_COLORS = { core: '#5E52D4', method: '#1A6BC4', finding: '#0B9E80', gap: '#D4921A', application: '#E0522A' };
+let axGraphData = null, axGraphAnim = null;
+let _gNodes = [], _gEdges = [], _gIdMap = {}, _gCanvas = null, _gCtx = null;
+let _gDragNode = null, _gDragOffX = 0, _gDragOffY = 0;
+let _gSelectedNode = null, _gHoverNode = null, _gEnergy = 1.0;
+
+async function buildConceptGraph() {
+  if (!axPaper) return;
+  const panel = document.getElementById('ax-graph-panel');
+  const status = document.getElementById('ax-graph-status');
+  const canvas = document.getElementById('ax-graph-canvas');
+  panel.style.display = 'block';
+  status.textContent = 'Asking Claude to extract concepts…';
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (axGraphAnim) { cancelAnimationFrame(axGraphAnim); axGraphAnim = null; }
+  let raw = '';
+  try {
+    const r = await fetch(API_BASE + '/api/claude', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Extract a concept knowledge graph from this research paper abstract. Return ONLY valid JSON.\n\nPaper: "${axPaper.title}"\nAbstract: ${axPaper.abstract}\n\nReturn this exact JSON:\n{"nodes":[{"id":"n1","label":"Short concept name","type":"core|method|finding|gap|application","learningRelevance":"One sentence explaining why this concept matters for learning."}],"edges":[{"from":"n1","to":"n2","label":"short relation"}]}\n\nRules: 8–14 nodes, 10–18 edges, node labels max 3 words, edge labels max 3 words, IDs like n1/n2/n3. Output only the JSON.` }) });
+    const d = await r.json();
+    raw = (d.text || d.content?.find(b => b.type === 'text')?.text || '').trim();
+    const m = raw.match(/\{[\s\S]*\}/); if (!m) throw new Error('No JSON');
+    axGraphData = JSON.parse(m[0]);
+  } catch (e) { status.textContent = 'Could not generate graph. Try again.'; return; }
+  status.textContent = '';
+  startForceGraph(canvas, ctx, axGraphData);
+}
+
+function resetGraphLayout() {
+  if (!axGraphData || !_gCanvas) return;
+  const W = _gCanvas.width, H = _gCanvas.height;
+  _gNodes.forEach(n => { n.x = W / 2 + (Math.random() - 0.5) * 20; n.y = H / 2 + (Math.random() - 0.5) * 20; n.vx = (Math.random() - 0.5) * 8; n.vy = (Math.random() - 0.5) * 8; });
+  _gSelectedNode = null; _gEnergy = 1.0;
+}
+
+function startForceGraph(canvas, ctx, data) {
+  _gCanvas = canvas; _gCtx = ctx;
+  const W = canvas.width, H = canvas.height;
+  _gNodes = data.nodes.map(n => ({ ...n, x: W / 2 + (Math.random() - 0.5) * 30, y: H / 2 + (Math.random() - 0.5) * 30, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10 }));
+  _gIdMap = Object.fromEntries(_gNodes.map(n => [n.id, n]));
+  _gEdges = data.edges.filter(e => _gIdMap[e.from] && _gIdMap[e.to]);
+  _gDragNode = null; _gSelectedNode = null; _gHoverNode = null; _gEnergy = 1.0;
+
+  const liveCanvas = document.getElementById('ax-graph-canvas') || canvas;
+  const newCanvas = liveCanvas.cloneNode(true);
+  if (liveCanvas.parentNode) liveCanvas.parentNode.replaceChild(newCanvas, liveCanvas);
+  _gCanvas = newCanvas;
+  const _cw = newCanvas.offsetWidth || 900, _ch = 520;
+  newCanvas.width = _cw; newCanvas.height = _ch; newCanvas.style.height = _ch + 'px';
+  _gCtx = newCanvas.getContext('2d');
+  _gNodes.forEach(n => { n.x = _cw / 2 + (Math.random() - 0.5) * 40; n.y = _ch / 2 + (Math.random() - 0.5) * 40; });
+
+  newCanvas.addEventListener('mousedown', _gOnMouseDown);
+  newCanvas.addEventListener('mousemove', _gOnMouseMove);
+  newCanvas.addEventListener('mouseup', _gOnMouseUp);
+  newCanvas.addEventListener('mouseleave', _gOnMouseLeave);
+  newCanvas.addEventListener('click', _gOnClick);
+  newCanvas.addEventListener('touchstart', _gOnTouchStart, { passive: true });
+  newCanvas.addEventListener('touchmove', _gOnTouchMove, { passive: false });
+  newCanvas.addEventListener('touchend', _gOnTouchEnd);
+
+  if (axGraphAnim) { cancelAnimationFrame(axGraphAnim); axGraphAnim = null; }
+  function loop() { const settled = _gTick(); _gDraw(); if (!settled) axGraphAnim = requestAnimationFrame(loop); else axGraphAnim = null; }
+  axGraphAnim = requestAnimationFrame(loop);
+}
+
+function _gResumeAnim() {
+  if (axGraphAnim) return;
+  function loop() { const settled = _gTick(); _gDraw(); if (!settled) axGraphAnim = requestAnimationFrame(loop); else axGraphAnim = null; }
+  axGraphAnim = requestAnimationFrame(loop);
+}
+
+function _gTick() {
+  const W = _gCanvas.width, H = _gCanvas.height;
+  const K = 100, REPEL = 7000, CORE_GRAVITY = 0.06, GRAVITY = 0.025, DAMP = 0.86;
+  _gEnergy = Math.max(0, _gEnergy - 0.006);
+  const ef = 1 + _gEnergy * 3;
+  _gNodes.forEach(n => { n.fx = 0; n.fy = 0; });
+  for (let a = 0; a < _gNodes.length; a++) for (let b = a + 1; b < _gNodes.length; b++) {
+    const dx = _gNodes[a].x - _gNodes[b].x, dy = _gNodes[a].y - _gNodes[b].y;
+    const d2 = dx * dx + dy * dy + 1, f = REPEL / d2;
+    _gNodes[a].fx += f * dx; _gNodes[a].fy += f * dy; _gNodes[b].fx -= f * dx; _gNodes[b].fy -= f * dy;
+  }
+  _gEdges.forEach(e => {
+    const s = _gIdMap[e.from], t = _gIdMap[e.to];
+    const dx = t.x - s.x, dy = t.y - s.y, d = Math.sqrt(dx * dx + dy * dy) || 1, f = (d - K) / d * 0.35;
+    s.fx += f * dx; s.fy += f * dy; t.fx -= f * dx; t.fy -= f * dy;
+  });
+  _gNodes.forEach(n => {
+    const g = n.type === 'core' ? CORE_GRAVITY : GRAVITY;
+    n.fx += (W / 2 - n.x) * g; n.fy += (H / 2 - n.y) * g;
+  });
+  let maxSpeed = 0;
+  _gNodes.forEach(n => {
+    if (n === _gDragNode) return;
+    n.vx = (n.vx + n.fx) * DAMP * ef; n.vy = (n.vy + n.fy) * DAMP * ef;
+    const speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+    if (speed > 16) { n.vx = n.vx / speed * 16; n.vy = n.vy / speed * 16; }
+    if (speed > maxSpeed) maxSpeed = speed;
+    const pad = n.type === 'core' ? 64 : 72;
+    n.x = Math.max(pad, Math.min(W - pad, n.x + n.vx));
+    n.y = Math.max(pad, Math.min(H - pad, n.y + n.vy));
+  });
+  return maxSpeed < 0.25 && _gEnergy <= 0 && !_gDragNode;
+}
+
+function _gDraw() {
+  const ctx = _gCtx, W = _gCanvas.width, H = _gCanvas.height;
+  ctx.fillStyle = '#F6F7FB'; ctx.fillRect(0, 0, W, H);
+  const selId = _gSelectedNode ? _gSelectedNode.id : null;
+  const neighborIds = new Set();
+  if (selId) { neighborIds.add(selId); _gEdges.forEach(e => { if (e.from === selId) neighborIds.add(e.to); if (e.to === selId) neighborIds.add(e.from); }); }
+  _gEdges.forEach(e => {
+    const s = _gIdMap[e.from], t = _gIdMap[e.to];
+    const isActive = !selId || (e.from === selId || e.to === selId);
+    const dx = t.x - s.x, dy = t.y - s.y, len = Math.sqrt(dx * dx + dy * dy) || 1;
+    const mx = (s.x + t.x) / 2, my = (s.y + t.y) / 2;
+    ctx.globalAlpha = isActive ? 1 : 0.18;
+    ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(t.x, t.y);
+    ctx.strokeStyle = isActive ? 'rgba(94,82,212,0.38)' : 'rgba(94,82,212,0.12)';
+    ctx.lineWidth = isActive ? 1.5 : 1; ctx.stroke();
+    const ax2 = t.x - dx / len * 13, ay2 = t.y - dy / len * 13;
+    const px = -dy / len * 4, py = dx / len * 4;
+    ctx.beginPath(); ctx.moveTo(ax2 + px, ay2 + py); ctx.lineTo(t.x - dx / len * 6, t.y - dy / len * 6); ctx.lineTo(ax2 - px, ay2 - py);
+    ctx.fillStyle = isActive ? 'rgba(94,82,212,0.5)' : 'rgba(94,82,212,0.07)'; ctx.fill();
+    if (e.label && isActive && selId) {
+      ctx.globalAlpha = 0.92; ctx.font = '10px system-ui,sans-serif';
+      const tw = ctx.measureText(e.label).width;
+      const ex = mx - tw / 2 - 5, ey = my - 9, ew = tw + 10, eh = 14;
+      ctx.fillStyle = 'rgba(238,236,255,0.95)'; ctx.beginPath(); ctx.roundRect(ex, ey, ew, eh, 4); ctx.fill();
+      ctx.fillStyle = '#3A2FAA'; ctx.fillText(e.label, mx - tw / 2, my + 1);
+    }
+    ctx.globalAlpha = 1;
+  });
+  _gNodes.forEach(n => {
+    const isCore = n.type === 'core', r = isCore ? 24 : 14;
+    const col = NODE_COLORS[n.type] || '#888';
+    const isActive = !selId || neighborIds.has(n.id);
+    ctx.globalAlpha = isActive ? 1 : 0.18;
+    if (isCore) { ctx.beginPath(); ctx.arc(n.x, n.y, r + 9, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(94,82,212,0.18)'; ctx.lineWidth = 8; ctx.stroke(); }
+    ctx.shadowColor = isCore ? 'rgba(94,82,212,0.3)' : 'rgba(0,0,0,0.12)'; ctx.shadowBlur = isCore ? 14 : 6;
+    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill(); ctx.shadowBlur = 0;
+    if (n === _gHoverNode || n === _gSelectedNode) {
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.globalAlpha = isActive ? 1 : 0.22;
+    ctx.font = isCore ? 'bold 12px system-ui,sans-serif' : 'bold 11px system-ui,sans-serif';
+    const lw = ctx.measureText(n.label).width + 12, lx = n.x - lw / 2, ly = n.y + r + 5, lh = 17;
+    ctx.fillStyle = 'rgba(255,255,255,0.96)'; ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, 5); ctx.fill();
+    ctx.fillStyle = col; ctx.fillText(n.label, n.x - lw / 2 + 6, ly + lh - 4);
+    ctx.globalAlpha = 1;
+  });
+}
+
+function _gHitNode(cx, cy) {
+  for (let i = _gNodes.length - 1; i >= 0; i--) {
+    const n = _gNodes[i], r = n.type === 'core' ? 28 : 18;
+    const dx = cx - n.x, dy = cy - n.y;
+    if (dx * dx + dy * dy <= r * r) return n;
+  }
+  return null;
+}
+
+function _gCanvasPos(canvas, e) {
+  const rect = canvas.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) * (canvas.width / rect.width), y: (e.clientY - rect.top) * (canvas.height / rect.height) };
+}
+
+function _gOnMouseDown(e) { const p = _gCanvasPos(_gCanvas, e), n = _gHitNode(p.x, p.y); if (n) { _gDragNode = n; _gDragOffX = p.x - n.x; _gDragOffY = p.y - n.y; _gCanvas.style.cursor = 'grabbing'; _gResumeAnim(); } }
+function _gOnMouseMove(e) {
+  const p = _gCanvasPos(_gCanvas, e);
+  if (_gDragNode) { _gDragNode.x = p.x - _gDragOffX; _gDragNode.y = p.y - _gDragOffY; _gDragNode.vx = 0; _gDragNode.vy = 0; _gCanvas.style.cursor = 'grabbing'; }
+  else {
+    const prev = _gHoverNode, n = _gHitNode(p.x, p.y);
+    _gHoverNode = n; _gCanvas.style.cursor = n ? 'pointer' : 'grab';
+    if (n !== prev) _gDraw();
+    const tt = document.getElementById('ax-graph-tooltip');
+    if (n && tt) {
+      const canvasRect = _gCanvas.getBoundingClientRect(), contRect = tt.parentElement.getBoundingClientRect();
+      const px = (n.x / _gCanvas.width) * canvasRect.width, py = (n.y / _gCanvas.height) * canvasRect.height;
+      const typeLabel = { core: 'Core idea', method: 'Method', finding: 'Finding', gap: 'Gap', application: 'Application' };
+      tt.textContent = '';
+      const ttName = document.createElement('div'); ttName.style.cssText = 'font-weight:700;font-size:12px;margin-bottom:3px;color:' + (NODE_COLORS[n.type] || '#aaa'); ttName.textContent = n.label;
+      const ttType = document.createElement('div'); ttType.style.cssText = 'font-size:10px;opacity:0.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px'; ttType.textContent = typeLabel[n.type] || n.type;
+      tt.appendChild(ttName); tt.appendChild(ttType);
+      if (n.learningRelevance) { const ttRel = document.createElement('div'); ttRel.style.cssText = 'font-size:11px;line-height:1.5'; ttRel.textContent = n.learningRelevance; tt.appendChild(ttRel); }
+      tt.style.display = 'block';
+      const offsetX = canvasRect.left - contRect.left, offsetY = canvasRect.top - contRect.top;
+      let tx = offsetX + px + 16, ty = offsetY + py - 10;
+      if (tx + 230 > contRect.width) tx = offsetX + px - 230;
+      if (ty < 0) ty = 0;
+      tt.style.left = tx + 'px'; tt.style.top = ty + 'px';
+    } else if (tt) { tt.style.display = 'none'; }
+  }
+}
+function _gOnMouseUp() { if (_gDragNode) { _gDragNode.vx = 0; _gDragNode.vy = 0; _gResumeAnim(); } _gDragNode = null; _gCanvas.style.cursor = 'grab'; }
+function _gOnMouseLeave() { _gDragNode = null; _gHoverNode = null; const tt = document.getElementById('ax-graph-tooltip'); if (tt) tt.style.display = 'none'; _gCanvas.style.cursor = 'grab'; _gDraw(); }
+function _gOnClick(e) {
+  const p = _gCanvasPos(_gCanvas, e), n = _gHitNode(p.x, p.y);
+  if (n && n === _gSelectedNode) { _gSelectedNode = null; _gDraw(); }
+  else if (n) {
+    _gSelectedNode = n; _gDraw();
+    const qa = document.getElementById('ax-q');
+    if (qa && axPaper) {
+      const typeHints = { core: 'central concept', method: 'method or approach', finding: 'key finding', gap: 'research gap', application: 'practical application' };
+      qa.value = `Explain "${n.label}" as a ${typeHints[n.type] || 'concept'} in this paper. How does it relate to the main findings, and what are the implications for low-income or LMIC contexts?`;
+      qa.focus();
+      const nudge = document.getElementById('ax-graph-nudge');
+      if (nudge) { nudge.textContent = `💬 "${n.label}" loaded — click Ask Claude to explore`; nudge.style.display = 'block'; setTimeout(() => { nudge.style.display = 'none'; }, 5000); }
+      qa.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  } else { _gSelectedNode = null; }
+}
+function _gOnTouchStart(e) { if (e.touches.length !== 1) return; const t = e.touches[0], p = _gCanvasPos(_gCanvas, { clientX: t.clientX, clientY: t.clientY }), n = _gHitNode(p.x, p.y); if (n) { _gDragNode = n; _gDragOffX = p.x - n.x; _gDragOffY = p.y - n.y; } }
+function _gOnTouchMove(e) { e.preventDefault(); if (!_gDragNode || e.touches.length !== 1) return; const t = e.touches[0], p = _gCanvasPos(_gCanvas, { clientX: t.clientX, clientY: t.clientY }); _gDragNode.x = p.x - _gDragOffX; _gDragNode.y = p.y - _gDragOffY; _gDragNode.vx = 0; _gDragNode.vy = 0; }
+function _gOnTouchEnd() { if (_gDragNode) { _gDragNode.vx = 0; _gDragNode.vy = 0; _gResumeAnim(); } _gDragNode = null; }
+</script>
+</body>
+</html>
