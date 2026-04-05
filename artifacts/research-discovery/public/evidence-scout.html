@@ -135,8 +135,8 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
-            <div style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;flex:1;min-width:180px">
-              <canvas id="ax-ev-radar" width="220" height="220" style="max-width:220px;max-height:220px"></canvas>
+            <div style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:10px;flex:1;min-width:260px;max-width:340px;position:relative">
+              <canvas id="ax-ev-radar" style="width:100%;height:auto;display:block"></canvas>
             </div>
             <div id="ax-ev-verdict" style="display:none;flex:1;min-width:160px;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:10px;font-size:11px;color:var(--text);line-height:1.6"></div>
           </div>
@@ -401,11 +401,18 @@ async function runEvidenceStrength() {
     const s = dim.indicators.reduce((a, ind) => a + (_evScores[dim.key]?.[ind.key]?.score || 0), 0) / dim.indicators.length;
     return Math.round(s * 10) / 10;
   });
+  const radarShortLabels = ['Study Rigor', 'Sample & Scale', 'Effect Precision', 'Replication', 'Equity & Fit', 'Actionability'];
   const radarCtx = document.getElementById('ax-ev-radar').getContext('2d');
   _evChart = new Chart(radarCtx, {
     type: 'radar',
-    data: { labels: EV_DIMS.map(d => d.label), datasets: [{ label: 'Evidence', data: dimScores, backgroundColor: 'rgba(11,110,79,0.12)', borderColor: '#0B9E80', borderWidth: 2, pointBackgroundColor: EV_DIMS.map(d => d.color), pointRadius: 5, pointHoverRadius: 7 }] },
-    options: { responsive: false, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, font: { size: 9 }, color: '#aaa' }, pointLabels: { font: { size: 9, weight: 'bold' }, color: '#1A1A3A' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.09)' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.raw}/5` } } } },
+    data: { labels: radarShortLabels, datasets: [{ label: 'Evidence', data: dimScores, backgroundColor: 'rgba(11,110,79,0.12)', borderColor: '#0B9E80', borderWidth: 2, pointBackgroundColor: EV_DIMS.map(d => d.color), pointRadius: 5, pointHoverRadius: 7 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      layout: { padding: { top: 14, bottom: 14, left: 14, right: 14 } },
+      scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, font: { size: 9 }, color: '#aaa', backdropColor: 'transparent' }, pointLabels: { font: { size: 10, weight: 'bold' }, color: '#1A1A3A', padding: 6 }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.09)' } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${EV_DIMS[c.dataIndex]?.label}: ${c.raw}/5` } } },
+    },
   });
 
   cards.innerHTML = EV_DIMS.map(dim => {
