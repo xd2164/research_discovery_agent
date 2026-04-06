@@ -1181,7 +1181,8 @@ async function fpaLoadHistory() {
 function fpaRestoreQuery(jsonStr) {
   const q = JSON.parse(jsonStr);
   const ta = document.getElementById('fpa-decision');
-  if (ta) { ta.value = q; ta.focus(); ta.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+  if (ta) { ta.value = q; ta.focus(); }
+  fpaStartResearch();
 }
 
 async function fpaDeleteHistory(id, btn) {
