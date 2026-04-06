@@ -167,7 +167,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px"><span>🕸️</span><span>Evidence Knowledge Graph</span></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;padding:6px 0" id="fpa-graph-legend"></div>
       </div>
-      <div id="fpa-graph-container" style="width:100%;height:340px;overflow:hidden;background:var(--surf)"></div>
+      <div id="fpa-graph-container" style="width:100%;height:400px;overflow:hidden;background:var(--surf)"></div>
       <div id="fpa-node-panel" style="display:none;padding:14px 20px;background:#F0F4FF;border-top:1px solid #C9D5FF">
         <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
           <div id="fpa-node-icon" style="font-size:22px;flex-shrink:0;margin-top:2px"></div>
@@ -533,7 +533,7 @@ Identify 2–3 key assumptions embedded in the question. For each:
 
   fpaSetStep(6);
   window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
-  setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis), 80);
+  setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
 
   // Auto-save to search history (fire and forget)
   fpaSaveHistory(
@@ -554,13 +554,18 @@ Identify 2–3 key assumptions embedded in the question. For each:
 }
 
 // ══ KNOWLEDGE GRAPH ══
-function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText) {
+function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText, roiData) {
   const graphPanel  = document.getElementById('fpa-graph-panel');
   const container   = document.getElementById('fpa-graph-container');
   const legendEl    = document.getElementById('fpa-graph-legend');
   if (!graphPanel || !container) return;
   container.innerHTML = '';
   if (typeof d3 === 'undefined') { graphPanel.style.display = 'none'; return; }
+  try { _buildKnowledgeGraphInner(papers, drData, cmLines, plan, synthText, roiData, graphPanel, container, legendEl); }
+  catch(err) { console.error('KG render error:', err); graphPanel.style.display='block'; container.innerHTML=`<div style="padding:16px;font-size:11px;color:var(--muted);font-style:italic">Graph render failed: ${err.message}</div>`; }
+}
+
+function _buildKnowledgeGraphInner(papers, drData, cmLines, plan, synthText, roiData, graphPanel, container, legendEl) {
 
   const nodes = [], links = [];
   const question = (window._fpaResearchCtx || {}).decision || '';
@@ -621,8 +626,61 @@ function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText) {
     links.push({ source:'topic', target:d.id, weight:1 });
   });
 
-  const colors = { topic:'#0A2240', strong:'#0B9E80', weak:'#D4921A', unknown:'#888', paper:'#5E52D4', assumption:'#F4A742', discovery:'#1A6BC4' };
-  const W = container.offsetWidth || 680, H = 360;
+  // ── ROI schema nodes ─────────────────────────────────────────────────────
+  const tierColors = { 1:'#0B7A4E', 2:'#1A5CB4', 3:'#C47800', 4:'#9E1515' };
+
+  if (roiData?.pillar) {
+    const isPillar2 = roiData.pillar === 'Pillar 2';
+    nodes.push({ id:'pillar', label: roiData.pillar, type:'pillar',
+      icon: isPillar2 ? '🎓' : '📚', r:22,
+      detail: `Evidence Tier ${roiData.evidence_tier||'?'} · Similarity ${((roiData.similarity_score||0)*100).toFixed(0)}% · ${roiData.effect_size?.evidence_type||''}`,
+      badge: `T${roiData.evidence_tier||'?'}` });
+    links.push({ source:'topic', target:'pillar', weight:4 });
+  }
+
+  if (roiData?.pipeline_steps?.length) {
+    const confColor = c => c==='High'?'#0B9E80':c==='Moderate'?'#D4921A':'#E0522A';
+    let prevId = nodes.find(n=>n.id==='pillar') ? 'pillar' : 'topic';
+    roiData.pipeline_steps.forEach((step, i) => {
+      const nid = `pipe-${i}`;
+      const rate = step.rate != null ? (step.rate < 1 ? (step.rate*100).toFixed(0)+'%' : step.rate) : '?';
+      const label = (step.step||`Step ${i+1}`).split('→').pop().trim();
+      nodes.push({ id:nid, label, type:'pipeline', icon:'⛓', r:12,
+        detail:`${step.step||'Pipeline step'}: ${rate} (${step.confidence||'?'} confidence)`,
+        badge: rate, _conf: confColor(step.confidence) });
+      links.push({ source:prevId, target:nid, weight:2.5 });
+      prevId = nid;
+    });
+  }
+
+  if (roiData?.proxy_studies?.length) {
+    roiData.proxy_studies.slice(0, 4).forEach((ps, i) => {
+      const nid = `proxy-${i}`;
+      const short = (ps.study||'Proxy').length > 30 ? (ps.study||'Proxy').slice(0,28)+'…' : (ps.study||'Proxy');
+      nodes.push({ id:nid, label:short, type:'proxy', icon:'📊', r:10 + (4 - Math.min(ps.tier||4,4)) * 2,
+        detail:`${ps.study}: ${ps.effect_size} ${ps.evidence_type||''} · Tier ${ps.tier} · ${((ps.similarity_score||0)*100).toFixed(0)}% match\n${ps.rationale||''}`,
+        badge:`T${ps.tier}`, _tier:ps.tier });
+      links.push({ source:'topic', target:nid, weight:1.2 });
+    });
+  }
+
+  if (roiData?.subgroup_modifiers?.length) {
+    roiData.subgroup_modifiers.slice(0, 3).forEach((sg, i) => {
+      const nid = `sg-${i}`;
+      const dir = (sg.direction||'').toLowerCase();
+      const arrow = dir==='larger'?'↑':dir==='smaller'?'↓':'~';
+      const label = (sg.subgroup||'Subgroup').split(' ').slice(0,3).join(' ');
+      nodes.push({ id:nid, label, type:'subgroup', icon:'👥', r:11,
+        detail:`${sg.subgroup}: ${arrow} ${sg.multiplier}× effect (${sg.direction||'?'}) · ${sg.source||''}`,
+        badge:`${arrow}${sg.multiplier}×` });
+      links.push({ source:'topic', target:nid, weight:1 });
+    });
+  }
+
+  const colors = { topic:'#0A2240', strong:'#0B9E80', weak:'#D4921A', unknown:'#888',
+    paper:'#5E52D4', assumption:'#F4A742', discovery:'#1A6BC4',
+    pillar:'#0D3D7C', pipeline:'#3B82C4', proxy:'#7C3AED', subgroup:'#0B6B5A' };
+  const W = container.offsetWidth || 680, H = 400;
 
   const tooltip = d3.select(container).append('div')
     .style('position','absolute').style('pointer-events','none').style('display','none')
@@ -696,13 +754,14 @@ function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText) {
   nodeGroup.filter(d => d.type==='topic').append('circle').attr('class','pulse-ring').attr('r', d => d.r).attr('fill','none').attr('stroke', colors.topic).attr('stroke-width',2).attr('opacity',0.4);
   svg.append('style').text(`@keyframes fpa-pulse{0%{r:${topicR}px;opacity:.55}70%{r:${topicR+18}px;opacity:0}100%{r:${topicR}px;opacity:0}}circle.pulse-ring{animation:fpa-pulse 2.4s ease-out infinite}`);
 
-  nodeGroup.append('circle').attr('class','main-circle').attr('r', d => d.r).attr('fill', d => colors[d.type] || '#888').attr('stroke','#fff').attr('stroke-width', d => d.type==='topic' ? 3.5 : d.type==='strong' ? 3 : 1.8);
+  const nodeColor = d => d.type==='proxy' ? (tierColors[d._tier]||'#7C3AED') : (colors[d.type] || '#888');
+  nodeGroup.append('circle').attr('class','main-circle').attr('r', d => d.r).attr('fill', nodeColor).attr('stroke','#fff').attr('stroke-width', d => d.type==='topic' ? 3.5 : d.type==='strong' ? 3 : 1.8);
   nodeGroup.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle').attr('font-size', d => d.r > 22 ? '15px' : d.r > 16 ? '13px' : '10px').style('pointer-events','none').text(d => d.icon || '');
 
   nodeGroup.filter(d => d.badge).append('g').attr('class','badge-group').each(function(d) {
     const g = d3.select(this);
     const bx = d.r * 0.7, by = -(d.r * 0.7), txt = String(d.badge), bw = Math.max(txt.length * 5.5 + 6, 14);
-    g.append('rect').attr('x', bx - bw/2).attr('y', by - 8).attr('width', bw).attr('height', 13).attr('rx', 6).attr('fill', d.type==='topic' ? '#5E52D4' : colors[d.type] || '#888').attr('stroke','#fff').attr('stroke-width', 1.5);
+    g.append('rect').attr('x', bx - bw/2).attr('y', by - 8).attr('width', bw).attr('height', 13).attr('rx', 6).attr('fill', d.type==='topic' ? '#5E52D4' : nodeColor(d)).attr('stroke','#fff').attr('stroke-width', 1.5);
     g.append('text').attr('x', bx).attr('y', by).attr('text-anchor','middle').attr('dominant-baseline','middle').attr('font-size','8px').attr('font-weight','700').attr('fill','#fff').style('pointer-events','none').text(txt);
   });
 
@@ -728,8 +787,8 @@ function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText) {
   graphPanel.style.display = 'block';
   if (legendEl) {
     const types = [...new Set(nodes.map(n=>n.type))].filter(t=>t!=='topic');
-    const labels = { strong:'Strong', weak:'Weak', unknown:'Unknown', paper:'Paper', assumption:'Assumption', discovery:'Insight' };
-    legendEl.innerHTML = types.map(t => `<div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:${colors[t]};flex-shrink:0"></div><span style="font-size:9px;color:var(--muted)">${labels[t]||t}</span></div>`).join('');
+    const labels = { strong:'Strong Evidence', weak:'Weak Evidence', unknown:'Unknown', paper:'Paper', assumption:'Assumption', discovery:'Insight', pillar:'Pillar', pipeline:'Pipeline Step', proxy:'Proxy Study', subgroup:'Equity Subgroup' };
+    legendEl.innerHTML = types.map(t => `<div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:${colors[t]||'#888'};flex-shrink:0"></div><span style="font-size:9px;color:var(--muted)">${labels[t]||t}</span></div>`).join('');
   }
 }
 

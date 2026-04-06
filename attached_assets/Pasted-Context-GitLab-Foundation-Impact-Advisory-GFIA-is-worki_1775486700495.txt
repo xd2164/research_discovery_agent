@@ -1,0 +1,72 @@
+Context
+GitLab Foundation Impact Advisory (GFIA) is working with the Data + AI team and Office of the President to pilot a new approach to estimating the social return on investment (ROI) of USP investments and strategies. In order to support this pilot effectively, GFIA is interested in partnering with the Data + AI team to support their development of low-friction workflows that allow USP users to generate social ROI estimates within a custom tool/platform environment.
+The knowledge graph (KG) platform that is currently being developed can be used to generate structured evidence findings that the ROI model translates into quantified social impact estimates. This document helps to specify what the ROI model needs the knowledge graph to produce as structured outputs so that the ROI model can run semi-autonomously.
+Knowledge Graph Components
+In order for the proposed knowledge graph to be useful during the ex-ante ROI modeling process, GFIA recommends the following design components:
+1.	Pillar Classification Routing Decisions
+a.	The entire causal chain, the relevant input parameters, and the earnings translation logic all depend on what pillar the investment falls under. The ROI model needs to map to the Ambition2045 pillars. For example, if the grant maps to a K-12 Body of Work (tutoring, curriculum, teacher quality, school systems), it should route as Pillar 1, and if it maps to a postsecondary BoW (courseware, corequisite reform, math pathways, gateway course redesign), it routes as Pillar 2.
+2.	Primary Effect Size with Evidence Quality Metadata
+a.	This is one of the most important parameters the knowledge graph needs to feed to the ROI model. For Pillar 1, the model needs an SD learning gain (e.g., 0.15 SD). For Pillar 2, it needs a pass-rate uplift in percentage points (e.g., 4.2pp) to determine the uplift in gateway course pass rates. This must be a structured numeric output, not a qualitative assessment.
+b.	Suggested fields
+i.	Point estimate: the best available effect size for this intervention or its closest proxy.
+ii.	Range: low and high bounds that reflect both study-level uncertainty and evidence relevance (see Section 3 below).
+iii.	Unit: SD (Pillar 1) or percentage points (Pillar 2).
+iv.	Evidence type: RCT, quasi-experimental, observational, meta-analysis.
+v.	Evidence strength score: the 0-1 normalized score from the KG's evidence layer.
+vi.	Source study count: number of underlying studies informing the estimate.
+vii.	The range values feed directly into the model's three-scenario structure (Low / Base / High) and parameterize the Monte Carlo simulation's inputs. The KG output format matters: if the KG returns an effect size of 0.06 with bounds [0.03, 0.10], those map directly into the Monte Carlo model columns.
+3.	Evidence Relevance Scoring and Band Calibration
+a.	When a grantee has no direct causal study on its own product or intervention, the ROI model must borrow from proxy studies. The question is how to account for the gap between the proxy and the actual intervention.
+b.	Use relevance to set band width
+i.	We can use the KG ‘similarity’ rating to help with the monte carlo confidence band. When we have direct evidence on the exact intervention, we know more, so the low-to-high range is narrow. When we borrow from a proxy, we know less, so the range widens. The central estimate stays anchored to the best available evidence because that remains the best guess. The bands then reflect how much confidence that guess deserves.
+ii.	A Tier 1 investment might show 85% probability of ROI above 1x. A Tier 3 investment with the same central estimate might show 55% because the tails are fatter. 
+c.	Open to designing evidence tiers - The KG should classify the best available evidence into one of four tiers based on how well the studied intervention matches the investment under review. This tier determines the band-width multiplier.
+i.	Tier 1 - Direct evidence on this exact intervention (e.g., Zearn Texas RCT), Use reported effect directly, Narrow bands
+ii.	Tier 2 - Close proxy: same mechanism, similar population (e.g., ALiS for LearnVia), we would anchor to proxy point estimate, moderate widening of the confidence interval.
+iii.	Tier 3 - Broad category: right general class but meaningful differences, use as plausibility range, not pinned center, Wider bands. Low case may be near zero.
+iv.	Tier 4 - Structural or theoretical proxy only (e.g., CUNY RCT for courseware), Treat as ceiling/reference, not as estimate, not used as model input.
+d.	Potential outputs: evidence_relevance_tier (1-4), similarity_score (0-1 float), the tag-level comparison that produced the score so the PO can see why a study was classified at a given tier.
+4.	Pipeline Conversion Rate Evidence
+a.	The ROI model uses a causal chain. 
+i.	For Pillar 1: SD gain → HS graduation lift → PS enrollment lift → gateway course completion → credential attainment. 
+ii.	For Pillar 2: pass-rate uplift → Year 2 retention → 6-year credential completion. Each step has a conversion rate drawn from the research literature.
+b.	The current model uses static defaults from its ‘Benchmarks’ tab (e.g., 1 SD math → 10pp HS graduation, 70% PS enrollment conversion, etc. The KG should surface the best available conversion rate evidence for each pipeline step, ideally specific to the investment's population and context.
+c.	For example, if a grant targets community college students in Texas, the KG should prefer conversion rates from Texas-specific or community college-specific studies over national averages. The KG's generalizability tagging is directly relevant here: conversion rates tagged as generalizable to the target population should be weighted higher.
+d.	Suggested output: an ordered list of the causal chain conversion steps, each with a rate, source citation, and confidence level. These could replace or refine the static defaults in the Benchmarks tab.
+5.	Baseline Outcome Rates for the Target Population
+a.	Baseline rates affect the ROI model's impact calculations: e.g., additional passers = enrolled students × exposure rate × uplift. For example, a 4pp uplift from a 55% baseline produces different absolute impact than the same uplift from a 70% baseline.
+b.	It would be great if the KG could surface these population-specific baselines
+i.	E.g., Baseline gateway math pass rate (for Pillar 2)
+ii.	Baseline first-year retention rate (disaggregated by race/ethnicity, institution type, Pell status)
+6.	Persistence and Durability Factors
+a.	The ROI model applies a persistence factor (50-70%) to account for the fade-out of intervention effects over time. The current anchors are Bailey et al. (2017) on test score fade-out and Chetty et al. (2011) on earnings persistence.
+b.	Suggested output: persistence_factor as a range (low, base, high), tagged by intervention category and supporting citation.
+7.	Credential Premium and Earnings Translation Parameters
+a.	The model translates educational outcomes into economic value through two channels: a direct channel (SD × PV lifetime earnings, from Chetty et al. 2014) and a credential channel (attainment increase × lifetime credential premium). The KG could surface these relevant earnings parameters, tagged by population.
+b.	Key parameters:
+i.	PV lifetime earnings per SD: default $40K from Chetty et al. 2014 (Pillar 1 only).
+ii.	Credential premiums by degree type: associate, bachelor's, certificate. BLS 2024 are currently some of the primary sources.
+c.	The KG should match the premium to the investment's target credential.
+8.	Proxy Study List
+a.	For example - for LearnVia, the relevant proxies are: ALiS adaptive courseware (+3.8pp, Tier 2), Next Generation Courseware Challenge (~0.09 SD, Tier 3), and the CUNY corequisite RCT (+19.2pp, Tier 4 ceiling). The KG could identify these based on intervention type, target population, and outcome domain, then rank them by relevance using the similarity scoring from Section 3.
+b.	Suggested output: an ordered list of proxy studies, each with: study name, effect size, evidence type, relevance tier, similarity score, and a brief rationale for inclusion. The ROI model could use the highest-tier study as the primary anchor and lower-tier studies as range calibrators.
+9.	Subgroup Effect Modifiers
+a.	The ROI model produces equity subgroup forecasts using uplift multipliers (e.g., 0.80x to 1.15x) applied to the central effect. The KG could provide structured evidence on differential effects by subgroup.
+b.	Relevant questions the KG should answer for each investment:
+i.	Does the literature show larger or smaller effects for Black, Latino, or Indigenous students?
+ii.	Do effects differ for Pell-eligible vs. non-Pell students?
+iii.	Example: Theobald et al. (2020) found that high-intensity active learning narrows racial achievement gaps by 33-45%, which would support an uplift multiplier above 1.0x for underrepresented students in active-learning interventions. The KG's ability to elevate population-specific evidence maps directly to this need.
+c.	Required output: subgroup_modifiers as a list of {subgroup, multiplier, direction (larger/smaller/unclear), source citation}.
+10.	Possible Schema
+Field	Type	Description
+pillar_type	string	"Pillar 1" or "Pillar 2" derived from Ambition '45 alignment
+primary_effect_size	object	{low, base, high, unit, evidence_type, evidence_score, source_count}
+evidence_relevance	object	{tier (1-4), similarity_score (0-1)}
+pipeline_conversions	array	[{step_name, rate, source, confidence}] for each causal chain link
+baseline_rates	object	{pass_rate, retention, completion, by_subgroup: {...}}
+persistence_factor	object	{low, base, high, intervention_category, source}
+credential_premium	object	{low, base, high, degree_type, source}
+proxy_studies	array	[{study, effect_size, evidence_type, tier, similarity_score, rationale}]
+subgroup_modifiers	array	[{subgroup, multiplier, direction, source}]
+market_readiness	float (0-1)	Optional. Ecosystem maturity signal for fidelity adjustment.
+
