@@ -14,7 +14,7 @@
   --text:#0D1B2A;--muted:#596577;--border:#D8E3F0;--surf:#F2F7FD;--white:#fff;
 }
 html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);font-size:14px}
-body{display:flex;flex-direction:column;overflow-y:auto}
+body{display:flex;flex-direction:column;overflow-y:auto;padding-top:40px}
 .topbar{background:#0A2240;border-bottom:2px solid #3DDBB0;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .topbar-dot{width:8px;height:8px;border-radius:50%;background:#3DDBB0}
 .topbar-brand{color:#fff;font-family:Georgia,serif;font-size:15px}
@@ -97,16 +97,24 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
   </div>
 
-  <button class="intro-launch" onclick="fpaLaunch()">Launch Demo →</button>
+  <div style="margin:28px 0 0;background:#FFF3CD22;border:1px solid #E6C84A55;border-radius:10px;padding:13px 18px;max-width:680px;width:100%;text-align:left">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:#E6A817;color:#fff;padding:2px 8px;border-radius:4px">⚠ Proof of Concept</span>
+      <span style="font-size:10px;font-weight:700;color:#E6C84A;letter-spacing:.5px;text-transform:uppercase">Pre-release · Internal Testing</span>
+    </div>
+    <p style="font-size:12px;color:#D4B96A;line-height:1.6;margin:0">This is <strong style="color:#F0D080">not a fully functional product</strong>. We are currently in pre-release testing with colleagues. Outputs are AI-generated and may be incomplete or inaccurate — they should not be used for formal investment decisions without independent verification.</p>
+  </div>
+
+  <button class="intro-launch" onclick="fpaLaunch()" style="margin-top:24px">Launch Demo →</button>
 
   <div class="intro-badge">
     <div class="intro-badge-dot"></div>
-    <span>POC · Internal use only · Not for distribution</span>
+    <span>Internal use only · Not for distribution</span>
   </div>
 </div>
 
 <!-- ── DISCLAIMER BANNER ── -->
-<div id="fpa-disclaimer" style="background:#FFF3CD;border-bottom:1px solid #E6C84A;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:system-ui,sans-serif;position:sticky;top:0;z-index:900">
+<div id="fpa-disclaimer" style="background:#FFF3CD;border-bottom:2px solid #E6C84A;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:system-ui,sans-serif;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px #00000018">
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span style="font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:#E6A817;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap">⚠ Proof of Concept</span>
     <span style="font-size:12px;color:#7A5800;line-height:1.4"><strong>FP&amp;A Research Agent</strong> — This is a pre-release demo, not a fully functional product. Currently in internal testing with colleagues. Results should not be used for formal investment decisions.</span>
