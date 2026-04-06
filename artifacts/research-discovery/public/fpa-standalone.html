@@ -190,14 +190,18 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
   <!-- OVERALL SYNTHESIS -->
   <div id="fpa-synthesis-panel" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-    <div style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--border);background:var(--surf)">
+    <div onclick="fpaTogglePanel('fpa-synthesis-body','fpa-synthesis-chevron')" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--border);background:var(--surf);cursor:pointer;user-select:none">
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-size:15px">&#129504;</span>
         <span style="font-size:13px;font-weight:800;color:var(--navy)">Overall Synthesis</span>
         <div id="fpa-mapping-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-left:6px"></div>
       </div>
-      <button onclick="fpaCopyBrief()" style="font-size:10px;padding:4px 12px;border-radius:6px;background:var(--white);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-weight:600">&#128203; Copy</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="event.stopPropagation();fpaCopyBrief()" style="font-size:10px;padding:4px 12px;border-radius:6px;background:var(--white);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-weight:600">&#128203; Copy</button>
+        <span id="fpa-synthesis-chevron" style="font-size:14px;color:var(--muted);transition:transform .25s">▲</span>
+      </div>
     </div>
+    <div id="fpa-synthesis-body">
     <div id="fpa-decision-readiness" style="display:none;padding:14px 20px;background:#F8F9FF;border-bottom:1px solid var(--border)"></div>
     <div id="fpa-roi-panel" style="display:none;border-bottom:1px solid var(--border)"></div>
     <div id="fpa-confidence-map" style="display:none;padding:12px 20px;border-bottom:1px solid var(--border)"></div>
@@ -226,13 +230,17 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       </div>
     </div>
     <div id="fpa-brief-synthesis" style="padding:20px 22px"></div>
+    </div><!-- /fpa-synthesis-body -->
   </div>
 
   <!-- SOURCE PAPERS -->
   <div id="fpa-brief-panel" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-    <div style="background:linear-gradient(135deg,#0A2240,#0D3260);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div onclick="fpaTogglePanel('fpa-brief-refs','fpa-brief-chevron')" style="background:linear-gradient(135deg,#0A2240,#0D3260);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;cursor:pointer;user-select:none">
       <span style="font-size:12px;font-weight:800;color:#fff">&#128218; Source Papers</span>
-      <span id="fpa-brief-paper-count" style="font-size:10px;color:rgba(255,255,255,.55)"></span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="fpa-brief-paper-count" style="font-size:10px;color:rgba(255,255,255,.55)"></span>
+        <span id="fpa-brief-chevron" style="font-size:13px;color:rgba(255,255,255,.6);transition:transform .25s">▲</span>
+      </div>
     </div>
     <div id="fpa-brief-refs" style="padding:14px 22px 18px"></div>
   </div>
@@ -1125,6 +1133,16 @@ function fpaScrollToStep(n) {
 }
 
 fpaSetStep(1);
+
+// ══ PANEL COLLAPSE ══
+function fpaTogglePanel(bodyId, chevronId) {
+  const body    = document.getElementById(bodyId);
+  const chevron = document.getElementById(chevronId);
+  if (!body) return;
+  const collapsed = body.style.display === 'none';
+  body.style.display = collapsed ? '' : 'none';
+  if (chevron) chevron.style.transform = collapsed ? '' : 'rotate(180deg)';
+}
 
 // ══ SEARCH HISTORY ══
 async function fpaSaveHistory(query, decision, summary, paperCount, sources, fullResults) {
