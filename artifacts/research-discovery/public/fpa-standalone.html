@@ -388,17 +388,13 @@ Identify 2–3 key assumptions embedded in the question. For each:
   }
 
   const cleanSynthesis = (() => {
-    const SKIP = ['DECISION_READINESS','CONFIDENCE MAP','CONFIDENCE_MAP','ROI_PARAMETERS','ROI PARAMETERS'];
-    // Split on section boundaries, keep only narrative sections
-    const parts = synthesis.split(/(?=\n## )/);
-    const kept = parts.filter(part => {
-      const header = (part.match(/^##\s*([^\n]+)/) || [])[1] || '';
-      return !SKIP.some(s => header.trim().toUpperCase() === s || header.trim().toUpperCase().startsWith(s));
-    });
-    let clean = kept.join('');
-    // Strip any stray inline JSON blocks (100+ chars between braces)
+    // Everything before "## Executive Summary" is structured machine data (JSON blocks,
+    // STRONG/WEAK/UNKNOWN lines, ROI parameters) — slice it off cleanly.
+    const execIdx = synthesis.search(/##\s*Executive Summary/i);
+    let clean = execIdx >= 0 ? synthesis.slice(execIdx) : synthesis;
+    // Safety net: strip any stray JSON objects that survived (80+ chars inside braces)
     clean = clean.replace(/\{[^{}]{80,}\}/g, '');
-    // Strip any STRONG/WEAK/UNKNOWN confidence map lines that bled through
+    // Strip any STRONG / WEAK / UNKNOWN confidence lines that bled through
     clean = clean.replace(/^(STRONG|WEAK|UNKNOWN):\s*.+$/gm, '');
     // Collapse excess blank lines
     clean = clean.replace(/\n{3,}/g, '\n\n');
