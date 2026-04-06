@@ -9,7 +9,7 @@ historyRouter.get("/history", async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
   try {
     const { rows } = await pool.query(
-      `SELECT id, query, decision, summary, paper_count, sources, created_at
+      `SELECT id, query, decision, summary, paper_count, sources, full_results, created_at
        FROM research_history
        ORDER BY created_at DESC
        LIMIT $1`,
@@ -22,22 +22,23 @@ historyRouter.get("/history", async (req, res) => {
   }
 });
 
-// POST /api/history  { query, decision, summary, paper_count, sources }
+// POST /api/history  { query, decision, summary, paper_count, sources, full_results }
 historyRouter.post("/history", async (req, res) => {
-  const { query, decision, summary, paper_count, sources } = req.body as {
+  const { query, decision, summary, paper_count, sources, full_results } = req.body as {
     query?: string;
     decision?: string;
     summary?: string;
     paper_count?: number;
     sources?: string[];
+    full_results?: object;
   };
   if (!query?.trim()) { res.status(400).json({ error: "query is required" }); return; }
   try {
     const { rows } = await pool.query(
-      `INSERT INTO research_history (query, decision, summary, paper_count, sources)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO research_history (query, decision, summary, paper_count, sources, full_results)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, created_at`,
-      [query.trim(), decision || null, summary || null, paper_count || 0, sources || []]
+      [query.trim(), decision || null, summary || null, paper_count || 0, sources || [], full_results ? JSON.stringify(full_results) : null]
     );
     res.json({ id: rows[0].id, created_at: rows[0].created_at });
   } catch (err) {

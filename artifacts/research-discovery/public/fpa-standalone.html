@@ -643,7 +643,8 @@ Identify 2–3 key assumptions embedded in the question. For each:
     drData?.evidence_strength || null,
     cleanSynthesis.slice(0, 300).replace(/#+\s*/g, '').trim() || null,
     allPapers.length,
-    [...new Set(allPapers.map(p => p.source).filter(Boolean))]
+    [...new Set(allPapers.map(p => p.source).filter(Boolean))],
+    { plan, allPapers, drData, cmLines, cleanSynthesis, roiData }
   );
 
   fpaSetStep(7);
@@ -1133,12 +1134,12 @@ function fpaScrollToStep(n) {
 fpaSetStep(1);
 
 // ══ SEARCH HISTORY ══
-async function fpaSaveHistory(query, decision, summary, paperCount, sources) {
+async function fpaSaveHistory(query, decision, summary, paperCount, sources, fullResults) {
   try {
     await fetch('/api/history', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, decision, summary, paper_count: paperCount, sources })
+      body: JSON.stringify({ query, decision, summary, paper_count: paperCount, sources, full_results: fullResults || null })
     });
     fpaLoadHistory();
   } catch(e) { console.warn('History save failed', e); }
@@ -1160,7 +1161,8 @@ async function fpaLoadHistory() {
       const date = new Date(row.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
       const sc = strengthColors[row.decision] || '#888';
       const srcs = (row.sources || []).slice(0,3).join(' · ') || '';
-      return `<div onclick="fpaRestoreQuery(${JSON.stringify(JSON.stringify(row.query))})"
+      const rowJson = JSON.stringify(JSON.stringify(row));
+      return `<div onclick="fpaRestoreQuery(${rowJson})"
         style="display:flex;align-items:flex-start;gap:10px;padding:9px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s"
         onmouseover="this.style.background='var(--surf)'" onmouseout="this.style.background=''">
         <span style="font-size:15px;flex-shrink:0;margin-top:1px">🔍</span>
@@ -1185,10 +1187,79 @@ async function fpaLoadHistory() {
 }
 
 function fpaRestoreQuery(jsonStr) {
-  const q = JSON.parse(jsonStr);
+  const row = JSON.parse(jsonStr);
   const ta = document.getElementById('fpa-decision');
-  if (ta) { ta.value = q; ta.focus(); }
-  fpaStartResearch();
+  if (ta) { ta.value = row.query || ''; ta.focus(); }
+
+  // If full results were stored, render them instantly without re-running
+  const fr = row.full_results;
+  if (fr && fr.cleanSynthesis) {
+    const { plan = {}, allPapers = [], drData = null, cmLines = {}, cleanSynthesis = '', roiData = null } = fr;
+    const decision = row.query;
+
+    // Show/hide panels
+    const progressPanel  = document.getElementById('fpa-progress-panel');
+    const briefPanel     = document.getElementById('fpa-brief-panel');
+    const synthesisPanel = document.getElementById('fpa-synthesis-panel');
+    if (progressPanel)  progressPanel.style.display  = 'none';
+    if (synthesisPanel) synthesisPanel.style.display = 'block';
+    if (briefPanel)     briefPanel.style.display     = 'block';
+
+    // Goal / outcome chips
+    const mappingRow = document.getElementById('fpa-mapping-row');
+    if (mappingRow) {
+      const ioHtml = (plan.ios||[]).map(id => { const io = FPA_IOs.find(x=>x.id===id); return io ? `<span style="background:#EEECFF;border:1px solid rgba(94,82,212,.3);border-radius:5px;padding:3px 9px;font-size:10px;color:#3A2FAA;font-weight:600">${io.label}</span>` : ''; }).join('');
+      const outHtml = (plan.outcomes||[]).map(o => `<span style="background:#DFF0FF;border:1px solid rgba(26,107,196,.25);border-radius:5px;padding:3px 9px;font-size:10px;color:#0E4A8A">${o}</span>`).join('');
+      mappingRow.innerHTML = ioHtml + outHtml;
+    }
+
+    // Decision readiness
+    const drEl = document.getElementById('fpa-decision-readiness');
+    if (drEl && drData) {
+      const sColors = { Low:'#E0522A', Medium:'#D4921A', High:'#0B9E80', 'Very High':'#1A6BC4' };
+      const cColors = { Low:'#E0522A', Moderate:'#D4921A', Strong:'#0B9E80' };
+      const sc = sColors[drData.evidence_strength] || '#888'; const cc = cColors[drData.confidence] || '#888';
+      drEl.style.display = 'block';
+      drEl.innerHTML = `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Decision Readiness</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px"><div style="display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px"><div style="width:10px;height:10px;border-radius:50%;background:${sc};flex-shrink:0"></div><div><div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Evidence Strength</div><div style="font-size:13px;font-weight:800;color:${sc}">${drData.evidence_strength||'—'}</div></div></div><div style="display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px"><div style="width:10px;height:10px;border-radius:50%;background:${cc};flex-shrink:0"></div><div><div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Confidence</div><div style="font-size:13px;font-weight:800;color:${cc}">${drData.confidence||'—'}</div></div></div><div style="flex:1;min-width:160px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px"><div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Key Risk</div><div style="font-size:12px;color:var(--navy);line-height:1.4">${drData.key_risk||'—'}</div></div></div><div style="background:#FFF8E1;border:1px solid #FFD54F;border-radius:7px;padding:8px 13px;font-size:12px;color:#5D4037"><strong>Recommendation:</strong> ${drData.investment_readiness||'—'}</div>`;
+    }
+
+    // ROI
+    const roiEl = document.getElementById('fpa-roi-panel');
+    if (roiEl && roiData) { try { roiEl.style.display='block'; roiEl.innerHTML=fpaRenderROI(roiData); } catch(e) {} }
+
+    // Confidence map
+    const cmEl = document.getElementById('fpa-confidence-map');
+    if (cmEl && Object.keys(cmLines).length) {
+      cmEl.style.display = 'block';
+      const rows2 = [{key:'STRONG',icon:'✅',label:'Strong',bg:'#D6F5EC',border:'#A0E8D0',text:'#065C3A'},{key:'WEAK',icon:'⚠️',label:'Weak',bg:'#FFF8E1',border:'#FFD54F',text:'#5D4037'},{key:'UNKNOWN',icon:'❓',label:'Unknown',bg:'#F5F5F5',border:'#E0E0E0',text:'#555'}].filter(r=>cmLines[r.key]);
+      cmEl.innerHTML = `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Confidence Map</div><div style="display:flex;flex-direction:column;gap:6px">${rows2.map(r=>`<div style="display:flex;align-items:flex-start;gap:8px;background:${r.bg};border:1px solid ${r.border};border-radius:7px;padding:7px 12px"><span style="font-size:14px;flex-shrink:0;line-height:1.3">${r.icon}</span><div><span style="font-size:10px;font-weight:700;color:${r.text};text-transform:uppercase;letter-spacing:.4px">${r.label}: </span><span style="font-size:12px;color:var(--navy)">${cmLines[r.key]}</span></div></div>`).join('')}</div>`;
+    }
+
+    // Synthesis
+    const briefSynth = document.getElementById('fpa-brief-synthesis');
+    if (briefSynth && cleanSynthesis) briefSynth.innerHTML = fpaRenderMD(cleanSynthesis);
+
+    // Citations
+    const refsEl = document.getElementById('fpa-brief-refs');
+    const sourceColors2 = { 'arXiv':{bg:'#E8F0FF',text:'#1A5CB4'},'Semantic Scholar':{bg:'#FFF3E0',text:'#C47800'},'ERIC':{bg:'#D6F5EC',text:'#0B7A4E'},'OpenAlex':{bg:'#F3E8FF',text:'#6B21A8'} };
+    const srcTally2 = {}; allPapers.forEach(p => { const s=p.source||'Other'; srcTally2[s]=(srcTally2[s]||0)+1; });
+    const tallyLabel2 = Object.entries(srcTally2).map(([k,v])=>`${v} ${k}`).join(' · ');
+    if (refsEl && allPapers.length) {
+      refsEl.innerHTML = `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">${allPapers.length} sources — ${tallyLabel2}</div><div style="display:flex;flex-direction:column;gap:4px">${allPapers.map((p,i)=>{const sc2=sourceColors2[p.source]||{bg:'#F5F5F5',text:'#555'};const badge=`<span style="flex-shrink:0;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${sc2.bg};color:${sc2.text}">${p.source||'?'}</span>`;const cites=p.citationCount>0?` · ${p.citationCount} cites`:'';return`<div style="display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.5"><span style="color:var(--muted);flex-shrink:0;font-size:9px;min-width:16px;text-align:right">[${i+1}]</span>${badge}<span><a href="${p.url||'#'}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a> — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span></div>`;}).join('')}</div>`;
+    }
+    const countEl = document.getElementById('fpa-brief-paper-count');
+    if (countEl) countEl.textContent = `${allPapers.length} papers · ${Object.keys(srcTally2).length} databases`;
+
+    // Knowledge graph + step state
+    window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+    window._fpaLastRoiJson = roiData ? JSON.stringify(roiData) : null;
+    fpaSetStep(8);
+    setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
+    synthesisPanel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  } else {
+    // No stored results — re-run the full pipeline
+    fpaStartResearch();
+  }
 }
 
 async function fpaDeleteHistory(id, btn) {
