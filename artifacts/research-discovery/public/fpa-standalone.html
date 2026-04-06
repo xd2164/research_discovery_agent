@@ -979,8 +979,14 @@ function fpaRenderROI(r) {
   const srcLink = src => {
     const s = String(src||'').trim();
     if (!s || s === '—') return '—';
-    const url = `https://scholar.google.com/scholar?q=${encodeURIComponent(s)}`;
-    return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Search Google Scholar">${esc(s)}</a>`;
+    // If it looks like a DOI, link directly to doi.org
+    const doiMatch = s.match(/10\.\d{4,}\/\S+/);
+    if (doiMatch) {
+      return `<a href="https://doi.org/${doiMatch[0]}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="View paper via DOI">${esc(s)}</a>`;
+    }
+    // Otherwise link to Semantic Scholar search — paper-focused, not a general web search
+    const url = `https://www.semanticscholar.org/search?q=${encodeURIComponent(s)}&sort=Relevance`;
+    return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Find on Semantic Scholar">${esc(s)}</a>`;
   };
   const pillarColor = r.pillar === 'Pillar 2' ? '#0B7A4E' : '#1A5CB4';
   const pillarBg    = r.pillar === 'Pillar 2' ? '#D6F5EC' : '#E8F0FF';
