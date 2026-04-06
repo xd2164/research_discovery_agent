@@ -621,10 +621,13 @@ Identify 2–3 key assumptions embedded in the question. For each:
         const sc = sourceColors[p.source] || { bg:'#F5F5F5', text:'#555' };
         const badge = `<span style="flex-shrink:0;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${sc.bg};color:${sc.text}">${p.source||'?'}</span>`;
         const cites = p.citationCount > 0 ? `<span style="color:var(--muted);font-size:9px"> · ${p.citationCount} cites</span>` : '';
+        const titleEl = p.url
+          ? `<a href="${p.url}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a>`
+          : `<span style="color:var(--navy);font-weight:600">${p.title}</span>`;
         return `<div id="fpa-ref-${i+1}" style="display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.5;border-radius:4px;transition:background 0.4s">
           <span style="color:var(--muted);flex-shrink:0;font-size:9px;min-width:16px;text-align:right">[${i+1}]</span>
           ${badge}
-          <span><a href="${p.url||'#'}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a> — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span>
+          <span>${titleEl} — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span>
         </div>`;
       }).join('') + `</div>`;
   } else if (refsEl) {
@@ -983,12 +986,11 @@ function fpaRenderROI(r) {
   const srcLink = src => {
     const s = String(src||'').trim();
     if (!s || s === '—') return '—';
-    // If it looks like a DOI, link directly to doi.org
-    const doiMatch = s.match(/10\.\d{4,}\/\S+/);
-    if (doiMatch) {
-      return `<a href="https://doi.org/${doiMatch[0]}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="View paper via DOI">${esc(s)}</a>`;
+    // If it's already a full URL, link to it directly
+    if (/^https?:\/\//i.test(s)) {
+      return `<a href="${s}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Open link">${esc(s)}</a>`;
     }
-    // Otherwise link to Semantic Scholar search — paper-focused, not a general web search
+    // For author/study name strings → Semantic Scholar search (never guess DOIs — Claude often hallucinates them)
     const url = `https://www.semanticscholar.org/search?q=${encodeURIComponent(s)}&sort=Relevance`;
     return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Find on Semantic Scholar">${esc(s)}</a>`;
   };
@@ -1296,7 +1298,7 @@ function fpaRestoreQuery(rowId) {
     const srcTally2 = {}; allPapers.forEach(p => { const s=p.source||'Other'; srcTally2[s]=(srcTally2[s]||0)+1; });
     const tallyLabel2 = Object.entries(srcTally2).map(([k,v])=>`${v} ${k}`).join(' · ');
     if (refsEl && allPapers.length) {
-      refsEl.innerHTML = `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">${allPapers.length} sources — ${tallyLabel2}</div><div style="display:flex;flex-direction:column;gap:4px">${allPapers.map((p,i)=>{const sc2=sourceColors2[p.source]||{bg:'#F5F5F5',text:'#555'};const badge=`<span style="flex-shrink:0;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${sc2.bg};color:${sc2.text}">${p.source||'?'}</span>`;const cites=p.citationCount>0?` · ${p.citationCount} cites`:'';return`<div id="fpa-ref-${i+1}" style="display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.5;border-radius:4px;transition:background 0.4s"><span style="color:var(--muted);flex-shrink:0;font-size:9px;min-width:16px;text-align:right">[${i+1}]</span>${badge}<span><a href="${p.url||'#'}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a> — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span></div>`;}).join('')}</div>`;
+      refsEl.innerHTML = `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">${allPapers.length} sources — ${tallyLabel2}</div><div style="display:flex;flex-direction:column;gap:4px">${allPapers.map((p,i)=>{const sc2=sourceColors2[p.source]||{bg:'#F5F5F5',text:'#555'};const badge=`<span style="flex-shrink:0;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${sc2.bg};color:${sc2.text}">${p.source||'?'}</span>`;const cites=p.citationCount>0?` · ${p.citationCount} cites`:'';const titleEl2=p.url?`<a href="${p.url}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a>`:`<span style="color:var(--navy);font-weight:600">${p.title}</span>`;return`<div id="fpa-ref-${i+1}" style="display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.5;border-radius:4px;transition:background 0.4s"><span style="color:var(--muted);flex-shrink:0;font-size:9px;min-width:16px;text-align:right">[${i+1}]</span>${badge}<span>${titleEl2} — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span></div>`;}).join('')}</div>`;
     }
     const countEl = document.getElementById('fpa-brief-paper-count');
     if (countEl) countEl.textContent = `${allPapers.length} papers · ${Object.keys(srcTally2).length} databases`;
