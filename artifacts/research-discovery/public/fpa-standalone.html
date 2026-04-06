@@ -380,9 +380,29 @@ Identify 2–3 key assumptions embedded in the question. For each:
   setP(92, 'Rendering…');
 
   // ── Parse structured machine-data sections (work with or without ## headers) ──
-  let drData = null;
-  const drJsonMatch = synthesis.match(/\{[^{}]*"evidence_strength"[^{}]*\}/);
-  if (drJsonMatch) { try { drData = JSON.parse(drJsonMatch[0]); } catch(e) {} }
+  // Brace-depth scanner: finds the complete JSON object containing a given key string.
+  function extractJsonByKey(text, key) {
+    const marker = `"${key}"`;
+    let pos = text.indexOf(marker);
+    while (pos >= 0) {
+      const start = text.lastIndexOf('{', pos);
+      if (start < 0) { pos = text.indexOf(marker, pos + 1); continue; }
+      let depth = 0;
+      for (let i = start; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') {
+          depth--;
+          if (depth === 0) {
+            try { return JSON.parse(text.slice(start, i + 1)); } catch(e) { break; }
+          }
+        }
+      }
+      pos = text.indexOf(marker, pos + 1);
+    }
+    return null;
+  }
+
+  let drData = extractJsonByKey(synthesis, 'evidence_strength');
 
   let cmLines = {};
   synthesis.split('\n').forEach(ln => {
@@ -390,16 +410,8 @@ Identify 2–3 key assumptions embedded in the question. For each:
     if (m) cmLines[m[1]] = m[2].trim();
   });
 
-  let roiData = null;
-  const roiJsonMatch = synthesis.match(/\{[^{}]*"pillar"[\s\S]*?"pipeline_steps"[\s\S]*?\}/);
-  if (roiJsonMatch) { try { roiData = JSON.parse(roiJsonMatch[0]); } catch(e) {} }
-  // Fallback: try any large JSON after ROI_PARAMETERS or second large JSON block
-  if (!roiData) {
-    const allJsonBlocks = [...synthesis.matchAll(/(\{[\s\S]{200,}?\})/g)];
-    for (const b of allJsonBlocks) {
-      try { const j = JSON.parse(b[1]); if (j.pillar) { roiData = j; break; } } catch(e) {}
-    }
-  }
+  let roiData = extractJsonByKey(synthesis, 'pipeline_steps');
+  if (!roiData) roiData = extractJsonByKey(synthesis, 'pillar');
 
   const cleanSynthesis = (() => {
     // Slice from "## Executive Summary" — everything before is machine data
