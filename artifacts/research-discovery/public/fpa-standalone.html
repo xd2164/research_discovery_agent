@@ -1036,11 +1036,12 @@ function fpaRenderROI(r) {
       const idx = parseInt(idxMatch[1], 10) - 1;
       const paper = (window._fpaAllPapers || [])[idx];
       if (paper) {
-        const label = `[${idx+1}] ${(paper.authors||[]).slice(0,2).join(', ')}${(paper.authors||[]).length>2?' et al.':''} (${paper.year||'n.d.'})`;
+        const label = `[${idx+1}]`;
+        const titleHint = [paper.title, (paper.authors||[]).slice(0,2).join(', '), paper.year].filter(Boolean).join(' · ');
         if (paper.url) {
-          return `<a href="${paper.url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="${esc(paper.title||'')}">${esc(label)}</a>`;
+          return `<a href="${paper.url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;font-weight:700" title="${esc(titleHint)}">${label}</a>`;
         }
-        return `<strong style="color:#0D1B3E">${esc(label)}</strong>`;
+        return `<strong style="color:#0D1B3E" title="${esc(titleHint)}">${label}</strong>`;
       }
     }
     // Try to resolve author+year strings to actual fetched paper (legacy / history entries)
