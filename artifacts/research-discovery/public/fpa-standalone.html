@@ -55,8 +55,9 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 .intro-card-icon{font-size:24px;margin-bottom:9px}
 .intro-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#3DDBB0;margin-bottom:5px}
 .intro-card-body{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5}
-.intro-launch{background:linear-gradient(135deg,#0B9E80,#1A6BC4);color:#fff;border:none;border-radius:30px;padding:14px 42px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 24px rgba(11,158,128,.35)}
-.intro-launch:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(11,158,128,.45)}
+.intro-launch{background:linear-gradient(135deg,#0B9E80,#1A6BC4);color:#fff;border:none;border-radius:30px;padding:18px 54px;font-size:18px;font-weight:800;cursor:pointer;letter-spacing:.4px;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 24px rgba(11,158,128,.5);animation:pulse-btn 2s ease-in-out infinite}
+.intro-launch:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(11,158,128,.6);animation:none}
+@keyframes pulse-btn{0%,100%{box-shadow:0 6px 24px rgba(11,158,128,.5),0 0 0 0 rgba(11,158,128,.4)}60%{box-shadow:0 8px 32px rgba(11,158,128,.6),0 0 0 14px rgba(11,158,128,0)}}
 .intro-badge{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.5px}
 .intro-badge-dot{width:6px;height:6px;border-radius:50%;background:#FFC97A}
 </style>
@@ -311,10 +312,12 @@ const API_BASE = window.API_BASE || '';
 // ── Intro overlay ────────────────────────────────────────────────
 function fpaLaunch() {
   const intro = document.getElementById('fpa-intro');
-  if (!intro) return;
+  if (!intro || intro.style.display === 'none') return;
   intro.classList.add('hide');
   setTimeout(() => { intro.style.display = 'none'; }, 520);
 }
+// Auto-launch when parent dashboard navigates to FP&A pane
+window.addEventListener('message', e => { if (e.data === 'fpa-launch') fpaLaunch(); });
 
 // ══ AMBITION 2045 GOALS ══
 const FPA_IOs = [
