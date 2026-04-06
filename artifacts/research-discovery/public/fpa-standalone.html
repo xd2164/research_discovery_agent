@@ -387,11 +387,23 @@ Identify 2–3 key assumptions embedded in the question. For each:
     if (jsonMatch) { try { roiData = JSON.parse(jsonMatch[1]); } catch(e) {} }
   }
 
-  const cleanSynthesis = synthesis
-    .replace(/##\s*DECISION_READINESS[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
-    .replace(/##\s*CONFIDENCE MAP[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
-    .replace(/##\s*ROI_PARAMETERS[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
-    .trim();
+  const cleanSynthesis = (() => {
+    const SKIP = ['DECISION_READINESS','CONFIDENCE MAP','CONFIDENCE_MAP','ROI_PARAMETERS','ROI PARAMETERS'];
+    // Split on section boundaries, keep only narrative sections
+    const parts = synthesis.split(/(?=\n## )/);
+    const kept = parts.filter(part => {
+      const header = (part.match(/^##\s*([^\n]+)/) || [])[1] || '';
+      return !SKIP.some(s => header.trim().toUpperCase() === s || header.trim().toUpperCase().startsWith(s));
+    });
+    let clean = kept.join('');
+    // Strip any stray inline JSON blocks (100+ chars between braces)
+    clean = clean.replace(/\{[^{}]{80,}\}/g, '');
+    // Strip any STRONG/WEAK/UNKNOWN confidence map lines that bled through
+    clean = clean.replace(/^(STRONG|WEAK|UNKNOWN):\s*.+$/gm, '');
+    // Collapse excess blank lines
+    clean = clean.replace(/\n{3,}/g, '\n\n');
+    return clean.trim();
+  })();
 
   // Render Goal / Outcome chips
   const mappingRow = document.getElementById('fpa-mapping-row');
@@ -754,7 +766,7 @@ Answer in 3–5 sentences. Be specific, cite evidence types where relevant, and 
     });
     const d = await r.json();
     const text = d.content?.find(b=>b.type==='text')?.text || 'No response.';
-    ans.innerHTML = `<div style="font-size:13px;line-height:1.7;color:var(--navy)">${text.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}</div>`;
+    ans.innerHTML = `<div style="font-size:13px;line-height:1.7;color:var(--navy)">${fpaRenderMD(text)}</div>`;
   } catch(e) {
     ans.innerHTML = '<span style="color:#E0522A;font-size:12px">Failed — check API connection.</span>';
   }
