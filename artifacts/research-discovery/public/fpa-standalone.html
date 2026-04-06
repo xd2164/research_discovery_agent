@@ -642,6 +642,7 @@ Identify 2–3 key assumptions embedded in the question. For each:
   // These always run regardless of any render error:
   fpaSetStep(6);
   window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+  window._fpaAllPapers = allPapers;
   setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
 
   // Auto-save to search history — always runs regardless of render errors
@@ -983,6 +984,25 @@ function fpaRenderROI(r) {
   const fmt = v => (v == null || v === undefined) ? '—' : v;
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const money = v => v == null ? '—' : '$' + Number(v).toLocaleString();
+  // Try to match "Author et al. YEAR" or "Author YEAR" against the actual fetched paper list
+  const matchPaperUrl = s => {
+    const papers = window._fpaAllPapers;
+    if (!papers || !papers.length) return null;
+    const yearM = s.match(/\b(19|20)\d{2}\b/);
+    if (!yearM) return null;
+    const year = yearM[0];
+    // Extract first author last name: first word before space/comma/. or "et al"
+    const nameM = s.match(/^([A-Za-z\-']+)/);
+    if (!nameM) return null;
+    const lastName = nameM[1].toLowerCase();
+    const hit = papers.find(p => {
+      if (String(p.year) !== year) return false;
+      const first = (p.authors || [])[0] || '';
+      // Authors may be "Firstname Lastname" or "Lastname, F." — check if last name appears
+      return first.toLowerCase().includes(lastName);
+    });
+    return (hit && hit.url) ? hit.url : null;
+  };
   const srcLink = src => {
     const s = String(src||'').trim();
     if (!s || s === '—') return '—';
@@ -990,7 +1010,12 @@ function fpaRenderROI(r) {
     if (/^https?:\/\//i.test(s)) {
       return `<a href="${s}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Open link">${esc(s)}</a>`;
     }
-    // For author/study name strings → Semantic Scholar search (never guess DOIs — Claude often hallucinates them)
+    // Try to resolve to the actual fetched paper first
+    const matchedUrl = matchPaperUrl(s);
+    if (matchedUrl) {
+      return `<a href="${matchedUrl}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="View source paper">${esc(s)}</a>`;
+    }
+    // Fall back to Semantic Scholar search — never guess DOIs (Claude often hallucinates them)
     const url = `https://www.semanticscholar.org/search?q=${encodeURIComponent(s)}&sort=Relevance`;
     return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Find on Semantic Scholar">${esc(s)}</a>`;
   };
@@ -1305,6 +1330,7 @@ function fpaRestoreQuery(rowId) {
 
     // Knowledge graph + step state
     window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+    window._fpaAllPapers = allPapers;
     window._fpaLastRoiJson = roiData ? JSON.stringify(roiData) : null;
     fpaSetStep(8);
     setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
