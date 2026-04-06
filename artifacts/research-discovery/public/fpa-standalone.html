@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FP&amp;A Research Agent · EDUAgent</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A2240;--teal:#0B9E80;--blue:#1A6BC4;--purple:#5E52D4;
+  --gold:#D4921A;--coral:#E0522A;
+  --tl:#D6F5EC;--bl:#DFF0FF;--nl:#E8EFF8;--pl:#EEECFF;--gl:#FEF3D7;
+  --text:#0D1B2A;--muted:#596577;--border:#D8E3F0;--surf:#F2F7FD;--white:#fff;
+}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);font-size:14px}
+body{display:flex;flex-direction:column;overflow-y:auto}
+.topbar{background:#0A2240;border-bottom:2px solid #3DDBB0;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.topbar-dot{width:8px;height:8px;border-radius:50%;background:#3DDBB0}
+.topbar-brand{color:#fff;font-family:Georgia,serif;font-size:15px}
+.topbar-tag{font-size:11px;color:rgba(255,255,255,.45);margin-left:4px}
+.topbar-poc{font-size:8px;padding:2px 7px;border-radius:5px;background:rgba(212,146,26,.3);color:#FFC97A;font-weight:700;letter-spacing:.3px;margin-left:6px}
+.t-hdr{padding:22px 28px 18px;background:var(--white);border-bottom:1px solid var(--border)}
+.t-ey{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.t-title{font-size:26px;color:var(--navy);font-family:Georgia,serif;margin-bottom:6px}
+.t-tag{font-size:14px;color:var(--muted);line-height:1.6;max-width:680px;margin-bottom:12px;font-style:italic}
+.t-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:14px}
+.main-content{padding:20px 28px;display:flex;flex-direction:column;gap:16px}
+select,textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--surf);resize:none;outline:none}
+select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(--white)}
+.fpa-step-circle{background:var(--surf);border:2px solid var(--border);color:#aaa}
+.fpa-step.active .fpa-step-circle{background:linear-gradient(135deg,#3A2FAA,#1A6BC4);border-color:#3A2FAA;box-shadow:0 0 0 4px rgba(94,82,212,.18);animation:fpa-step-pulse 1.8s ease-in-out infinite}
+.fpa-step.done .fpa-step-circle{background:#0B9E80;border-color:#0B9E80}
+.fpa-step.active .fpa-step-label{color:#3A2FAA;font-weight:800}
+.fpa-step.done .fpa-step-label{color:#0B9E80;font-weight:700}
+.fpa-step .fpa-step-label{color:var(--muted)}
+.fpa-connector.done{background:linear-gradient(90deg,#0B9E80,#1A6BC4)!important}
+.fpa-connector.active{background:linear-gradient(90deg,#1A6BC4,rgba(94,82,212,.3))!important}
+.fpa-step:hover .fpa-step-circle{transform:scale(1.1)}
+@keyframes fpa-step-pulse{0%,100%{box-shadow:0 0 0 4px rgba(94,82,212,.18)}50%{box-shadow:0 0 0 8px rgba(94,82,212,.08)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <div class="topbar-dot"></div>
+  <div class="topbar-brand">FP&amp;A Research Agent</div>
+  <div class="topbar-tag">EDUAgent · Ambition 2045</div>
+  <span class="topbar-poc">POC</span>
+</div>
+
+<!-- ── TOOL HEADER ── -->
+<div class="t-hdr">
+  <div class="t-ey" style="color:#5E52D4">AI in Education · Deep Research Agent</div>
+  <div class="t-title">EDUAgent Research Assistant</div>
+  <div class="t-tag">Enter a research question — the agent maps it to an Ambition 2045 Goal &times; Learning Outcome, searches academic literature across multiple databases in parallel, then returns a single synthesised evidence brief graded against the 6-rung ladder.</div>
+  <div class="t-chips">
+    <div class="chip" style="background:#EEECFF;color:#3A2FAA"><span style="width:6px;height:6px;border-radius:50%;background:#5E52D4;display:inline-block"></span>Ambition 2045 Goal mapping</div>
+    <div class="chip" style="background:#DFF0FF;color:#0E4A8A"><span style="width:6px;height:6px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>arXiv · ERIC · Semantic Scholar</div>
+    <div class="chip" style="background:#D6F5EC;color:#065C3A"><span style="width:6px;height:6px;border-radius:50%;background:#0B9E80;display:inline-block"></span>6-rung evidence ladder</div>
+    <div class="chip" style="background:#F3E8FF;color:#6B21A8"><span style="width:6px;height:6px;border-radius:50%;background:#6B21A8;display:inline-block"></span>ROI model parameters</div>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="main-content">
+
+  <!-- WORKFLOW STEPPER -->
+  <div id="fpa-stepper" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 18px;overflow-x:auto">
+    <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Research Workflow</div>
+    <div style="display:flex;align-items:center;min-width:560px">
+      <div class="fpa-step active" id="fpa-step-1" onclick="fpaScrollToStep(1)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">🔍</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Query</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-1" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-2" onclick="fpaScrollToStep(2)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">🗺️</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Map Goals</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-2" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-3" onclick="fpaScrollToStep(3)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">📡</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Search</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-3" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-4" onclick="fpaScrollToStep(4)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">📊</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Grade</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-4" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-5" onclick="fpaScrollToStep(5)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">🧠</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Synthesise</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-5" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-6" onclick="fpaScrollToStep(6)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">🕸️</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Graph</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-6" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-7" onclick="fpaScrollToStep(7)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">✅</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Readiness</span>
+      </div>
+      <div class="fpa-connector" id="fpa-con-7" style="flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:14px;transition:background .4s"></div>
+      <div class="fpa-step" id="fpa-step-8" onclick="fpaScrollToStep(8)" style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer">
+        <div class="fpa-step-circle" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;transition:all .3s">📋</div>
+        <span class="fpa-step-label" style="font-size:9px;font-weight:600;text-align:center;white-space:nowrap;transition:color .3s">Output</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION INPUT -->
+  <div style="background:var(--white);border:1px solid var(--border);border-left:4px solid #5E52D4;border-radius:10px;padding:18px 20px">
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">Research question</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Ask anything about AI in education. The agent silently plans the investigation, fires all literature searches in parallel, then returns one unified evidence brief.</div>
+    <textarea id="fpa-decision" rows="3" placeholder="e.g. What is the evidence for AI-assisted tutoring improving math outcomes for K-12 students?" style="width:100%;border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-size:13px;font-family:inherit;color:var(--text);background:var(--surf);resize:none;outline:none;min-height:76px;margin-bottom:10px"></textarea>
+    <button onclick="fpaStartResearch()" id="fpa-start-btn" style="width:100%;padding:13px 0;background:linear-gradient(135deg,#3A2FAA,#1A6BC4);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;letter-spacing:.3px;box-shadow:0 2px 10px rgba(58,47,170,.25)">
+      <span style="font-size:18px">&#129504;</span> Start Deep Research
+    </button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div id="fpa-progress-panel" style="display:none;background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="width:14px;height:14px;border:2px solid rgba(0,0,0,.1);border-top-color:#5E52D4;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></div>
+      <span id="fpa-progress-text" style="font-size:12px;color:var(--muted);font-style:italic">Initialising…</span>
+    </div>
+    <div style="height:5px;background:rgba(0,0,0,.07);border-radius:3px;overflow:hidden">
+      <div id="fpa-progress-bar" style="height:5px;background:linear-gradient(90deg,#5E52D4,#1A6BC4);border-radius:3px;width:0%;transition:width .5s ease"></div>
+    </div>
+  </div>
+
+  <!-- OVERALL SYNTHESIS -->
+  <div id="fpa-synthesis-panel" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <div style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--border);background:var(--surf)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:15px">&#129504;</span>
+        <span style="font-size:13px;font-weight:800;color:var(--navy)">Overall Synthesis</span>
+        <div id="fpa-mapping-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-left:6px"></div>
+      </div>
+      <button onclick="fpaCopyBrief()" style="font-size:10px;padding:4px 12px;border-radius:6px;background:var(--white);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-weight:600">&#128203; Copy</button>
+    </div>
+    <div id="fpa-decision-readiness" style="display:none;padding:14px 20px;background:#F8F9FF;border-bottom:1px solid var(--border)"></div>
+    <div id="fpa-roi-panel" style="display:none;border-bottom:1px solid var(--border)"></div>
+    <div id="fpa-confidence-map" style="display:none;padding:12px 20px;border-bottom:1px solid var(--border)"></div>
+    <div id="fpa-graph-panel" style="display:none;border-bottom:1px solid var(--border)">
+      <div style="padding:10px 20px 0;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px"><span>🕸️</span><span>Evidence Knowledge Graph</span></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;padding:6px 0" id="fpa-graph-legend"></div>
+      </div>
+      <div id="fpa-graph-container" style="width:100%;height:340px;overflow:hidden;background:var(--surf)"></div>
+      <div id="fpa-node-panel" style="display:none;padding:14px 20px;background:#F0F4FF;border-top:1px solid #C9D5FF">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
+          <div id="fpa-node-icon" style="font-size:22px;flex-shrink:0;margin-top:2px"></div>
+          <div style="flex:1">
+            <div id="fpa-node-label" style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:3px"></div>
+            <div id="fpa-node-detail" style="font-size:12px;color:var(--muted);line-height:1.5"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="fpa-node-q" type="text" placeholder="Ask a question about this node…"
+            style="flex:1;padding:8px 12px;border:1px solid #C9D5FF;border-radius:7px;font-size:12px;background:var(--white);color:var(--navy);outline:none;font-family:inherit"
+            onkeydown="if(event.key==='Enter')fpaAskNode()">
+          <button onclick="fpaAskNode()" id="fpa-node-ask-btn"
+            style="padding:8px 16px;background:#5E52D4;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Ask ›</button>
+        </div>
+        <div id="fpa-node-answer" style="display:none;margin-top:12px;padding:12px 14px;background:var(--white);border:1px solid #C9D5FF;border-radius:8px;font-size:13px;line-height:1.65;color:var(--navy)"></div>
+      </div>
+    </div>
+    <div id="fpa-brief-synthesis" style="padding:20px 22px"></div>
+  </div>
+
+  <!-- SOURCE PAPERS -->
+  <div id="fpa-brief-panel" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0A2240,#0D3260);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span style="font-size:12px;font-weight:800;color:#fff">&#128218; Source Papers</span>
+      <span id="fpa-brief-paper-count" style="font-size:10px;color:rgba(255,255,255,.55)"></span>
+    </div>
+    <div id="fpa-brief-refs" style="padding:14px 22px 18px"></div>
+  </div>
+
+</div><!-- end main-content -->
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  CONFIG — set this to your API server base URL
+//  e.g. 'https://your-api.example.com' or '' for same origin
+// ══════════════════════════════════════════════════════════════════
+const API_BASE = window.API_BASE || '';
+
+// ══ AMBITION 2045 GOALS ══
+const FPA_IOs = [
+  { id:'g1', label:'Full Stack Core Instruction & Tutoring',                              desc:'AI-powered tutors, adaptive learning, personalised instruction, intelligent curriculum delivery, K-12 and postsecondary', color:'#5E52D4' },
+  { id:'g2', label:'AI-Enabled Gateway Math Courses',                                     desc:'Courseware, corequisite reform, math pathways, gateway course redesign, developmental education', color:'#1A5CB4' },
+  { id:'g3', label:'AI-Enabled Personalized Advising',                                   desc:'Student guidance, career counselling, academic planning, early-alert systems, wraparound support', color:'#0B9E80' },
+  { id:'g4', label:'AI-Enabled Learning Mobility',                                        desc:'Credential recognition, pathway optimisation, transfer, stackable credentials, prior learning assessment', color:'#D4921A' },
+  { id:'g5', label:'AI & Data Infrastructure',                                            desc:'Data systems, interoperability, learning analytics platforms, AI tooling, institutional capacity', color:'#9E1515' },
+  { id:'g6', label:'Exemplars, Public Goods, State Policy, Funding, Comms & Engagement', desc:'Field-building, open resources, policy advocacy, communications, funder coordination, public goods', color:'#6B21A8' },
+  { id:'g7', label:'Breakthrough Innovations (Future Horizons)',                          desc:'Emerging AI technologies, experimental interventions, moonshot bets, frontier research partnerships', color:'#0B6E6E' },
+];
+const FPA_OUTCOMES = {
+  cognitive:  ['Mathematical numeracy','Reading & writing literacy','STEM proficiency','Critical thinking / metacognition','Language learning'],
+  behavioral: ['Engagement','Motivation / self-efficacy','Persistence / completion'],
+  systemic:   ['Access & equity','Cost-effectiveness','Teacher & instructor capacity','Institutional effectiveness']
+};
+const FPA_LADDER = ['Monitoring','Implementation','Comparative','Causal effectiveness','Generalisability','Personalised'];
+
+// ══ DEEP RESEARCH ══
+async function fpaStartResearch() {
+  const decision = (document.getElementById('fpa-decision')?.value || '').trim();
+  if (!decision) { alert('Please enter a research question first.'); return; }
+
+  const btn           = document.getElementById('fpa-start-btn');
+  const progressPanel = document.getElementById('fpa-progress-panel');
+  const progressBar   = document.getElementById('fpa-progress-bar');
+  const progressText  = document.getElementById('fpa-progress-text');
+  const briefPanel    = document.getElementById('fpa-brief-panel');
+  const synthesisPanel = document.getElementById('fpa-synthesis-panel');
+
+  if (synthesisPanel) synthesisPanel.style.display = 'none';
+  if (briefPanel) briefPanel.style.display = 'none';
+  if (progressPanel) progressPanel.style.display = 'block';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></div> Researching…'; }
+
+  const setP = (pct, msg) => {
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (progressText) progressText.textContent = msg;
+  };
+
+  fpaSetStep(2);
+  setP(8, 'Mapping question to Ambition 2045 goals…');
+  const ioList  = FPA_IOs.map(io => `- ${io.id}: ${io.label} — ${io.desc}`).join('\n');
+  const outList = Object.entries(FPA_OUTCOMES).map(([cat,items]) => `${cat}: ${items.join(', ')}`).join('\n');
+
+  let plan = { ios:[], outcomes:[], angles:[] };
+  try {
+    const pr = await fetch(API_BASE + '/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages:[{ role:'user', content:
+        `Education research analyst using the EDUAgent / Ambition 2045 taxonomy.\n\nQUESTION: "${decision}"\n\nAMBITION 2045 GOALS (select the best-fitting goal IDs from this list):\n${ioList}\n\nLEARNING OUTCOMES:\n${outList}\n\nReturn ONLY valid JSON — no commentary:\n{"ios":["g1"],"outcomes":["Mathematical numeracy"],"angles":[{"angle":"Short title","query":"specific academic search terms"},{"angle":"...","query":"..."},{"angle":"...","query":"..."},{"angle":"...","query":"..."}]}`
+      }]})
+    });
+    const pd = await pr.json();
+    const raw = (pd.content?.find(b=>b.type==='text')?.text||'').trim();
+    const m = raw.match(/\{[\s\S]*\}/);
+    if (m) plan = JSON.parse(m[0]);
+  } catch(e) {}
+
+  if (!plan.angles || plan.angles.length < 2) {
+    const w = decision.toLowerCase().replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(x=>x.length>3).slice(0,5).join(' ');
+    plan.angles = [
+      { angle:'Intervention evidence', query: w+' AI education intervention outcomes' },
+      { angle:'Learning outcomes',     query: w+' student learning achievement AI' },
+      { angle:'Systematic review',     query: w+' meta-analysis systematic review education' },
+      { angle:'Equity & access',       query: w+' equity access underserved students AI' }
+    ];
+  }
+  const queries = plan.angles.slice(0,5);
+
+  fpaSetStep(3);
+  setP(25, `Searching ${queries.length} literature angles across arXiv, Semantic Scholar, ERIC, and OpenAlex…`);
+  const results = await Promise.all(queries.map(q =>
+    fetch(API_BASE + `/api/papers/search?q=${encodeURIComponent(q.query)}&max=12`)
+      .then(r=>r.json()).then(d=>(d.papers||[]).map(p=>({...p,year:(p.published||'').slice(0,4)})))
+      .catch(()=>[])
+  ));
+
+  const seen = new Set();
+  const allPapers = [];
+  results.forEach(batch => batch.forEach(p => {
+    const yr = parseInt((p.published||'').slice(0,4),10);
+    if (!seen.has(p.id) && yr >= 2015) { seen.add(p.id); allPapers.push(p); }
+  }));
+  allPapers.sort((a,b) => (b.citationCount||0) - (a.citationCount||0));
+
+  fpaSetStep(4);
+  setP(55, `Synthesising ${allPapers.length} papers with EDUAgent evidence framework…`);
+  fpaSetStep(5);
+  const paperCtx = allPapers.slice(0,25).map((p,i) =>
+    `[${i+1}] ${p.title} (${p.year||'n.d.'}) — ${p.source||'?'} · ${p.url||''}\n    ${(p.authors||[]).slice(0,3).join(', ')}${(p.authors||[]).length>3?' et al.':''}${p.citationCount>0?' · '+p.citationCount+' citations':''}\n    ${(p.abstract||'').slice(0,380)}`
+  ).join('\n\n');
+
+  const ioRef     = FPA_IOs.map(io=>`- ${io.label}: ${io.desc}`).join('\n');
+  const ladderRef = FPA_LADDER.map((r,i)=>`Rung ${i+1} — ${r}`).join(' · ');
+
+  let synthesis = '';
+  try {
+    const sr = await fetch(API_BASE + '/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages:[{ role:'user', content:
+`You are a senior education research analyst at the Gates Foundation using the EDUAgent Decision-Readiness framework.
+
+RESEARCH QUESTION: "${decision}"
+
+AMBITION 2045 GOALS: ${FPA_IOs.map(io=>io.label).join(' | ')}
+EVIDENCE LADDER: ${ladderRef}
+
+RETRIEVED PAPERS — 2015 onwards (${allPapers.length} papers from arXiv, Semantic Scholar, ERIC, OpenAlex):
+${paperCtx || 'No papers retrieved from databases — synthesise from your knowledge of education research including WWC, Campbell Collaboration, MDRC, J-PAL, and meta-analytic literature.'}
+
+CITATION RULES:
+- Every factual claim must cite a source.
+- Retrieved papers: cite as [N] inline.
+- External sources (WWC, Cochrane, named meta-analyses): cite as (Author Year) and name the study.
+- Do NOT make uncited assertions.
+
+OUTPUT FORMAT — use EXACTLY these headers in this order:
+
+## DECISION_READINESS
+Output a single JSON object on one line (no line breaks inside):
+{"evidence_strength":"Medium","confidence":"Moderate","key_risk":"[one sentence]","investment_readiness":"[one sentence action recommendation]"}
+evidence_strength options: Low | Medium | High | Very High
+confidence options: Low | Moderate | Strong
+
+## CONFIDENCE MAP
+Three lines only, exactly:
+STRONG: [comma-separated list of what has strong evidence]
+WEAK: [comma-separated list of what has weak or emerging evidence]
+UNKNOWN: [comma-separated list of what is unknown or untested]
+
+## ROI_PARAMETERS
+Output a SINGLE JSON object on ONE line (no line breaks). This feeds directly into the Monte Carlo ROI model. Use best available evidence; estimate numerically where uncertain.
+Pillar 1 = K-12 body of work (SD learning gain). Pillar 2 = Postsecondary body of work (percentage-point pass-rate uplift).
+Evidence tiers: 1=direct study on exact intervention (narrow CI), 2=close proxy same mechanism (moderate CI), 3=broad category proxy (wide CI, low case near zero), 4=structural/theoretical only (ceiling reference, not model input).
+{"pillar":"Pillar 1","effect_size":{"low":0.08,"base":0.15,"high":0.25,"unit":"SD","evidence_type":"RCT","evidence_score":0.72,"source_count":5},"evidence_tier":2,"similarity_score":0.71,"persistence_factor":{"low":0.45,"base":0.55,"high":0.65,"source":"Bailey et al. 2017"},"pipeline_steps":[{"step":"SD gain → HS graduation","rate":0.10,"confidence":"Moderate"},{"step":"HS grad → PS enrollment","rate":0.70,"confidence":"High"},{"step":"PS enroll → gateway completion","rate":0.62,"confidence":"Moderate"},{"step":"Gateway → credential attainment","rate":0.55,"confidence":"Low"}],"subgroup_modifiers":[{"subgroup":"Black/Latino students","multiplier":1.1,"direction":"larger","source":"Theobald et al. 2020"}],"proxy_studies":[{"study":"Example RCT","effect_size":0.15,"evidence_type":"RCT","tier":1,"similarity_score":0.85,"rationale":"Direct intervention match"}],"baseline_rates":{"pass_rate":null,"retention":null,"note":"Population-specific baselines not surfaced in retrieved literature"},"credential_premium":{"low":32000,"base":40000,"high":48000,"degree_type":"bachelor","source":"Chetty et al. 2014"}}
+
+## Executive Summary
+2–3 sentences with at least 2 inline citations. Overall verdict on evidence quality and direction.
+
+## Ambition 2045 Goal & Outcomes
+Which Ambition 2045 Goal(s) are implicated and which learning outcomes they target. Cite papers most directly mapping to each.
+
+## Synthesised Findings
+6–8 bullets. Each bullet must cite at least one source. Build an argument — do not just list papers. Include effect sizes, populations, study designs where known.
+
+## Assumption Analysis
+Identify 2–3 key assumptions embedded in the question. For each:
+**Assumption: "[stated assumption]"**
+- Supported by: [citations]
+- Contested by: [citations or note if no contradictory evidence]
+- Missing evidence: [what is needed to validate this assumption]
+
+## Discovery Insights
+**Cluster:** [a dominant pattern across the literature — e.g. many pilots, few rigorous evaluations]
+**Gap:** [most significant evidence gap — e.g. strong outcomes data, weak cost evidence]
+**Signal:** [an emerging or underexplored trend worth watching]
+
+## Evidence Gaps
+4 bullets identifying missing evidence — underserved populations, weak Goal × Outcome cells, methodological limits.
+
+## Programme Officer Recommendations
+3 concrete, actionable recommendations grounded in the evidence.`
+      }]})
+    });
+    const sd = await sr.json();
+    synthesis = sd.content?.find(b=>b.type==='text')?.text || '';
+  } catch(e) {
+    synthesis = '## Executive Summary\nSynthesis unavailable — check API connection and retry.';
+  }
+
+  setP(92, 'Rendering…');
+
+  const drMatch = synthesis.match(/##\s*DECISION_READINESS\s*\n\s*(\{[^\n]+\})/);
+  let drData = null;
+  if (drMatch) { try { drData = JSON.parse(drMatch[1]); } catch(e) {} }
+
+  const cmMatch = synthesis.match(/##\s*CONFIDENCE MAP\s*\n([\s\S]*?)(?=\n##|\Z)/);
+  let cmLines = {};
+  if (cmMatch) {
+    cmMatch[1].split('\n').forEach(ln => {
+      const m = ln.match(/^(STRONG|WEAK|UNKNOWN):\s*(.+)/);
+      if (m) cmLines[m[1]] = m[2];
+    });
+  }
+
+  let roiData = null;
+  if (synthesis.search(/##\s*ROI_PARAMETERS/) > -1) {
+    const section = synthesis.slice(synthesis.search(/##\s*ROI_PARAMETERS/));
+    const nextSection = section.slice(1).search(/\n##/);
+    const chunk = nextSection > -1 ? section.slice(0, nextSection + 1) : section;
+    const jsonMatch = chunk.match(/(\{[\s\S]+\})/);
+    if (jsonMatch) { try { roiData = JSON.parse(jsonMatch[1]); } catch(e) {} }
+  }
+
+  const cleanSynthesis = synthesis
+    .replace(/##\s*DECISION_READINESS[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
+    .replace(/##\s*CONFIDENCE MAP[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
+    .replace(/##\s*ROI_PARAMETERS[\s\S]*?(?=\n## |\n#[^#]|$)/m, '')
+    .trim();
+
+  // Render Goal / Outcome chips
+  const mappingRow = document.getElementById('fpa-mapping-row');
+  if (mappingRow) {
+    const ioHtml = (plan.ios||[]).map(id => {
+      const io = FPA_IOs.find(x=>x.id===id);
+      return io ? `<span style="background:#EEECFF;border:1px solid rgba(94,82,212,.3);border-radius:5px;padding:3px 9px;font-size:10px;color:#3A2FAA;font-weight:600">${io.label}</span>` : '';
+    }).join('');
+    const outHtml = (plan.outcomes||[]).map(o =>
+      `<span style="background:#DFF0FF;border:1px solid rgba(26,107,196,.25);border-radius:5px;padding:3px 9px;font-size:10px;color:#0E4A8A">${o}</span>`
+    ).join('');
+    mappingRow.innerHTML = ioHtml + outHtml;
+  }
+
+  // Render Decision Readiness
+  const drEl = document.getElementById('fpa-decision-readiness');
+  if (drEl && drData) {
+    const sColors = { Low:'#E0522A', Medium:'#D4921A', High:'#0B9E80', 'Very High':'#1A6BC4' };
+    const cColors = { Low:'#E0522A', Moderate:'#D4921A', Strong:'#0B9E80' };
+    const sc = sColors[drData.evidence_strength] || '#888';
+    const cc = cColors[drData.confidence] || '#888';
+    drEl.style.display = 'block';
+    drEl.innerHTML = `
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Decision Readiness</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px">
+          <div style="width:10px;height:10px;border-radius:50%;background:${sc};flex-shrink:0"></div>
+          <div><div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Evidence Strength</div><div style="font-size:13px;font-weight:800;color:${sc}">${drData.evidence_strength||'—'}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px">
+          <div style="width:10px;height:10px;border-radius:50%;background:${cc};flex-shrink:0"></div>
+          <div><div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Confidence</div><div style="font-size:13px;font-weight:800;color:${cc}">${drData.confidence||'—'}</div></div>
+        </div>
+        <div style="flex:1;min-width:160px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 13px">
+          <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Key Risk</div>
+          <div style="font-size:12px;color:var(--navy);line-height:1.4">${drData.key_risk||'—'}</div>
+        </div>
+      </div>
+      <div style="background:#FFF8E1;border:1px solid #FFD54F;border-radius:7px;padding:8px 13px;font-size:12px;color:#5D4037">
+        <strong>Recommendation:</strong> ${drData.investment_readiness||'—'}
+      </div>`;
+  }
+
+  // Render ROI Parameters
+  const roiEl = document.getElementById('fpa-roi-panel');
+  if (roiEl && roiData) { roiEl.style.display = 'block'; roiEl.innerHTML = fpaRenderROI(roiData); }
+
+  // Render Confidence Map
+  const cmEl = document.getElementById('fpa-confidence-map');
+  if (cmEl && Object.keys(cmLines).length) {
+    cmEl.style.display = 'block';
+    const rows = [
+      { key:'STRONG',  icon:'✅', label:'Strong',  bg:'#D6F5EC', border:'#A0E8D0', text:'#065C3A' },
+      { key:'WEAK',    icon:'⚠️', label:'Weak',    bg:'#FFF8E1', border:'#FFD54F', text:'#5D4037' },
+      { key:'UNKNOWN', icon:'❓', label:'Unknown', bg:'#F5F5F5', border:'#E0E0E0', text:'#555' }
+    ].filter(r => cmLines[r.key]);
+    cmEl.innerHTML = `
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Confidence Map</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${rows.map(r => `<div style="display:flex;align-items:flex-start;gap:8px;background:${r.bg};border:1px solid ${r.border};border-radius:7px;padding:7px 12px">
+          <span style="font-size:14px;flex-shrink:0;line-height:1.3">${r.icon}</span>
+          <div><span style="font-size:10px;font-weight:700;color:${r.text};text-transform:uppercase;letter-spacing:.4px">${r.label}: </span><span style="font-size:12px;color:var(--navy)">${cmLines[r.key]}</span></div>
+        </div>`).join('')}
+      </div>`;
+  }
+
+  // Render synthesis text
+  const briefSynth = document.getElementById('fpa-brief-synthesis');
+  if (briefSynth && cleanSynthesis) briefSynth.innerHTML = fpaRenderMD(cleanSynthesis);
+
+  // Render citations
+  const refsEl = document.getElementById('fpa-brief-refs');
+  const sourceColors = {
+    'arXiv':            { bg:'#E8F0FF', text:'#1A5CB4' },
+    'Semantic Scholar': { bg:'#FFF3E0', text:'#C47800' },
+    'ERIC':             { bg:'#D6F5EC', text:'#0B7A4E' },
+    'OpenAlex':         { bg:'#F3E8FF', text:'#6B21A8' },
+  };
+  const srcTally = {};
+  allPapers.forEach(p => { const s = p.source||'Other'; srcTally[s] = (srcTally[s]||0)+1; });
+  const tallyLabel = Object.entries(srcTally).map(([k,v])=>`${v} ${k}`).join(' · ');
+  if (refsEl && allPapers.length) {
+    refsEl.innerHTML =
+      `<div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">${allPapers.length} sources — ${tallyLabel}</div>` +
+      `<div style="display:flex;flex-direction:column;gap:4px">` +
+      allPapers.map((p,i) => {
+        const sc = sourceColors[p.source] || { bg:'#F5F5F5', text:'#555' };
+        const badge = `<span style="flex-shrink:0;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${sc.bg};color:${sc.text}">${p.source||'?'}</span>`;
+        const cites = p.citationCount > 0 ? `<span style="color:var(--muted);font-size:9px"> · ${p.citationCount} cites</span>` : '';
+        return `<div style="display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.5">
+          <span style="color:var(--muted);flex-shrink:0;font-size:9px;min-width:16px;text-align:right">[${i+1}]</span>
+          ${badge}
+          <span><a href="${p.url||'#'}" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:none">${p.title}</a> — ${(p.authors||[]).slice(0,2).join(', ')}${(p.authors||[]).length>2?' et al.':''} <span style="color:var(--muted)">${p.year||''}</span>${cites}</span>
+        </div>`;
+      }).join('') + `</div>`;
+  } else if (refsEl) {
+    refsEl.innerHTML = `<div style="font-size:11px;color:var(--muted);font-style:italic">No papers retrieved — synthesis drawn from Claude knowledge base.</div>`;
+  }
+
+  const countEl = document.getElementById('fpa-brief-paper-count');
+  if (countEl) countEl.textContent = `${allPapers.length} papers · ${queries.length} angles · ${Object.keys(srcTally).length} databases`;
+
+  fpaSetStep(6);
+  window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+  setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis), 80);
+
+  fpaSetStep(7);
+  setP(100, 'Complete');
+  setTimeout(() => { if (progressPanel) progressPanel.style.display = 'none'; }, 500);
+  if (synthesisPanel) { synthesisPanel.style.display = 'block'; synthesisPanel.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+  if (briefPanel) briefPanel.style.display = 'block';
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span style="font-size:18px">&#129504;</span> Start Deep Research'; }
+  setTimeout(() => fpaSetStep(8), 600);
+}
+
+// ══ KNOWLEDGE GRAPH ══
+function buildKnowledgeGraph(papers, drData, cmLines, plan, synthText) {
+  const graphPanel  = document.getElementById('fpa-graph-panel');
+  const container   = document.getElementById('fpa-graph-container');
+  const legendEl    = document.getElementById('fpa-graph-legend');
+  if (!graphPanel || !container) return;
+  container.innerHTML = '';
+  if (typeof d3 === 'undefined') { graphPanel.style.display = 'none'; return; }
+
+  const nodes = [], links = [];
+  const question = (window._fpaResearchCtx || {}).decision || '';
+  const topicLabel = question.length > 38 ? question.slice(0,36) + '…' : question;
+  const strengthScale = { Low:20, Medium:26, High:31, 'Very High':36 };
+  const topicR = strengthScale[drData?.evidence_strength] || 26;
+
+  nodes.push({ id:'topic', label: topicLabel, type:'topic', r: topicR, icon:'🔬', detail: question, badge: drData?.evidence_strength || '' });
+
+  const confMap = [
+    { key:'STRONG',  id:'ev-strong',  label:'Strong Evidence', type:'strong',  icon:'✅', r:28, lw:5 },
+    { key:'WEAK',    id:'ev-weak',    label:'Weak Evidence',   type:'weak',    icon:'⚠️', r:20, lw:3 },
+    { key:'UNKNOWN', id:'ev-unknown', label:'Unknown',         type:'unknown', icon:'❓', r:14, lw:1.5 },
+  ];
+  confMap.forEach(c => {
+    if (!cmLines[c.key]) return;
+    const itemCount = (cmLines[c.key].match(/,/g)||[]).length + 1;
+    nodes.push({ id:c.id, label:c.label, type:c.type, icon:c.icon, r:c.r, detail: cmLines[c.key], badge: itemCount });
+    links.push({ source:'topic', target:c.id, weight:c.lw });
+  });
+
+  const citeCounts = {};
+  (synthText.match(/\[(\d+)\]/g) || []).forEach(m => {
+    const n = parseInt(m.replace(/\D/g,'')) - 1;
+    citeCounts[n] = (citeCounts[n] || 0) + 1;
+  });
+  const strongId = cmLines.STRONG ? 'ev-strong' : 'topic';
+  const weakId   = cmLines.WEAK   ? 'ev-weak'   : 'topic';
+  papers.slice(0, 9).forEach((p, i) => {
+    const nid = `paper-${i}`;
+    const cites = citeCounts[i] || 0;
+    const r = 9 + Math.min(cites * 2.5, 10);
+    const short = p.title.length > 34 ? p.title.slice(0,32) + '…' : p.title;
+    const parentId = cites > 1 ? strongId : cites === 1 ? weakId : 'topic';
+    nodes.push({ id:nid, label:short, type:'paper', icon:'📄', r, detail:`${p.title} (${p.year||'n.d.'}) — ${(p.authors||[]).slice(0,2).join(', ')}`, badge: cites > 0 ? `×${cites}` : '' });
+    links.push({ source: parentId, target:nid, weight: cites > 0 ? 1 + cites * 0.5 : 0.8 });
+  });
+
+  let assumpIdx = 0;
+  const assumpRe = /\*\*Assumption:\s*"([^"]{4,80})"/g;
+  let am;
+  while ((am = assumpRe.exec(synthText)) !== null && assumpIdx < 3) {
+    const nid = `assump-${assumpIdx}`;
+    const short = am[1].length > 34 ? am[1].slice(0,32) + '…' : am[1];
+    nodes.push({ id:nid, label:short, type:'assumption', icon:'🧩', r:15, detail: am[1] });
+    links.push({ source:'topic', target:nid, weight:1.5 });
+    assumpIdx++;
+  }
+
+  [
+    { re:/\*\*Cluster:\*\*\s*(.+)/, id:'disc-cluster', label:'Cluster', icon:'🔗', r:16 },
+    { re:/\*\*Gap:\*\*\s*(.+)/,     id:'disc-gap',     label:'Gap',     icon:'🕳️', r:14 },
+    { re:/\*\*Signal:\*\*\s*(.+)/,  id:'disc-signal',  label:'Signal',  icon:'📡', r:16 },
+  ].forEach(d => {
+    const m = synthText.match(d.re);
+    if (!m) return;
+    nodes.push({ id:d.id, label:d.label, type:'discovery', icon:d.icon, r:d.r, detail: m[1].replace(/\*\*/g,'').trim() });
+    links.push({ source:'topic', target:d.id, weight:1 });
+  });
+
+  const colors = { topic:'#0A2240', strong:'#0B9E80', weak:'#D4921A', unknown:'#888', paper:'#5E52D4', assumption:'#F4A742', discovery:'#1A6BC4' };
+  const W = container.offsetWidth || 680, H = 360;
+
+  const tooltip = d3.select(container).append('div')
+    .style('position','absolute').style('pointer-events','none').style('display','none')
+    .style('background','#0A2240').style('color','#fff').style('padding','8px 12px')
+    .style('border-radius','8px').style('font-size','11px').style('max-width','220px')
+    .style('line-height','1.5').style('box-shadow','0 4px 16px rgba(0,0,0,.3)').style('z-index','10');
+  d3.select(container).style('position','relative');
+
+  const svg = d3.select(container).append('svg').attr('width','100%').attr('height', H)
+    .attr('viewBox', `0 0 ${W} ${H}`).style('font-family','inherit').style('overflow','visible');
+
+  const defs = svg.append('defs');
+  Object.entries(colors).forEach(([type, col]) => {
+    const f = defs.append('filter').attr('id',`glow-${type}`).attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
+    f.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','4').attr('result','blur');
+    const merge = f.append('feMerge');
+    merge.append('feMergeNode').attr('in','blur');
+    merge.append('feMergeNode').attr('in','SourceGraphic');
+  });
+
+  const neighbours = {};
+  nodes.forEach(n => { neighbours[n.id] = new Set(); });
+  links.forEach(l => {
+    const s = typeof l.source === 'object' ? l.source.id : l.source;
+    const t = typeof l.target === 'object' ? l.target.id : l.target;
+    neighbours[s].add(t); neighbours[t].add(s);
+  });
+
+  const simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(d => d.weight===2 ? 115 : 80).strength(0.6))
+    .force('charge', d3.forceManyBody().strength(-260))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collide', d3.forceCollide(d => d.r + 22));
+
+  const linkEl = svg.append('g').selectAll('line').data(links).join('line')
+    .attr('stroke','#C8D4F0').attr('stroke-width', d => Math.max(d.weight || 1, 0.8))
+    .attr('opacity', d => d.weight >= 4 ? 0.7 : d.weight >= 2 ? 0.55 : 0.38);
+
+  const nodeGroup = svg.append('g').selectAll('g').data(nodes).join('g')
+    .style('cursor','pointer')
+    .on('click', (event, d) => {
+      nodeGroup.selectAll('.sel-ring').remove();
+      d3.select(event.currentTarget).append('circle').attr('class','sel-ring').attr('r', d.r + 6).attr('fill','none').attr('stroke', colors[d.type] || '#888').attr('stroke-width',2.5).attr('stroke-dasharray','4 3').attr('opacity',0.7);
+      fpaSelectNode(d);
+    })
+    .on('mouseover', function(event, d) {
+      d3.select(this).select('circle.main-circle').attr('filter', `url(#glow-${d.type})`).transition().duration(150).attr('r', d.r * 1.18);
+      const nid = d.id;
+      nodeGroup.style('opacity', nd => nd.id === nid || neighbours[nid].has(nd.id) ? 1 : 0.25);
+      linkEl.attr('stroke', l => { const s = l.source.id||l.source, t = l.target.id||l.target; return (s===nid||t===nid) ? (colors[d.type]||'#888') : '#C8D4F0'; })
+        .attr('stroke-width', l => { const s = l.source.id||l.source, t = l.target.id||l.target; return (s===nid||t===nid) ? 3 : 1.2; })
+        .attr('opacity', l => { const s = l.source.id||l.source, t = l.target.id||l.target; return (s===nid||t===nid) ? 1 : 0.2; });
+      const detail = d.detail ? d.detail.slice(0,120) + (d.detail.length>120 ? '…' : '') : '';
+      tooltip.style('display','block').html(`<div style="font-weight:700;margin-bottom:3px">${d.icon||''} ${d.label}</div>${detail ? `<div style="opacity:.75">${detail}</div>` : ''}<div style="margin-top:5px;opacity:.5;font-size:9px">Click to ask a question</div>`);
+    })
+    .on('mousemove', function(event) {
+      const rect = container.getBoundingClientRect();
+      tooltip.style('left', (event.clientX - rect.left + 14) + 'px').style('top', (event.clientY - rect.top - 12) + 'px');
+    })
+    .on('mouseout', function(event, d) {
+      d3.select(this).select('circle.main-circle').attr('filter',null).transition().duration(200).attr('r', d.r);
+      nodeGroup.style('opacity',1);
+      linkEl.attr('stroke','#C8D4F0').attr('stroke-width', l => l.weight===2 ? 2 : 1.2).attr('opacity',0.55);
+      tooltip.style('display','none');
+    })
+    .call(d3.drag()
+      .on('start', (ev, d) => { if (!ev.active) simulation.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag',  (ev, d) => { d.fx=ev.x; d.fy=ev.y; })
+      .on('end',   (ev, d) => { if (!ev.active) simulation.alphaTarget(0); d.fx=null; d.fy=null; }));
+
+  nodeGroup.filter(d => d.type==='topic').append('circle').attr('class','pulse-ring').attr('r', d => d.r).attr('fill','none').attr('stroke', colors.topic).attr('stroke-width',2).attr('opacity',0.4);
+  svg.append('style').text(`@keyframes fpa-pulse{0%{r:${topicR}px;opacity:.55}70%{r:${topicR+18}px;opacity:0}100%{r:${topicR}px;opacity:0}}circle.pulse-ring{animation:fpa-pulse 2.4s ease-out infinite}`);
+
+  nodeGroup.append('circle').attr('class','main-circle').attr('r', d => d.r).attr('fill', d => colors[d.type] || '#888').attr('stroke','#fff').attr('stroke-width', d => d.type==='topic' ? 3.5 : d.type==='strong' ? 3 : 1.8);
+  nodeGroup.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle').attr('font-size', d => d.r > 22 ? '15px' : d.r > 16 ? '13px' : '10px').style('pointer-events','none').text(d => d.icon || '');
+
+  nodeGroup.filter(d => d.badge).append('g').attr('class','badge-group').each(function(d) {
+    const g = d3.select(this);
+    const bx = d.r * 0.7, by = -(d.r * 0.7), txt = String(d.badge), bw = Math.max(txt.length * 5.5 + 6, 14);
+    g.append('rect').attr('x', bx - bw/2).attr('y', by - 8).attr('width', bw).attr('height', 13).attr('rx', 6).attr('fill', d.type==='topic' ? '#5E52D4' : colors[d.type] || '#888').attr('stroke','#fff').attr('stroke-width', 1.5);
+    g.append('text').attr('x', bx).attr('y', by).attr('text-anchor','middle').attr('dominant-baseline','middle').attr('font-size','8px').attr('font-weight','700').attr('fill','#fff').style('pointer-events','none').text(txt);
+  });
+
+  nodeGroup.append('text').attr('class','node-label').attr('text-anchor','middle').attr('dy', d => d.r + 7).attr('font-size', d => d.type==='topic' ? '10px' : '9px').attr('font-weight', d => d.type==='topic' ? '700' : '400').attr('fill', d => d.type==='topic' ? '#0A2240' : '#555').style('pointer-events','none')
+    .each(function(d) {
+      const words = d.label.split(' '), el = d3.select(this);
+      let line = '', lineNum = 0;
+      const maxW = Math.max(d.r * 4, 60);
+      words.forEach(w => {
+        const test = line ? line + ' ' + w : w;
+        if (test.length * 5.2 > maxW && line) { el.append('tspan').attr('x',0).attr('dy', lineNum===0 ? 0 : '1.15em').text(line); line = w; lineNum++; }
+        else { line = test; }
+      });
+      el.append('tspan').attr('x',0).attr('dy', lineNum===0 ? 0 : '1.15em').text(line);
+    });
+
+  simulation.on('tick', () => {
+    const pad = 40;
+    linkEl.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    nodeGroup.attr('transform', d => `translate(${Math.max(pad, Math.min(W-pad, d.x))},${Math.max(pad+10, Math.min(H-pad-10, d.y))})`);
+  });
+
+  graphPanel.style.display = 'block';
+  if (legendEl) {
+    const types = [...new Set(nodes.map(n=>n.type))].filter(t=>t!=='topic');
+    const labels = { strong:'Strong', weak:'Weak', unknown:'Unknown', paper:'Paper', assumption:'Assumption', discovery:'Insight' };
+    legendEl.innerHTML = types.map(t => `<div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:${colors[t]};flex-shrink:0"></div><span style="font-size:9px;color:var(--muted)">${labels[t]||t}</span></div>`).join('');
+  }
+}
+
+// ══ NODE INTERACTION ══
+let _fpaSelectedNode = null;
+function fpaSelectNode(d) {
+  _fpaSelectedNode = d;
+  const panel  = document.getElementById('fpa-node-panel');
+  const icon   = document.getElementById('fpa-node-icon');
+  const label  = document.getElementById('fpa-node-label');
+  const detail = document.getElementById('fpa-node-detail');
+  const qInput = document.getElementById('fpa-node-q');
+  const ans    = document.getElementById('fpa-node-answer');
+  if (!panel) return;
+  if (icon)   icon.textContent   = d.icon || '📌';
+  if (label)  label.textContent  = d.label;
+  if (detail) detail.textContent = d.detail || '';
+  if (ans)    { ans.style.display = 'none'; ans.innerHTML = ''; }
+  const typeQ = {
+    topic:      `What is the overall evidence landscape for: "${d.label}"?`,
+    strong:     `What makes the evidence for "${d.detail}" particularly strong or reliable?`,
+    weak:       `Why is the evidence for "${d.detail}" still weak or emerging?`,
+    unknown:    `What would it take to establish evidence for "${d.detail}"?`,
+    paper:      `Summarise the key findings and methodology of: "${d.label}"`,
+    assumption: `What evidence supports or challenges the assumption: "${d.detail}"?`,
+    discovery:  `Explain the significance of this pattern: "${d.detail}"`,
+  };
+  if (qInput) qInput.value = typeQ[d.type] || `Tell me more about "${d.label}"`;
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+async function fpaAskNode() {
+  if (!_fpaSelectedNode) return;
+  const qInput = document.getElementById('fpa-node-q');
+  const btn    = document.getElementById('fpa-node-ask-btn');
+  const ans    = document.getElementById('fpa-node-answer');
+  if (!qInput || !ans) return;
+  const q = qInput.value.trim();
+  if (!q) return;
+  const ctx = window._fpaResearchCtx || {};
+  const origBtn = btn ? btn.innerHTML : 'Ask ›';
+  if (btn) { btn.disabled = true; btn.innerHTML = '…'; }
+  ans.style.display = 'block';
+  ans.innerHTML = '<span style="color:var(--muted);font-size:12px;font-style:italic">Thinking…</span>';
+  try {
+    const r = await fetch(API_BASE + '/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages:[{ role:'user', content:
+`You are a senior education research analyst at the Gates Foundation.
+
+OVERALL RESEARCH QUESTION: "${ctx.decision || 'AI in education'}"
+EVIDENCE CONTEXT:
+- Evidence Strength: ${ctx.drData?.evidence_strength || 'N/A'}
+- Confidence: ${ctx.drData?.confidence || 'N/A'}
+- Key Risk: ${ctx.drData?.key_risk || 'N/A'}
+- Strong areas: ${ctx.cmLines?.STRONG || 'N/A'}
+- Weak areas: ${ctx.cmLines?.WEAK || 'N/A'}
+- Unknown areas: ${ctx.cmLines?.UNKNOWN || 'N/A'}
+
+NODE CLICKED: ${_fpaSelectedNode.type.toUpperCase()} — "${_fpaSelectedNode.label}"
+Node detail: ${_fpaSelectedNode.detail || 'N/A'}
+
+USER QUESTION: ${q}
+
+Answer in 3–5 sentences. Be specific, cite evidence types where relevant, and stay grounded in what the evidence shows. Do not repeat the question.`
+      }]})
+    });
+    const d = await r.json();
+    const text = d.content?.find(b=>b.type==='text')?.text || 'No response.';
+    ans.innerHTML = `<div style="font-size:13px;line-height:1.7;color:var(--navy)">${text.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}</div>`;
+  } catch(e) {
+    ans.innerHTML = '<span style="color:#E0522A;font-size:12px">Failed — check API connection.</span>';
+  }
+  if (btn) { btn.disabled = false; btn.innerHTML = origBtn; }
+}
+
+// ══ ROI PARAMETERS RENDERER ══
+function fpaRenderROI(r) {
+  const pct = v => isNaN(v) ? '—' : (v * 100).toFixed(1) + '%';
+  const fmt = v => (v == null || v === undefined) ? '—' : v;
+  const money = v => v == null ? '—' : '$' + Number(v).toLocaleString();
+  const pillarColor = r.pillar === 'Pillar 2' ? '#0B7A4E' : '#1A5CB4';
+  const pillarBg    = r.pillar === 'Pillar 2' ? '#D6F5EC' : '#E8F0FF';
+  const tierColors = { 1:'#0B7A4E', 2:'#1A5CB4', 3:'#C47800', 4:'#9E1515' };
+  const tierLabels = { 1:'Tier 1 — Direct evidence (narrow CI)', 2:'Tier 2 — Close proxy, same mechanism', 3:'Tier 3 — Broad category (wide CI)', 4:'Tier 4 — Structural proxy (ceiling ref.)' };
+  const tier = r.evidence_tier, tierColor = tierColors[tier] || '#888';
+  const es = r.effect_size || {}, unit = es.unit || 'SD';
+  const lo = +es.low||0, base = +es.base||0, hi = +es.high||0, rangeMax = hi * 1.3 || 1;
+  const barLo = Math.min(100,(lo/rangeMax)*100).toFixed(1), barBase = Math.min(100,(base/rangeMax)*100).toFixed(1), barHi = Math.min(100,(hi/rangeMax)*100).toFixed(1);
+  const escore = +(es.evidence_score)||0, sim = +(r.similarity_score)||0;
+  const pf = r.persistence_factor||{}, pipeSteps = r.pipeline_steps||[], proxies = r.proxy_studies||[], subgroups = r.subgroup_modifiers||[], cp = r.credential_premium||{};
+  const confColor = c => c==='High' ? '#0B7A4E' : c==='Moderate' ? '#C47800' : '#9E1515';
+  const jsonStr = JSON.stringify(r, null, 2);
+
+  return `<div style="padding:16px 20px 20px;background:#F4F7FF">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📐</span><span style="font-size:13px;font-weight:800;color:#0D1B3E">ROI Model Parameters</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:${pillarBg};color:${pillarColor};border:1px solid ${pillarColor}30">${fmt(r.pillar)}</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:${tierColors[tier]||'#888'}18;color:${tierColor};border:1px solid ${tierColor}30">Tier ${tier}</span></div>
+      <button onclick="navigator.clipboard.writeText(${JSON.stringify(jsonStr).replace(/"/g,'&quot;')})" style="font-size:10px;padding:4px 12px;border-radius:6px;background:#fff;color:#555;border:1px solid #D0D5E0;cursor:pointer;font-weight:600">⬇ Copy JSON</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+      <div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Primary Effect Size (${unit})</div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#7A869A;margin-bottom:4px"><span>Low: <strong style="color:#0D1B3E">${fmt(es.low)}</strong></span><span>Base: <strong style="color:#1A5CB4;font-size:13px">${fmt(es.base)}</strong></span><span>High: <strong style="color:#0D1B3E">${fmt(es.high)}</strong></span></div>
+        <div style="position:relative;height:8px;background:#E8EBF4;border-radius:4px;margin-bottom:8px"><div style="position:absolute;left:${barLo}%;width:${(+barHi-+barLo).toFixed(1)}%;height:100%;background:#1A5CB430;border-radius:4px"></div><div style="position:absolute;left:${barBase}%;transform:translateX(-50%);width:3px;height:100%;background:#1A5CB4;border-radius:2px"></div></div>
+        <div style="font-size:10px;color:#7A869A;display:flex;gap:12px;flex-wrap:wrap"><span>Type: <strong style="color:#0D1B3E">${fmt(es.evidence_type)}</strong></span><span>Studies: <strong style="color:#0D1B3E">${fmt(es.source_count)}</strong></span></div>
+        <div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:9px;color:#7A869A;margin-bottom:3px"><span>Evidence quality score</span><span style="font-weight:700;color:#0D1B3E">${(escore*100).toFixed(0)}/100</span></div><div style="height:5px;background:#E8EBF4;border-radius:3px"><div style="height:100%;width:${(escore*100).toFixed(0)}%;background:linear-gradient(90deg,#1A5CB4,#0B9E80);border-radius:3px"></div></div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Evidence Relevance</div>
+        <div style="padding:8px 12px;border-radius:7px;background:${tierColor}12;border:1px solid ${tierColor}30;margin-bottom:10px"><div style="font-size:11px;font-weight:700;color:${tierColor}">${tierLabels[tier]||'—'}</div></div>
+        <div style="font-size:9px;color:#7A869A;margin-bottom:3px">Similarity to intervention</div>
+        <div style="height:5px;background:#E8EBF4;border-radius:3px;margin-bottom:4px"><div style="height:100%;width:${(sim*100).toFixed(0)}%;background:${tierColor};border-radius:3px"></div></div>
+        <div style="text-align:right;font-size:10px;font-weight:700;color:#0D1B3E">${(sim*100).toFixed(0)}%</div>
+        ${r.baseline_rates?.note ? `<div style="margin-top:8px;font-size:10px;color:#7A869A;font-style:italic">${r.baseline_rates.note}</div>` : ''}
+      </div>
+      <div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Persistence / Fade-out</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px"><div style="text-align:center"><div style="font-size:9px;color:#7A869A">Low</div><div style="font-size:14px;font-weight:800;color:#0D1B3E">${pct(pf.low)}</div></div><div style="text-align:center"><div style="font-size:9px;color:#7A869A">Base</div><div style="font-size:18px;font-weight:800;color:#1A5CB4">${pct(pf.base)}</div></div><div style="text-align:center"><div style="font-size:9px;color:#7A869A">High</div><div style="font-size:14px;font-weight:800;color:#0D1B3E">${pct(pf.high)}</div></div></div>
+        <div style="font-size:10px;color:#7A869A">Source: ${fmt(pf.source)}</div>
+        ${cp.base ? `<div style="margin-top:10px;padding-top:8px;border-top:1px solid #F0F0F0"><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#7A869A;margin-bottom:4px">Credential Premium (${fmt(cp.degree_type)})</div><div style="font-size:11px;color:#0D1B3E">${money(cp.low)} – <strong>${money(cp.base)}</strong> – ${money(cp.high)} <span style="color:#7A869A">(${fmt(cp.source)})</span></div></div>` : ''}
+      </div>
+    </div>
+    ${pipeSteps.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Causal Pipeline Conversion Rates</div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px">${pipeSteps.map((s,i) => `<div style="display:flex;align-items:center;gap:4px"><div style="background:#F4F7FF;border:1px solid #D0D5E0;border-radius:7px;padding:6px 10px;min-width:110px"><div style="font-size:9px;color:#7A869A;margin-bottom:2px">${s.step||'—'}</div><div style="font-size:13px;font-weight:800;color:#0D1B3E">${s.rate!=null?(s.rate<1?(s.rate*100).toFixed(0)+'%':s.rate):'—'}</div><div style="font-size:9px;font-weight:600;color:${confColor(s.confidence)}">${s.confidence||''}</div></div>${i<pipeSteps.length-1?'<span style="color:#7A869A;font-size:16px">→</span>':''}</div>`).join('')}</div></div>` : ''}
+    ${subgroups.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Equity Subgroup Effect Modifiers</div><div style="display:flex;flex-wrap:wrap;gap:8px">${subgroups.map(sg=>{const dir=(sg.direction||'').toLowerCase(),mc=dir==='larger'?'#0B7A4E':dir==='smaller'?'#C47800':'#555',arrow=dir==='larger'?'↑':dir==='smaller'?'↓':'~';return `<div style="border:1px solid #D0D5E0;border-radius:7px;padding:7px 12px;min-width:140px"><div style="font-size:10px;font-weight:700;color:#0D1B3E">${sg.subgroup||'—'}</div><div style="font-size:16px;font-weight:800;color:${mc}">${arrow} ${sg.multiplier!=null?sg.multiplier+'×':'—'}</div><div style="font-size:9px;color:#7A869A">${sg.direction||''} · ${sg.source||''}</div></div>`}).join('')}</div></div>` : ''}
+    ${proxies.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:8px">Proxy Study Stack</div><div style="display:flex;flex-direction:column;gap:5px">${proxies.map(p=>{const tc=tierColors[p.tier]||'#888';return `<div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:#F8F9FF;border-radius:6px;font-size:11px"><span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:${tc}18;color:${tc};white-space:nowrap">T${p.tier}</span><strong style="color:#0D1B3E;flex:1">${p.study||'—'}</strong><span style="color:#555;white-space:nowrap">${p.effect_size!=null?p.effect_size+' '+(p.evidence_type||''):'—'}</span><span style="color:#7A869A;font-size:9px">${(+(p.similarity_score)*100||0).toFixed(0)}% match</span></div>`}).join('')}</div></div>` : ''}
+  </div>`;
+}
+
+// ══ MARKDOWN RENDERER ══
+function fpaRenderMD(text) {
+  const sectionColors = {
+    'ASSUMPTION ANALYSIS': { bg:'#FFF8F0', border:'#F4A742', icon:'🧩' },
+    'DISCOVERY INSIGHTS':  { bg:'#F0F8FF', border:'#5E9CD3', icon:'🔭' },
+    'EVIDENCE GAPS':       { bg:'#FFF5F5', border:'#E57373', icon:'⚠️' },
+    'PROGRAMME OFFICER RECOMMENDATIONS': { bg:'#F0FFF4', border:'#66BB6A', icon:'✅' },
+  };
+  let html = '', inSection = null, sectionBuf = '';
+  function flushSection() {
+    if (!inSection || !sectionBuf.trim()) return;
+    const sc = sectionColors[inSection.toUpperCase()] || {};
+    html += sc.bg ? `<div style="background:${sc.bg};border:1px solid ${sc.border};border-radius:8px;padding:12px 14px;margin-bottom:4px">${sectionBuf}</div>` : sectionBuf;
+    sectionBuf = ''; inSection = null;
+  }
+  function renderLine(l) {
+    if (!l) return '';
+    if (l.match(/^\*\*Assumption:/i) || l.match(/^\*\*Cluster:/i) || l.match(/^\*\*Gap:/i) || l.match(/^\*\*Signal:/i)) {
+      return `<div style="font-size:12px;font-weight:700;color:var(--navy);margin:8px 0 4px">${l.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}</div>`;
+    } else if (l.match(/^[-•*]\s/)) {
+      return `<div style="font-size:13px;line-height:1.65;padding-left:16px;margin-bottom:4px;position:relative"><span style="position:absolute;left:2px;color:var(--muted)">•</span>${l.replace(/^[-•*]\s/,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\[(\d+(?:,\s*\d+)*)\]/g,'<span style="font-size:10px;background:#EEF0FF;color:#3A2FAA;border-radius:3px;padding:0 4px;font-weight:700">[$1]</span>')}</div>`;
+    } else {
+      return `<p style="font-size:13px;line-height:1.7;margin-bottom:4px">${l.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\[(\d+(?:,\s*\d+)*)\]/g,'<span style="font-size:10px;background:#EEF0FF;color:#3A2FAA;border-radius:3px;padding:0 4px;font-weight:700">[$1]</span>')}</p>`;
+    }
+  }
+  text.split('\n').forEach(line => {
+    const l = line.trim(); if (!l) return;
+    if (l.startsWith('## ')) {
+      flushSection();
+      const heading = l.replace(/^##\s*/,'');
+      const sc = sectionColors[heading.toUpperCase()] || {};
+      html += `<div style="font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:18px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border);font-weight:700;display:flex;align-items:center;gap:5px">${sc.icon ? '<span>'+sc.icon+'</span>' : ''}<span>${heading}</span></div>`;
+      inSection = heading;
+    } else if (inSection && sectionColors[inSection.toUpperCase()]) {
+      sectionBuf += renderLine(l);
+    } else {
+      html += renderLine(l);
+    }
+  });
+  flushSection();
+  return html;
+}
+
+// ══ COPY BRIEF ══
+async function fpaCopyBrief() {
+  const synth = document.getElementById('fpa-brief-synthesis');
+  if (!synth) return;
+  try {
+    await navigator.clipboard.writeText(synth.innerText);
+    const btn = event.target;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied!';
+    setTimeout(() => btn.innerHTML = orig, 1800);
+  } catch(e) {}
+}
+
+// ══ WORKFLOW STEPPER ══
+function fpaSetStep(n) {
+  for (let i = 1; i <= 8; i++) {
+    const el  = document.getElementById(`fpa-step-${i}`);
+    const con = document.getElementById(`fpa-con-${i}`);
+    if (!el) continue;
+    el.classList.remove('active','done');
+    if (i < n)        { el.classList.add('done');   if (con) { con.classList.remove('active'); con.classList.add('done'); } }
+    else if (i === n) { el.classList.add('active');  if (con) { con.classList.remove('done');  con.classList.add('active'); } }
+    else              {                               if (con) { con.classList.remove('active','done'); } }
+  }
+  const activeEl = document.getElementById(`fpa-step-${n}`);
+  if (activeEl) activeEl.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+}
+
+function fpaScrollToStep(n) {
+  const targets = { 1:'fpa-decision', 2:'fpa-decision', 3:'fpa-progress-panel', 4:'fpa-progress-panel', 5:'fpa-brief-synthesis', 6:'fpa-graph-panel', 7:'fpa-decision-readiness', 8:'fpa-brief-panel' };
+  const el = document.getElementById(targets[n]);
+  if (el && el.style.display !== 'none') el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+fpaSetStep(1);
+</script>
+</body>
+</html>

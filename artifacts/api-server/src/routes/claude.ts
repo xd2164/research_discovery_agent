@@ -9,16 +9,23 @@ const anthropic = new Anthropic({
 });
 
 claudeRouter.post("/claude", async (req, res) => {
-  const { prompt } = req.body as { prompt?: string };
-  if (!prompt) {
-    res.status(400).json({ error: "prompt is required" });
+  const body = req.body as { prompt?: string; messages?: { role: string; content: string }[] };
+
+  let messages: Anthropic.MessageParam[];
+  if (body.messages && Array.isArray(body.messages)) {
+    messages = body.messages as Anthropic.MessageParam[];
+  } else if (body.prompt) {
+    messages = [{ role: "user", content: body.prompt }];
+  } else {
+    res.status(400).json({ error: "prompt or messages is required" });
     return;
   }
+
   try {
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 8192,
-      messages: [{ role: "user", content: prompt }],
+      messages,
     });
     res.json({ content: message.content });
   } catch (err) {
