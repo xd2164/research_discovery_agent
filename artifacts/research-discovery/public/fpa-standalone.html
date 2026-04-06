@@ -425,6 +425,34 @@ Identify 2–3 key assumptions embedded in the question. For each:
   let roiData = extractJsonByKey(synthesis, 'pipeline_steps');
   if (!roiData) roiData = extractJsonByKey(synthesis, 'pillar');
 
+  // Fallback: dedicated extraction call when inline parsing fails
+  if (!roiData) {
+    try {
+      setP(93, 'Extracting ROI parameters…');
+      const roiExtractResp = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{
+          role: 'user',
+          content: `You are a structured-data extractor. Given the educational research synthesis below, output ONLY a single valid JSON object — no markdown, no explanation, no code fences — with exactly these fields filled from the evidence:\n\n{"pillar":"Pillar 1 or 2","effect_size":{"low":0.0,"base":0.0,"high":0.0,"unit":"SD","evidence_type":"","evidence_score":0.0,"source_count":0},"evidence_tier":2,"similarity_score":0.0,"persistence_factor":{"low":0.0,"base":0.0,"high":0.0,"source":""},"pipeline_steps":[{"step":"","rate":0.0,"confidence":"High|Moderate|Low"}],"subgroup_modifiers":[{"subgroup":"","multiplier":1.0,"direction":"larger|smaller|similar","source":""}],"proxy_studies":[{"study":"","effect_size":0.0,"evidence_type":"","tier":2,"similarity_score":0.0,"rationale":""}],"baseline_rates":{"note":""},"credential_premium":{"low":0,"base":0,"high":0,"degree_type":"Bachelor","source":""}}\n\nResearch question: ${decision}\n\nSynthesis:\n${synthesis.slice(0, 5000)}`
+        }]})
+      });
+      const roiExtractJson = await roiExtractResp.json();
+      const roiRaw = roiExtractJson.content?.find(b => b.type === 'text')?.text || '';
+      // Grab the first { ... } block (may span multiple lines)
+      const roiMatch = roiRaw.match(/\{[\s\S]+\}/);
+      if (roiMatch) {
+        try {
+          roiData = JSON.parse(roiMatch[0]);
+        } catch(e1) {
+          // Clean trailing commas and literal newlines, then retry
+          const cleaned = roiMatch[0].replace(/,\s*([}\]])/g, '$1').replace(/([^\\])\n/g, '$1 ');
+          try { roiData = JSON.parse(cleaned); } catch(e2) { console.warn('ROI fallback parse failed', e2); }
+        }
+      }
+    } catch(e) { console.warn('ROI fallback call failed', e); }
+  }
+
   const cleanSynthesis = (() => {
     // Slice from "## Executive Summary" — everything before is machine data
     const execIdx = synthesis.search(/##\s*Executive Summary/i);
