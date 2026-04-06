@@ -1,0 +1,15 @@
+{"evidence_strength":"Medium","confidence":"Moderate","key_risk":"Causal evidence for AI-enabled teaching improving learning outcomes at scale remains sparse, with most studies being descriptive or opinion-based, creating a high risk of premature investment in unproven modalities.","investment_readiness":"Proceed with targeted, rigorous pilot investments in AI-enabled instruction tied to embedded evaluation designs before broad scaling, prioritising gateway math and personalized advising where proximate evidence is strongest."}
+
+---
+
+STRONG: AI-enabled tools can personalize learning pathways and adapt content delivery [10][19][20], ChatGPT and LLM capabilities in generating educational content are well-documented [2][3][6], educator perceptions of AI potential are broadly positive with known reservations [12][13][23]
+
+WEAK: Causal learning-outcome effects of AI-enabled teaching in K-12 and postsecondary contexts [19][20], teacher-AI collaboration models and their implementation fidelity [12][23], equity effects across racial/socioeconomic subgroups [9][19], persistence of AI-driven learning gains over time [19][20]
+
+UNKNOWN: Cost-effectiveness ratios for AI-enabled instruction vs. traditional instruction, long-run credential attainment effects, differential impacts on first-generation and Pell-eligible students, optimal human-AI instructional balance in gateway courses
+
+---
+
+{"pillar":"Pillar 1","effect_size":{"low":0.08,"base":0.20,"high":0.35,"unit":"SD","evidence_type":"Meta-analysis/RCT","evidence_score":0.68,"source_count":4},"evidence_tier":2,"similarity_score":0.68,"persistence_factor":{"low":0.40,"base":0.52,"high":0.65,"source":"Bailey et al. 2017"},"pipeline_steps":[{"step":"SD gain → HS graduation","rate":0.10,"confidence":"Moderate"},{"step":"HS grad → PS enrollment","rate":0.70,"confidence":"High"},{"step":"PS enroll → gateway completion","rate":0.62,"confidence":"Moderate"},{"step":"Gateway → credential attainment","rate":0.55,"confidence":"Low"}],"subgroup_modifiers":[{"subgroup":"Black/Latino students","multiplier":1.12,"direction":"larger_potential_but_uncertain","source":"Theobald et al. 2020 (proxy); Li et al. 2025 [19]"}],"proxy_studies":[{"study":"Li et al. 2025 meta-analysis AI-enabled STEM K-12","effect_size":0.20,"evidence_type":"meta-analysis","tier":2,"similarity_score":0.72,"rationale":"Closest available aggregation of AI personalized learning in K-12 STEM; not postsecondary gateway-specific"},{"study":"Yi et al. 2025 systematic review AI K-12 mathematics","effect_size":0.18,"evidence_type":"systematic review/meta-analysis","tier":2,"similarity_score":0.75,"rationale":"Mathematics-specific AI effectiveness in K-12; closest proxy to gateway math goal"}],"baseline_rates":{"pass_rate":null,"retention":null,"note":"Population-specific postsecondary baseline pass rates not surfaced in retrieved literature; K-12 math baseline not disaggregated in retrieved papers"},"credential_premium":{"low":32000,"base":40000,"high":48000,"degree_type":"bachelor","source":"Chetty et al. 2014"}}
+
+---

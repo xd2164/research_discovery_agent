@@ -365,37 +365,40 @@ Identify 2–3 key assumptions embedded in the question. For each:
 
   setP(92, 'Rendering…');
 
-  const drMatch = synthesis.match(/##\s*DECISION_READINESS\s*\n\s*(\{[^\n]+\})/);
+  // ── Parse structured machine-data sections (work with or without ## headers) ──
   let drData = null;
-  if (drMatch) { try { drData = JSON.parse(drMatch[1]); } catch(e) {} }
+  const drJsonMatch = synthesis.match(/\{[^{}]*"evidence_strength"[^{}]*\}/);
+  if (drJsonMatch) { try { drData = JSON.parse(drJsonMatch[0]); } catch(e) {} }
 
-  const cmMatch = synthesis.match(/##\s*CONFIDENCE MAP\s*\n([\s\S]*?)(?=\n##|\Z)/);
   let cmLines = {};
-  if (cmMatch) {
-    cmMatch[1].split('\n').forEach(ln => {
-      const m = ln.match(/^(STRONG|WEAK|UNKNOWN):\s*(.+)/);
-      if (m) cmLines[m[1]] = m[2];
-    });
-  }
+  synthesis.split('\n').forEach(ln => {
+    const m = ln.match(/^(STRONG|WEAK|UNKNOWN):\s*(.+)/);
+    if (m) cmLines[m[1]] = m[2].trim();
+  });
 
   let roiData = null;
-  if (synthesis.search(/##\s*ROI_PARAMETERS/) > -1) {
-    const section = synthesis.slice(synthesis.search(/##\s*ROI_PARAMETERS/));
-    const nextSection = section.slice(1).search(/\n##/);
-    const chunk = nextSection > -1 ? section.slice(0, nextSection + 1) : section;
-    const jsonMatch = chunk.match(/(\{[\s\S]+\})/);
-    if (jsonMatch) { try { roiData = JSON.parse(jsonMatch[1]); } catch(e) {} }
+  const roiJsonMatch = synthesis.match(/\{[^{}]*"pillar"[\s\S]*?"pipeline_steps"[\s\S]*?\}/);
+  if (roiJsonMatch) { try { roiData = JSON.parse(roiJsonMatch[0]); } catch(e) {} }
+  // Fallback: try any large JSON after ROI_PARAMETERS or second large JSON block
+  if (!roiData) {
+    const allJsonBlocks = [...synthesis.matchAll(/(\{[\s\S]{200,}?\})/g)];
+    for (const b of allJsonBlocks) {
+      try { const j = JSON.parse(b[1]); if (j.pillar) { roiData = j; break; } } catch(e) {}
+    }
   }
 
   const cleanSynthesis = (() => {
-    // Everything before "## Executive Summary" is structured machine data (JSON blocks,
-    // STRONG/WEAK/UNKNOWN lines, ROI parameters) — slice it off cleanly.
+    // Slice from "## Executive Summary" — everything before is machine data
     const execIdx = synthesis.search(/##\s*Executive Summary/i);
-    let clean = execIdx >= 0 ? synthesis.slice(execIdx) : synthesis;
-    // Safety net: strip any stray JSON objects that survived (80+ chars inside braces)
-    clean = clean.replace(/\{[^{}]{80,}\}/g, '');
-    // Strip any STRONG / WEAK / UNKNOWN confidence lines that bled through
+    // If the marker is missing, show nothing rather than dumping raw machine data
+    if (execIdx < 0) return '';
+    let clean = synthesis.slice(execIdx);
+    // Strip any stray JSON objects (60+ chars inside braces)
+    clean = clean.replace(/\{[^{}]{60,}\}/g, '');
+    // Strip STRONG / WEAK / UNKNOWN confidence lines
     clean = clean.replace(/^(STRONG|WEAK|UNKNOWN):\s*.+$/gm, '');
+    // Strip --- horizontal rule lines
+    clean = clean.replace(/^---+$/gm, '');
     // Collapse excess blank lines
     clean = clean.replace(/\n{3,}/g, '\n\n');
     return clean.trim();
@@ -848,6 +851,11 @@ function fpaRenderMD(text) {
   }
   text.split('\n').forEach(line => {
     const l = line.trim(); if (!l) return;
+    if (l.match(/^-{3,}$/)) {
+      flushSection();
+      html += '<hr style="border:none;border-top:1px solid var(--border);margin:12px 0">';
+      return;
+    }
     if (l.startsWith('## ')) {
       flushSection();
       const heading = l.replace(/^##\s*/,'');
