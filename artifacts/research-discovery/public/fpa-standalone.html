@@ -422,36 +422,35 @@ Identify 2–3 key assumptions embedded in the question. For each:
     if (m) cmLines[m[1]] = m[2].trim();
   });
 
-  let roiData = extractJsonByKey(synthesis, 'pipeline_steps');
-  if (!roiData) roiData = extractJsonByKey(synthesis, 'pillar');
-
-  // Fallback: dedicated extraction call when inline parsing fails
-  if (!roiData) {
-    try {
-      setP(93, 'Extracting ROI parameters…');
-      const roiExtractResp = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [{
-          role: 'user',
-          content: `You are a structured-data extractor. Given the educational research synthesis below, output ONLY a single valid JSON object — no markdown, no explanation, no code fences — with exactly these fields filled from the evidence:\n\n{"pillar":"Pillar 1 or 2","effect_size":{"low":0.0,"base":0.0,"high":0.0,"unit":"SD","evidence_type":"","evidence_score":0.0,"source_count":0},"evidence_tier":2,"similarity_score":0.0,"persistence_factor":{"low":0.0,"base":0.0,"high":0.0,"source":""},"pipeline_steps":[{"step":"","rate":0.0,"confidence":"High|Moderate|Low"}],"subgroup_modifiers":[{"subgroup":"","multiplier":1.0,"direction":"larger|smaller|similar","source":""}],"proxy_studies":[{"study":"","effect_size":0.0,"evidence_type":"","tier":2,"similarity_score":0.0,"rationale":""}],"baseline_rates":{"note":""},"credential_premium":{"low":0,"base":0,"high":0,"degree_type":"Bachelor","source":""}}\n\nResearch question: ${decision}\n\nSynthesis:\n${synthesis.slice(0, 5000)}`
-        }]})
-      });
-      const roiExtractJson = await roiExtractResp.json();
-      const roiRaw = roiExtractJson.content?.find(b => b.type === 'text')?.text || '';
-      // Grab the first { ... } block (may span multiple lines)
-      const roiMatch = roiRaw.match(/\{[\s\S]+\}/);
-      if (roiMatch) {
-        try {
-          roiData = JSON.parse(roiMatch[0]);
-        } catch(e1) {
-          // Clean trailing commas and literal newlines, then retry
-          const cleaned = roiMatch[0].replace(/,\s*([}\]])/g, '$1').replace(/([^\\])\n/g, '$1 ');
-          try { roiData = JSON.parse(cleaned); } catch(e2) { console.warn('ROI fallback parse failed', e2); }
+  // Always use dedicated extraction call — inline parse is too fragile for nested JSON
+  let roiData = null;
+  try {
+    setP(91, 'Extracting ROI parameters…');
+    const roiExtractResp = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{
+        role: 'user',
+        content: `You are a structured-data extractor for an education ROI model. Output ONLY a single valid JSON object with NO markdown, NO code fences, NO explanation — raw JSON only. Fill all numeric fields with real values from the research below. Use this exact shape:\n{"pillar":"Pillar 1","effect_size":{"low":0.08,"base":0.17,"high":0.3,"unit":"SD","evidence_type":"RCT","evidence_score":0.65,"source_count":4},"evidence_tier":2,"similarity_score":0.65,"persistence_factor":{"low":0.4,"base":0.52,"high":0.63,"source":""},"pipeline_steps":[{"step":"SD gain → HS graduation","rate":0.10,"confidence":"Moderate"},{"step":"HS grad → PS enrollment","rate":0.70,"confidence":"High"},{"step":"PS enroll → gateway completion","rate":0.62,"confidence":"Moderate"},{"step":"Gateway → credential attainment","rate":0.55,"confidence":"Low"}],"subgroup_modifiers":[{"subgroup":"","multiplier":1.0,"direction":"larger","source":""}],"proxy_studies":[{"study":"","effect_size":0.15,"evidence_type":"RCT","tier":2,"similarity_score":0.7,"rationale":""}],"baseline_rates":{"note":""},"credential_premium":{"low":32000,"base":40000,"high":48000,"degree_type":"Bachelor","source":"Chetty et al. 2014"}}\n\nResearch question: ${decision}\n\nSynthesis (first 4000 chars):\n${synthesis.slice(0, 4000)}`
+      }]})
+    });
+    const roiExtractJson = await roiExtractResp.json();
+    const roiRaw = (roiExtractJson.content?.find(b => b.type === 'text')?.text || '').trim();
+    // Use extractJsonByKey on the response for robust nested-JSON extraction
+    roiData = extractJsonByKey(roiRaw, 'pipeline_steps') || extractJsonByKey(roiRaw, 'pillar');
+    if (!roiData) {
+      // Last-resort: grab from first { to last }
+      const first = roiRaw.indexOf('{'), last = roiRaw.lastIndexOf('}');
+      if (first >= 0 && last > first) {
+        const raw = roiRaw.slice(first, last + 1);
+        try { roiData = JSON.parse(raw); }
+        catch(e) {
+          const cleaned = raw.replace(/,\s*([}\]])/g, '$1').replace(/([^\\])\n/g, '$1 ');
+          try { roiData = JSON.parse(cleaned); } catch(e2) { console.warn('ROI parse failed', e2); }
         }
       }
-    } catch(e) { console.warn('ROI fallback call failed', e); }
-  }
+    }
+  } catch(e) { console.warn('ROI extraction call failed', e); }
 
   const cleanSynthesis = (() => {
     // Slice from "## Executive Summary" — everything before is machine data
@@ -469,6 +468,10 @@ Identify 2–3 key assumptions embedded in the question. For each:
     clean = clean.replace(/\n{3,}/g, '\n\n');
     return clean.trim();
   })();
+
+  // ── RENDER RESULTS ─────────────────────────────────────────────────────────
+  // Wrapped in try-catch so fpaSaveHistory always runs even if rendering throws
+  try {
 
   // Render Goal / Outcome chips
   const mappingRow = document.getElementById('fpa-mapping-row');
@@ -514,7 +517,16 @@ Identify 2–3 key assumptions embedded in the question. For each:
 
   // Render ROI Parameters
   const roiEl = document.getElementById('fpa-roi-panel');
-  if (roiEl && roiData) { roiEl.style.display = 'block'; roiEl.innerHTML = fpaRenderROI(roiData); }
+  if (roiEl && roiData) {
+    try {
+      roiEl.style.display = 'block';
+      roiEl.innerHTML = fpaRenderROI(roiData);
+    } catch(roiErr) {
+      console.error('ROI render error:', roiErr);
+      roiEl.style.display = 'block';
+      roiEl.innerHTML = `<div style="padding:14px 20px;font-size:11px;color:#9E1515;background:#FFF5F5;border-bottom:1px solid #FFC9C9">ROI panel render error — ${roiErr.message}</div>`;
+    }
+  }
 
   // Render Confidence Map
   const cmEl = document.getElementById('fpa-confidence-map');
@@ -571,11 +583,14 @@ Identify 2–3 key assumptions embedded in the question. For each:
   const countEl = document.getElementById('fpa-brief-paper-count');
   if (countEl) countEl.textContent = `${allPapers.length} papers · ${queries.length} angles · ${Object.keys(srcTally).length} databases`;
 
+  } catch(renderErr) { console.error('Render error (non-fatal):', renderErr); }
+
+  // These always run regardless of any render error:
   fpaSetStep(6);
   window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
   setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
 
-  // Auto-save to search history (fire and forget)
+  // Auto-save to search history — always runs regardless of render errors
   fpaSaveHistory(
     decision,
     drData?.evidence_strength || null,
