@@ -937,12 +937,12 @@ function fpaRenderROI(r) {
   const escore = +(es.evidence_score)||0, sim = +(r.similarity_score)||0;
   const pf = r.persistence_factor||{}, pipeSteps = r.pipeline_steps||[], proxies = r.proxy_studies||[], subgroups = r.subgroup_modifiers||[], cp = r.credential_premium||{};
   const confColor = c => c==='High' ? '#0B7A4E' : c==='Moderate' ? '#C47800' : '#9E1515';
-  const jsonStr = JSON.stringify(r, null, 2);
+  window._fpaLastRoiJson = JSON.stringify(r, null, 2);
 
   return `<div style="padding:16px 20px 20px;background:#F4F7FF">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📐</span><span style="font-size:13px;font-weight:800;color:#0D1B3E">ROI Model Parameters</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:${pillarBg};color:${pillarColor};border:1px solid ${pillarColor}30">${fmt(r.pillar)}</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:${tierColors[tier]||'#888'}18;color:${tierColor};border:1px solid ${tierColor}30">Tier ${tier}</span></div>
-      <button onclick="navigator.clipboard.writeText(${JSON.stringify(jsonStr).replace(/"/g,'&quot;')})" style="font-size:10px;padding:4px 12px;border-radius:6px;background:#fff;color:#555;border:1px solid #D0D5E0;cursor:pointer;font-weight:600">⬇ Copy JSON</button>
+      <button onclick="fpaCopyRoiJson(this)" style="font-size:10px;padding:4px 12px;border-radius:6px;background:#fff;color:#555;border:1px solid #D0D5E0;cursor:pointer;font-weight:600">⬇ Copy JSON</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
       <div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px">
@@ -1121,6 +1121,20 @@ async function fpaDeleteHistory(id, btn) {
     await fetch(`/api/history/${id}`, { method: 'DELETE' });
     fpaLoadHistory();
   } catch(e) { btn.disabled = false; }
+}
+
+function fpaCopyRoiJson(btn) {
+  const json = window._fpaLastRoiJson;
+  if (!json) return;
+  navigator.clipboard.writeText(json).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#0B9E80';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = '#555'; }, 1800);
+  }).catch(() => {
+    btn.textContent = '✗ Failed';
+    setTimeout(() => { btn.textContent = '⬇ Copy JSON'; btn.style.color = '#555'; }, 1800);
+  });
 }
 
 // Load history on page init
