@@ -191,6 +191,18 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
   </div>
 
+  <!-- RESULTS COLLAPSE BAR -->
+  <div id="fpa-results-header" style="display:none;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:0">
+    <div onclick="fpaToggleResults()" style="padding:9px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:12px">📄</span>
+        <span style="font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.3px">Research Results</span>
+        <span id="fpa-results-label" style="font-size:10px;color:var(--muted);font-style:italic"></span>
+      </div>
+      <span id="fpa-results-chevron" style="font-size:13px;color:var(--muted);transition:transform .25s">▲</span>
+    </div>
+  </div>
+
   <!-- OVERALL SYNTHESIS -->
   <div id="fpa-synthesis-panel" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
     <div onclick="fpaTogglePanel('fpa-synthesis-body','fpa-synthesis-chevron')" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--border);background:var(--surf);cursor:pointer;user-select:none">
@@ -289,6 +301,8 @@ async function fpaStartResearch() {
 
   if (synthesisPanel) synthesisPanel.style.display = 'none';
   if (briefPanel) briefPanel.style.display = 'none';
+  const resultsHdr = document.getElementById('fpa-results-header');
+  if (resultsHdr) resultsHdr.style.display = 'none';
   if (progressPanel) progressPanel.style.display = 'block';
   if (btn) { btn.disabled = true; btn.innerHTML = '<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></div> Researching…'; }
 
@@ -661,6 +675,12 @@ Identify 2–3 key assumptions embedded in the question. For each:
   setTimeout(() => { if (progressPanel) progressPanel.style.display = 'none'; }, 500);
   if (synthesisPanel) { synthesisPanel.style.display = 'block'; synthesisPanel.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
   if (briefPanel) briefPanel.style.display = 'block';
+  const rHdr = document.getElementById('fpa-results-header');
+  const rChv = document.getElementById('fpa-results-chevron');
+  const rLbl = document.getElementById('fpa-results-label');
+  if (rHdr) { rHdr.style.display = 'block'; }
+  if (rChv) { rChv.style.transform = ''; }
+  if (rLbl) { rLbl.textContent = decision ? `"${decision.slice(0,60)}${decision.length>60?'…':''}"` : ''; }
   if (btn) { btn.disabled = false; btn.innerHTML = '<span style="font-size:18px">&#129504;</span> Start Deep Research'; }
   setTimeout(() => fpaSetStep(8), 600);
 }
@@ -1197,6 +1217,16 @@ function fpaTogglePanel(bodyId, chevronId) {
   if (chevron) chevron.style.transform = collapsed ? '' : 'rotate(180deg)';
 }
 
+function fpaToggleResults() {
+  const synth   = document.getElementById('fpa-synthesis-panel');
+  const refs    = document.getElementById('fpa-brief-panel');
+  const chevron = document.getElementById('fpa-results-chevron');
+  const collapsed = synth && synth.style.display === 'none';
+  if (synth)   synth.style.display   = collapsed ? 'block' : 'none';
+  if (refs)    refs.style.display    = collapsed ? 'block' : 'none';
+  if (chevron) chevron.style.transform = collapsed ? '' : 'rotate(180deg)';
+}
+
 // ══ SEARCH HISTORY ══
 async function fpaSaveHistory(query, decision, summary, paperCount, sources, fullResults) {
   try {
@@ -1283,6 +1313,12 @@ function fpaRestoreQuery(rowId) {
     if (progressPanel)  progressPanel.style.display  = 'none';
     if (synthesisPanel) synthesisPanel.style.display = 'block';
     if (briefPanel)     briefPanel.style.display     = 'block';
+    const rHdr2 = document.getElementById('fpa-results-header');
+    const rChv2 = document.getElementById('fpa-results-chevron');
+    const rLbl2 = document.getElementById('fpa-results-label');
+    if (rHdr2) { rHdr2.style.display = 'block'; }
+    if (rChv2) { rChv2.style.transform = ''; }
+    if (rLbl2) { rLbl2.textContent = row.query ? `"${row.query.slice(0,60)}${row.query.length>60?'…':''}"` : ''; }
 
     // Goal / outcome chips
     const mappingRow = document.getElementById('fpa-mapping-row');
