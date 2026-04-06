@@ -380,24 +380,36 @@ Identify 2–3 key assumptions embedded in the question. For each:
   setP(92, 'Rendering…');
 
   // ── Parse structured machine-data sections (work with or without ## headers) ──
-  // Brace-depth scanner: finds the complete JSON object containing a given key string.
+  // Scans top-level JSON objects and returns the first one containing the target key.
   function extractJsonByKey(text, key) {
     const marker = `"${key}"`;
-    let pos = text.indexOf(marker);
-    while (pos >= 0) {
-      const start = text.lastIndexOf('{', pos);
-      if (start < 0) { pos = text.indexOf(marker, pos + 1); continue; }
-      let depth = 0;
-      for (let i = start; i < text.length; i++) {
-        if (text[i] === '{') depth++;
-        else if (text[i] === '}') {
-          depth--;
-          if (depth === 0) {
-            try { return JSON.parse(text.slice(start, i + 1)); } catch(e) { break; }
+    let i = 0;
+    while (i < text.length) {
+      if (text[i] === '{') {
+        let depth = 0, j = i;
+        let inString = false, escape = false;
+        while (j < text.length) {
+          const ch = text[j];
+          if (escape) { escape = false; }
+          else if (ch === '\\' && inString) { escape = true; }
+          else if (ch === '"') { inString = !inString; }
+          else if (!inString) {
+            if (ch === '{') depth++;
+            else if (ch === '}') {
+              depth--;
+              if (depth === 0) {
+                const candidate = text.slice(i, j + 1);
+                if (candidate.includes(marker)) {
+                  try { return JSON.parse(candidate); } catch(e) {}
+                }
+                break;
+              }
+            }
           }
+          j++;
         }
-      }
-      pos = text.indexOf(marker, pos + 1);
+        i = j + 1;
+      } else { i++; }
     }
     return null;
   }
