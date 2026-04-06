@@ -496,7 +496,7 @@ Identify 2–3 key assumptions embedded in the question. For each:
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: [{
         role: 'user',
-        content: `You are a structured-data extractor for an education ROI model. Output ONLY a single valid JSON object with NO markdown, NO code fences, NO explanation — raw JSON only. Fill all numeric fields with real values from the research below. Use this exact shape:\n{"pillar":"Pillar 1","effect_size":{"low":0.08,"base":0.17,"high":0.3,"unit":"SD","evidence_type":"RCT","evidence_score":0.65,"source_count":4},"evidence_tier":2,"similarity_score":0.65,"persistence_factor":{"low":0.4,"base":0.52,"high":0.63,"source":""},"pipeline_steps":[{"step":"SD gain → HS graduation","rate":0.10,"confidence":"Moderate"},{"step":"HS grad → PS enrollment","rate":0.70,"confidence":"High"},{"step":"PS enroll → gateway completion","rate":0.62,"confidence":"Moderate"},{"step":"Gateway → credential attainment","rate":0.55,"confidence":"Low"}],"subgroup_modifiers":[{"subgroup":"","multiplier":1.0,"direction":"larger","source":""}],"proxy_studies":[{"study":"","effect_size":0.15,"evidence_type":"RCT","tier":2,"similarity_score":0.7,"rationale":""}],"baseline_rates":{"note":""},"credential_premium":{"low":32000,"base":40000,"high":48000,"degree_type":"Bachelor","source":"Chetty et al. 2014"}}\n\nResearch question: ${decision}\n\nSynthesis (first 4000 chars):\n${synthesis.slice(0, 4000)}`
+        content: `You are a structured-data extractor for an education ROI model. Output ONLY a single valid JSON object with NO markdown, NO code fences, NO explanation — raw JSON only.\n\nIMPORTANT: For every "source" field, you MUST use the paper index number (e.g. "3" or "12") from the NUMBERED PAPER LIST below. Do NOT invent author names or years. Only cite papers that appear in the list. If no paper in the list supports a value, use "".\n\nUse this exact JSON shape (source fields must be index numbers like "3" not author names):\n{"pillar":"Pillar 1","effect_size":{"low":0.08,"base":0.17,"high":0.3,"unit":"SD","evidence_type":"RCT","evidence_score":0.65,"source_count":4},"evidence_tier":2,"similarity_score":0.65,"persistence_factor":{"low":0.4,"base":0.52,"high":0.63,"source":"3"},"pipeline_steps":[{"step":"SD gain → HS graduation","rate":0.10,"confidence":"Moderate"},{"step":"HS grad → PS enrollment","rate":0.70,"confidence":"High"},{"step":"PS enroll → gateway completion","rate":0.62,"confidence":"Moderate"},{"step":"Gateway → credential attainment","rate":0.55,"confidence":"Low"}],"subgroup_modifiers":[{"subgroup":"","multiplier":1.0,"direction":"larger","source":"7"}],"proxy_studies":[{"study":"","effect_size":0.15,"evidence_type":"RCT","tier":2,"similarity_score":0.7,"rationale":""}],"baseline_rates":{"note":""},"credential_premium":{"low":32000,"base":40000,"high":48000,"degree_type":"Bachelor","source":"2"}}\n\nResearch question: ${decision}\n\nNUMBERED PAPER LIST (cite by index number only):\n${allPapers.slice(0,25).map((p,i)=>`[${i+1}] ${p.title} (${p.year||'n.d.'}) — ${(p.authors||[]).slice(0,3).join(', ')}${(p.authors||[]).length>3?' et al.':''}`).join('\n')}\n\nSynthesis (first 3500 chars):\n${synthesis.slice(0, 3500)}`
       }]})
     });
     const roiExtractJson = await roiExtractResp.json();
@@ -1030,7 +1030,20 @@ function fpaRenderROI(r) {
     if (/^https?:\/\//i.test(s)) {
       return `<a href="${s}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Open link">${esc(s)}</a>`;
     }
-    // Try to resolve to the actual fetched paper first
+    // Resolve index-number references like "3" or "[3]" to actual fetched papers
+    const idxMatch = s.match(/^\[?(\d+)\]?$/);
+    if (idxMatch) {
+      const idx = parseInt(idxMatch[1], 10) - 1;
+      const paper = (window._fpaAllPapers || [])[idx];
+      if (paper) {
+        const label = `[${idx+1}] ${(paper.authors||[]).slice(0,2).join(', ')}${(paper.authors||[]).length>2?' et al.':''} (${paper.year||'n.d.'})`;
+        if (paper.url) {
+          return `<a href="${paper.url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="${esc(paper.title||'')}">${esc(label)}</a>`;
+        }
+        return `<strong style="color:#0D1B3E">${esc(label)}</strong>`;
+      }
+    }
+    // Try to resolve author+year strings to actual fetched paper (legacy / history entries)
     const matchedUrl = matchPaperUrl(s);
     if (matchedUrl) {
       return `<a href="${matchedUrl}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="View source paper">${esc(s)}</a>`;
