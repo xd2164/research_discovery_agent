@@ -1704,10 +1704,6 @@ function go(id){
     el.classList.toggle('on',eid===id);
   });
   document.getElementById('main').scrollTop=0;
-  if(id==='fpa'){
-    const iframe=document.querySelector('#pane-fpa iframe');
-    if(iframe) try{iframe.contentWindow.postMessage('fpa-launch','*');}catch(e){}
-  }
 }
 function goTab(id,tabIdx){
   go(id);
