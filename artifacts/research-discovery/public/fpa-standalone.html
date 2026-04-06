@@ -1015,9 +1015,9 @@ function fpaRenderROI(r) {
     if (matchedUrl) {
       return `<a href="${matchedUrl}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="View source paper">${esc(s)}</a>`;
     }
-    // Fall back to Semantic Scholar search — never guess DOIs (Claude often hallucinates them)
-    const url = `https://www.semanticscholar.org/search?q=${encodeURIComponent(s)}&sort=Relevance`;
-    return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Find on Semantic Scholar">${esc(s)}</a>`;
+    // Fall back to Google Scholar search
+    const url = `https://scholar.google.com/scholar?q=${encodeURIComponent(s)}`;
+    return `<a href="${url}" target="_blank" rel="noopener" style="color:#1A5CB4;text-decoration:none;border-bottom:1px dotted #1A5CB480" title="Search Google Scholar">${esc(s)}</a>`;
   };
   const pillarColor = r.pillar === 'Pillar 2' ? '#0B7A4E' : '#1A5CB4';
   const pillarBg    = r.pillar === 'Pillar 2' ? '#D6F5EC' : '#E8F0FF';
