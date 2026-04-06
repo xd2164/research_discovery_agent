@@ -14,7 +14,7 @@
   --text:#0D1B2A;--muted:#596577;--border:#D8E3F0;--surf:#F2F7FD;--white:#fff;
 }
 html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--surf);font-size:14px}
-body{display:flex;flex-direction:column;overflow-y:auto;padding-top:40px}
+body{display:flex;flex-direction:column;overflow-y:auto}
 .topbar{background:#0A2240;border-bottom:2px solid #3DDBB0;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .topbar-dot{width:8px;height:8px;border-radius:50%;background:#3DDBB0}
 .topbar-brand{color:#fff;font-family:Georgia,serif;font-size:15px}
@@ -113,21 +113,21 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   </div>
 </div>
 
-<!-- ── DISCLAIMER BANNER ── -->
-<div id="fpa-disclaimer" style="background:#FFF3CD;border-bottom:2px solid #E6C84A;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:system-ui,sans-serif;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px #00000018">
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:#E6A817;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap">⚠ Proof of Concept</span>
-    <span style="font-size:12px;color:#7A5800;line-height:1.4"><strong>FP&amp;A Research Agent</strong> — This is a pre-release demo, not a fully functional product. Currently in internal testing with colleagues. Results should not be used for formal investment decisions.</span>
-  </div>
-  <button onclick="document.getElementById('fpa-disclaimer').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:16px;color:#7A5800;padding:0 4px;line-height:1;flex-shrink:0" title="Dismiss">✕</button>
-</div>
-
 <!-- ── TOP BAR ── -->
 <div class="topbar">
   <div class="topbar-dot"></div>
   <div class="topbar-brand">FP&amp;A Research Agent</div>
   <div class="topbar-tag">EDUAgent · Ambition 2045</div>
   <span class="topbar-poc">POC</span>
+</div>
+
+<!-- ── DISCLAIMER BANNER ── -->
+<div id="fpa-disclaimer" style="background:#FFF3CD;border-bottom:2px solid #E6C84A;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:system-ui,sans-serif;position:sticky;top:0;z-index:1000;box-shadow:0 2px 6px #00000012">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:#E6A817;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap">⚠ Proof of Concept</span>
+    <span style="font-size:12px;color:#7A5800;line-height:1.4"><strong>FP&amp;A Research Agent</strong> — Pre-release demo, not a fully functional product. Currently in internal testing with colleagues. Results should not be used for formal investment decisions.</span>
+  </div>
+  <button onclick="document.getElementById('fpa-disclaimer').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:16px;color:#7A5800;padding:0 4px;line-height:1;flex-shrink:0" title="Dismiss">✕</button>
 </div>
 
 <!-- ── TOOL HEADER ── -->
