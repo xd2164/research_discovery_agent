@@ -1,0 +1,88 @@
+{
+  "pillar": "Pillar 1",
+  "effect_size": {
+    "low": 0.05,
+    "base": 0.15,
+    "high": 0.28,
+    "unit": "SD",
+    "evidence_type": "quasi-experimental and RCT proxies",
+    "evidence_score": 0.58,
+    "source_count": 3
+  },
+  "evidence_tier": 3,
+  "similarity_score": 0.6,
+  "persistence_factor": {
+    "low": 0.35,
+    "base": 0.5,
+    "high": 0.62,
+    "source": "Bailey et al. 2017 (proxy from CAI literature)"
+  },
+  "pipeline_steps": [
+    {
+      "step": "SD gain → HS graduation",
+      "rate": 0.1,
+      "confidence": "Moderate"
+    },
+    {
+      "step": "HS grad → PS enrollment",
+      "rate": 0.7,
+      "confidence": "High"
+    },
+    {
+      "step": "PS enroll → gateway completion",
+      "rate": 0.62,
+      "confidence": "Moderate"
+    },
+    {
+      "step": "Gateway → credential attainment",
+      "rate": 0.55,
+      "confidence": "Low"
+    }
+  ],
+  "subgroup_modifiers": [
+    {
+      "subgroup": "Black/Latino students",
+      "multiplier": 1.1,
+      "direction": "larger effect plausible but untested for AI-specific tools",
+      "source": "Theobald et al. 2020 (external proxy)"
+    }
+  ],
+  "proxy_studies": [
+    {
+      "study": "Escueta et al. 2017 CAI review (NBER w23744)",
+      "effect_size": 0.15,
+      "evidence_type": "meta-analytic review of RCTs",
+      "tier": 2,
+      "similarity_score": 0.65,
+      "rationale": "Covers computer-assisted instruction broadly; generative AI tutoring is a newer, higher-capability mechanism not directly studied"
+    },
+    {
+      "study": "Darvishi et al. 2023 AI agency study",
+      "effect_size": null,
+      "evidence_type": "observational",
+      "tier": 3,
+      "similarity_score": 0.55,
+      "rationale": "Examines AI scaffolding effects on student agency but does not report standardised learning gain estimates"
+    },
+    {
+      "study": "Striełkowski et al. 2024 adaptive learning review",
+      "effect_size": null,
+      "evidence_type": "narrative review",
+      "tier": 3,
+      "similarity_score": 0.5,
+      "rationale": "Describes adaptive AI learning benefits but lacks quantified effect sizes from controlled studies"
+    }
+  ],
+  "baseline_rates": {
+    "pass_rate": null,
+    "retention": null,
+    "note": "Population-specific baselines for gateway math or postsecondary AI tutoring not surfaced in retrieved literature"
+  },
+  "credential_premium": {
+    "low": 32000,
+    "base": 40000,
+    "high": 48000,
+    "degree_type": "bachelor",
+    "source": "Chetty et al. 2014"
+  }
+}
