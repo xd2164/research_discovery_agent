@@ -640,17 +640,27 @@ async function buildConceptGraph() {
   startForceGraph(canvas,ctx,axGraphData);
 }
 
+function _placeNodesInCircle(W, H) {
+  const n=_gNodes.length, r=Math.min(W,H)*0.28;
+  _gNodes.forEach((node,i)=>{
+    const angle=(i/n)*Math.PI*2 - Math.PI/2;
+    node.x=W/2+Math.cos(angle)*r*(0.85+Math.random()*0.3);
+    node.y=H/2+Math.sin(angle)*r*(0.85+Math.random()*0.3);
+    node.vx=0; node.vy=0;
+  });
+}
+
 function resetGraphLayout() {
   if(!axGraphData||!_gCanvas) return;
-  const W=_gCanvas.width, H=_gCanvas.height;
-  _gNodes.forEach(n=>{ n.x=W/2+(Math.random()-.5)*20; n.y=H/2+(Math.random()-.5)*20; n.vx=(Math.random()-.5)*8; n.vy=(Math.random()-.5)*8; });
+  _placeNodesInCircle(_gCanvas.width, _gCanvas.height);
   _gSelectedNode=null; _gEnergy=1.0;
+  _gResumeAnim();
 }
 
 function startForceGraph(canvas,ctx,data) {
   _gCanvas=canvas; _gCtx=ctx;
   const W=canvas.width, H=canvas.height;
-  _gNodes=data.nodes.map(n=>({...n,x:W/2+(Math.random()-.5)*30,y:H/2+(Math.random()-.5)*30,vx:(Math.random()-.5)*10,vy:(Math.random()-.5)*10}));
+  _gNodes=data.nodes.map(n=>({...n,x:W/2,y:H/2,vx:0,vy:0}));
   _gIdMap=Object.fromEntries(_gNodes.map(n=>[n.id,n]));
   _gEdges=data.edges.filter(e=>_gIdMap[e.from]&&_gIdMap[e.to]);
   _gDragNode=null; _gSelectedNode=null; _gHoverNode=null; _gEnergy=1.0;
@@ -661,7 +671,7 @@ function startForceGraph(canvas,ctx,data) {
   const _cw=newCanvas.offsetWidth||900, _ch=480;
   newCanvas.width=_cw; newCanvas.height=_ch; newCanvas.style.height=_ch+'px';
   _gCtx=newCanvas.getContext('2d');
-  _gNodes.forEach(n=>{ n.x=_cw/2+(Math.random()-.5)*40; n.y=_ch/2+(Math.random()-.5)*40; });
+  _placeNodesInCircle(_cw, _ch);
   newCanvas.addEventListener('mousedown',_gOnMouseDown);
   newCanvas.addEventListener('mousemove',_gOnMouseMove);
   newCanvas.addEventListener('mouseup',_gOnMouseUp);
@@ -683,32 +693,37 @@ function _gResumeAnim() {
 
 function _gTick() {
   const W=_gCanvas.width, H=_gCanvas.height;
-  const K=100, REPEL=7000, CORE_GRAVITY=0.06, GRAVITY=0.025, DAMP=0.86;
-  _gEnergy=Math.max(0,_gEnergy-0.006);
-  const ef=1+_gEnergy*3;
+  // Higher damping + lower speed cap = smooth, no oscillation
+  const K=110, REPEL=4800, CORE_GRAVITY=0.035, GRAVITY=0.015, DAMP=0.92, MAX_SPEED=5;
+  _gEnergy=Math.max(0,_gEnergy-0.022);
   _gNodes.forEach(n=>{ n.fx=0; n.fy=0; });
+  // Node-node repulsion
   for(let a=0;a<_gNodes.length;a++) for(let b=a+1;b<_gNodes.length;b++){
     const dx=_gNodes[a].x-_gNodes[b].x, dy=_gNodes[a].y-_gNodes[b].y;
     const d2=dx*dx+dy*dy+1, f=REPEL/d2;
-    _gNodes[a].fx+=f*dx; _gNodes[a].fy+=f*dy; _gNodes[b].fx-=f*dx; _gNodes[b].fy-=f*dy;
+    _gNodes[a].fx+=f*dx; _gNodes[a].fy+=f*dy;
+    _gNodes[b].fx-=f*dx; _gNodes[b].fy-=f*dy;
   }
+  // Spring edges
   _gEdges.forEach(e=>{
     const s=_gIdMap[e.from], t=_gIdMap[e.to];
-    const dx=t.x-s.x, dy=t.y-s.y, d=Math.sqrt(dx*dx+dy*dy)||1, f=(d-K)/d*0.35;
+    const dx=t.x-s.x, dy=t.y-s.y, d=Math.sqrt(dx*dx+dy*dy)||1, f=(d-K)/d*0.28;
     s.fx+=f*dx; s.fy+=f*dy; t.fx-=f*dx; t.fy-=f*dy;
   });
+  // Centre gravity
   _gNodes.forEach(n=>{
     const g=n.type==='core'?CORE_GRAVITY:GRAVITY;
     n.fx+=(W/2-n.x)*g; n.fy+=(H/2-n.y)*g;
   });
+  // Integrate — no energy multiplier so forces stay proportional throughout
   let maxSpeed=0;
   _gNodes.forEach(n=>{
     if(n===_gDragNode) return;
-    n.vx=(n.vx+n.fx)*DAMP*ef; n.vy=(n.vy+n.fy)*DAMP*ef;
+    n.vx=(n.vx+n.fx)*DAMP; n.vy=(n.vy+n.fy)*DAMP;
     const speed=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(speed>16){ n.vx=n.vx/speed*16; n.vy=n.vy/speed*16; }
+    if(speed>MAX_SPEED){ n.vx=n.vx/speed*MAX_SPEED; n.vy=n.vy/speed*MAX_SPEED; }
     if(speed>maxSpeed) maxSpeed=speed;
-    const pad=n.type==='core'?64:72;
+    const pad=n.type==='core'?60:68;
     n.x=Math.max(pad,Math.min(W-pad,n.x+n.vx));
     n.y=Math.max(pad,Math.min(H-pad,n.y+n.vy));
   });
