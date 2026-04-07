@@ -351,7 +351,11 @@ let axPaper = null;
 
 async function fetchArxiv() {
   const raw = document.getElementById('ax-id').value.trim();
-  const id = raw.replace(/https?:\/\/.*?abs\//, '').replace(/v\d+$/, '').trim();
+  const id = raw
+    .replace(/https?:\/\/arxiv\.org\/(abs|pdf|html)\//, '')
+    .replace(/\.pdf$/, '')
+    .replace(/v\d+$/, '')
+    .trim();
   if (!id) return;
   const out = document.getElementById('ax-out');
   const placeholder = document.getElementById('ax-meta-placeholder');

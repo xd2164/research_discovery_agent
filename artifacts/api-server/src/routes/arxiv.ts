@@ -37,7 +37,11 @@ function parseArxivXml(xml: string) {
 // GET /api/arxiv?id=<arxivId>
 arxivRouter.get("/arxiv", async (req, res) => {
   const raw = (req.query.id as string || "").trim();
-  const id = raw.replace(/https?:\/\/.*?abs\//, "").replace(/v\d+$/, "").trim();
+  const id = raw
+    .replace(/https?:\/\/arxiv\.org\/(abs|pdf|html)\//, "")
+    .replace(/\.pdf$/, "")
+    .replace(/v\d+$/, "")
+    .trim();
   if (!id) { res.status(400).json({ error: "id is required" }); return; }
   try {
     const r = await fetch(`https://export.arxiv.org/api/query?id_list=${encodeURIComponent(id)}&max_results=1`);
