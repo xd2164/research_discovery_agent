@@ -212,16 +212,85 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .chat-inp{padding:12px 14px;border-top:1px solid var(--border);background:var(--surf);display:flex;gap:8px;align-items:flex-end}
 .chat-side{display:flex;flex-direction:column;gap:12px}
+
+/* ── HAMBURGER BUTTON (mobile only) ── */
+.mob-ham{display:none;flex-direction:column;justify-content:center;gap:4px;width:36px;height:36px;padding:6px;cursor:pointer;border:none;background:transparent;border-radius:7px;flex-shrink:0;margin-right:4px}
+.mob-ham:hover{background:rgba(255,255,255,.12)}
+.mob-ham span{display:block;height:2px;width:20px;background:#fff;border-radius:2px;transition:all .2s}
+
+/* ── SIDEBAR OVERLAY BACKDROP ── */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;touch-action:none}
+#sb-overlay.open{display:block}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:700px){
+  /* Topnav */
+  .topnav{padding:0 12px;gap:6px}
+  .topnav-brand{font-size:13px}
+  .topnav-sub{display:none}
+  .mob-ham{display:flex}
+
+  /* Body layout: sidebar no longer takes space */
+  html,body{overflow:auto}
+  .body-layout{display:block;overflow:visible}
+
+  /* Sidebar becomes a fixed overlay drawer */
+  .sidebar{
+    position:fixed;top:0;bottom:0;left:0;
+    z-index:200;
+    transform:translateX(-100%);
+    transition:transform .25s cubic-bezier(.4,0,.2,1);
+    width:260px;min-width:260px;max-width:260px;
+    box-shadow:4px 0 24px rgba(0,0,0,.35);
+  }
+  .sidebar.sb-open{transform:translateX(0)}
+
+  /* Main takes full width */
+  .main{min-height:calc(100vh - 48px)}
+
+  /* Tool header */
+  .t-hdr{padding:16px 16px 12px}
+  .t-title{font-size:20px}
+  .t-tag{font-size:12px;margin-bottom:10px}
+
+  /* Tab nav + content */
+  .tnav{padding:0 12px}
+  .tc{padding:16px 12px}
+
+  /* Grids → single column */
+  .g2,.g3,.pat-grid,.ins-g{grid-template-columns:1fr!important}
+  .proto{grid-template-columns:1fr!important}
+  .metrics{grid-template-columns:1fr 1fr!important}
+  .osb-g{grid-template-columns:1fr 1fr!important}
+  .arch-comps{grid-template-columns:1fr 1fr!important}
+  .chat-wrap{grid-template-columns:1fr!important;height:auto}
+  .chat-side{display:none}
+
+  /* FPA iframe — let it scroll naturally */
+  #pane-fpa{padding:0}
+  #pane-fpa iframe{display:block;width:100%;height:calc(100vh - 48px);border:none}
+}
+
+@media(max-width:420px){
+  .metrics,.osb-g,.arch-comps{grid-template-columns:1fr!important}
+  .t-title{font-size:18px}
+}
 </style>
 </head>
 <body>
 
 <!-- TOP NAV -->
 <div class="topnav">
+  <button class="mob-ham" onclick="toggleSidebar()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="topnav-dot"></div>
   <div class="topnav-brand">Data &amp; AI Enablement Hub</div>
   <span class="topnav-sub">US Program · Research &amp; Discovery</span>
 </div>
+
+<!-- SIDEBAR OVERLAY BACKDROP -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
 
 <!-- BODY -->
 <div class="body-layout">
@@ -1694,6 +1763,17 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 <script>
 // ══ NAVIGATION ══
 const PANES=['research','market','agents','fpa'];
+function toggleSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sb-overlay');
+  const open=sb.classList.toggle('sb-open');
+  ov.classList.toggle('open',open);
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('sb-open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
 function go(id){
   PANES.forEach(p=>{
     const el=document.getElementById('pane-'+p);
@@ -1704,6 +1784,8 @@ function go(id){
     el.classList.toggle('on',eid===id);
   });
   document.getElementById('main').scrollTop=0;
+  // Auto-close sidebar on mobile after navigation
+  if(window.innerWidth<=700) closeSidebar();
 }
 function goTab(id,tabIdx){
   go(id);
