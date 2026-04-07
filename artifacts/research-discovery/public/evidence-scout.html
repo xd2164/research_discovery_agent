@@ -53,6 +53,21 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
 /* ── top banner ── */
 .es-banner{background:#0A1F3A;border-radius:10px;padding:12px 16px;margin-bottom:16px;border-left:4px solid #5E52D4;display:flex;align-items:center;gap:12px}
+
+/* ── summary output cards ── */
+.sum-header{border-radius:9px;padding:12px 16px;margin-bottom:14px;border:1px solid #D8E3F0;background:#F7F9FF}
+.sum-paper-title{font-size:15px;font-weight:700;color:#0A2240;line-height:1.35;margin-bottom:4px;font-family:Georgia,serif}
+.sum-paper-meta{font-size:11px;color:#596577}
+.sum-card{border-radius:9px;overflow:hidden;margin-bottom:10px;border:1px solid var(--border)}
+.sum-card-hdr{padding:8px 14px;display:flex;align-items:center;gap:8px}
+.sum-card-icon{font-size:14px;flex-shrink:0}
+.sum-card-label{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.sum-card-body{padding:10px 14px 12px;background:#fff;font-size:12.5px;line-height:1.7;color:#0D1B2A}
+.sum-card-body p{margin-bottom:5px}
+.sum-card-body p:last-child{margin-bottom:0}
+.sum-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.sum-li{display:flex;gap:8px;align-items:flex-start;line-height:1.55;font-size:12.5px;color:#0D1B2A}
+.sum-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .es-banner-icon{font-size:20px;flex-shrink:0}
 .es-banner-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5}
 
@@ -315,7 +330,87 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 <script>
 const API_BASE = '';
 
-// ── Render text output ──
+// ── Summary section config ──
+const SUM_SECTIONS = [
+  { match: 'paper overview',            icon: '📄', color: '#1A6BC4', bg: '#EAF3FF', border: '#B8D4F5' },
+  { match: 'key findings',              icon: '🔬', color: '#0B6E4F', bg: '#E6F8F2', border: '#9AE0CA' },
+  { match: 'evidence quality',          icon: '📊', color: '#5E52D4', bg: '#F0EEFF', border: '#C5C0F0' },
+  { match: 'relevance',                 icon: '🎯', color: '#0A2240', bg: '#EBF0F8', border: '#B0C4DE' },
+  { match: 'gaps',                      icon: '⚠️', color: '#B07010', bg: '#FEF6E0', border: '#EDD080' },
+  { match: 'next steps',                icon: '➡️', color: '#C0391B', bg: '#FFF0EA', border: '#F5B8A0' },
+];
+
+function _sumStyle(heading) {
+  const h = heading.toLowerCase();
+  return SUM_SECTIONS.find(s => h.includes(s.match)) ||
+    { icon: '◆', color: '#596577', bg: '#F2F7FD', border: '#D8E3F0' };
+}
+
+function _inlineMd(t) {
+  return t
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+function _renderSectionBody(lines, dotColor) {
+  let html = '', inList = false;
+  const flush = () => { if (inList) { html += '</ul>'; inList = false; } };
+  lines.forEach(l => {
+    const trimmed = l.trim();
+    if (!trimmed) { flush(); return; }
+    if (trimmed.match(/^[-•*]\s/)) {
+      if (!inList) { html += `<ul class="sum-ul">`; inList = true; }
+      html += `<li class="sum-li"><span class="sum-dot" style="background:${dotColor}"></span><span>${_inlineMd(trimmed.replace(/^[-•*]\s/, ''))}</span></li>`;
+    } else {
+      flush();
+      html += `<p>${_inlineMd(trimmed)}</p>`;
+    }
+  });
+  flush();
+  return html;
+}
+
+// ── Render structured paper summary ──
+function renderSummary(el, text) {
+  // Split on ## headings
+  const raw = text.split(/^##\s+/m);
+  const intro = raw[0].trim();
+  const sections = raw.slice(1).map(block => {
+    const nl = block.indexOf('\n');
+    const heading = nl > -1 ? block.slice(0, nl).trim() : block.trim();
+    const body = nl > -1 ? block.slice(nl + 1).trim() : '';
+    return { heading, lines: body.split('\n') };
+  });
+
+  if (!sections.length) {
+    // Fallback: plain text
+    el.innerHTML = `<div style="font-size:13px;line-height:1.7;white-space:pre-wrap">${_inlineMd(text)}</div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Paper header card (if intro text exists)
+  if (intro) {
+    html += `<div class="sum-header"><p style="font-size:12.5px;color:#596577;line-height:1.6">${_inlineMd(intro)}</p></div>`;
+  }
+
+  // Section cards
+  sections.forEach(({ heading, lines }) => {
+    const s = _sumStyle(heading);
+    html += `<div class="sum-card" style="border-color:${s.border}">
+      <div class="sum-card-hdr" style="background:${s.bg}">
+        <span class="sum-card-icon">${s.icon}</span>
+        <span class="sum-card-label" style="color:${s.color}">${heading}</span>
+      </div>
+      <div class="sum-card-body">${_renderSectionBody(lines, s.color)}</div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+// ── Plain-text renderer (used for Q&A) ──
 function renderOut(el, text) {
   const lines = text.split('\n'); let html = '', inL = false, inS = false;
   lines.forEach(l => {
@@ -335,7 +430,7 @@ function renderOut(el, text) {
   el.innerHTML = html || `<p style="font-size:13px">${text}</p>`;
 }
 
-// ── Claude helper ──
+// ── Claude helper (Q&A and misc) ──
 async function callClaude(prompt, outId) {
   const out = document.getElementById(outId); if (!out) return;
   out.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px;padding:8px 0"><div class="spin"></div>Generating…</div>';
@@ -390,7 +485,29 @@ async function fetchArxiv() {
 
 async function runArxiv() {
   if (!axPaper) return;
-  await callClaude(`You are EDUAgent, a research synthesis assistant for the Bill & Melinda Gates Foundation.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0,5).join(', ')}\narXiv ID: ${axPaper.id}\nPublished: ${axPaper.published}\nCategories: ${axPaper.categories.join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nGenerate a structured evidence brief for a Gates Foundation program officer.\n\nUse ## headings:\n## Paper overview\n## Key findings\n## Evidence quality (six-rung ladder)\n## Relevance to Gates Foundation\n## Gaps and caveats\n## Recommended next steps`, 'ax-out');
+  const out = document.getElementById('ax-out');
+  out.innerHTML = `<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px;padding:8px 0"><div class="spin" style="border-top-color:#5E52D4"></div>Generating evidence brief…</div>`;
+  try {
+    const r = await fetch(API_BASE + '/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt:
+        `You are EDUAgent, a research synthesis assistant for the Bill & Melinda Gates Foundation.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0,5).join(', ')}\narXiv ID: ${axPaper.id}\nPublished: ${axPaper.published}\nCategories: ${axPaper.categories.join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nGenerate a structured evidence brief for a Gates Foundation program officer. Be specific and concise in each section.\n\nUse these exact ## headings (in this order):\n## Paper overview\n## Key findings\n## Evidence quality (six-rung ladder)\n## Relevance to Gates Foundation\n## Gaps and caveats\n## Recommended next steps` })
+    });
+    const d = await r.json();
+    const text = d.content?.find(b => b.type === 'text')?.text || 'No response.';
+    // Prepend paper identity banner then render section cards
+    const meta = `<div class="sum-header">
+      <div class="sum-paper-title">${axPaper.title}</div>
+      <div class="sum-paper-meta">${axPaper.authors.slice(0,4).join(', ')}${axPaper.authors.length > 4 ? ' et al.' : ''} &nbsp;·&nbsp; ${axPaper.published.slice(0,4)} &nbsp;·&nbsp; arXiv:${axPaper.id}</div>
+    </div>`;
+    out.innerHTML = meta;
+    const cards = document.createElement('div');
+    renderSummary(cards, text);
+    out.appendChild(cards);
+  } catch(e) {
+    out.innerHTML = '<p style="color:#E0522A;font-size:13px">Connection error. Please try again.</p>';
+  }
 }
 
 async function runArxivQ() {
