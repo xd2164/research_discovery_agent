@@ -46,6 +46,33 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 #fpa-disclaimer-modal.open{display:flex}
 #fpa-disclaimer-modal-box{background:#fff;border-radius:12px;padding:28px 32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width:640px){
+  .topbar{padding:8px 14px;gap:7px}
+  .topbar-tag{display:none}
+  .topbar-brand{font-size:13px}
+  .t-hdr{padding:14px 16px 10px}
+  .t-title{font-size:20px}
+  .t-tag{font-size:12px}
+  .main-content{padding:12px 14px;gap:12px}
+  .fpa-disc-strip{margin:8px 14px 0!important}
+  .fpa-caps-grid{padding:10px 14px 0!important;grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+  .fpa-caps-grid>div{padding:10px 11px!important}
+  #fpa-disclaimer-modal-box{padding:20px 18px}
+  /* Synthesis panel header buttons stack */
+  #fpa-synthesis-panel [style*="flex-wrap:wrap"]{gap:6px}
+  /* ROI panel header */
+  #fpa-roi-panel [style*="justify-content:space-between"]{flex-wrap:wrap;gap:6px}
+  /* Node panel input row */
+  #fpa-node-panel [style*="display:flex;gap:8px"]{flex-direction:column}
+  /* History panel — narrower padding */
+  #fpa-history-panel [style*="padding:11px 16px"]{padding:9px 12px!important}
+}
+@media (max-width:420px){
+  .fpa-caps-grid{grid-template-columns:1fr!important}
+  .t-title{font-size:18px}
+}
+
 </style>
 </head>
 <body>
@@ -75,13 +102,13 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 </div>
 
 <!-- ── DISCLAIMER STRIP ── -->
-<div style="margin:10px 20px 0;background:#FFFBEB;border:1px solid #F6D860;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:10px">
+<div class="fpa-disc-strip" style="margin:10px 20px 0;background:#FFFBEB;border:1px solid #F6D860;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:10px">
   <span style="font-size:14px;flex-shrink:0">⚠️</span>
   <span style="font-size:11px;color:#92400E;line-height:1.5"><strong>Proof of Concept</strong> — This is a pre-release demo in internal testing. Not a fully functional product. Outputs should not be used for formal investment decisions.</span>
 </div>
 
 <!-- ── CAPABILITY CARDS ── -->
-<div style="padding:14px 20px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+<div class="fpa-caps-grid" style="padding:14px 20px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
   <div style="background:#fff;border:1px solid #D8E3F0;border-radius:10px;padding:12px 14px">
     <div style="font-size:18px;margin-bottom:6px">🎯</div>
     <div style="font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#3A2FAA;margin-bottom:4px">Goal Mapping</div>
