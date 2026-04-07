@@ -84,16 +84,22 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 .ax-action-btn{padding:8px 16px;font-size:12px;font-weight:700;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#fff;transition:opacity .15s}
 .ax-action-btn:disabled{opacity:.38;cursor:not-allowed}
 
-/* ── scorecard layout ── */
-.ev-scorecard-grid{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.ev-radar-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px;flex:1;min-width:240px;max-width:300px}
-.ev-verdict-box{flex:1;min-width:180px;background:var(--white);border:1px solid var(--border);border-radius:9px;padding:12px;font-size:11px;color:var(--text);line-height:1.65}
-.ev-cards-col{display:flex;flex-direction:column;gap:8px;width:100%}
-
-/* ── evidence dim card ── */
-.ev-dim-card{background:var(--white);border:1px solid var(--border);border-radius:9px;overflow:hidden}
-.ev-dim-hdr{padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;user-select:none}
-.ev-dim-body{padding:0 13px 10px}
+/* ── scorecard layout — mirrors ROI Parameters panel ── */
+.ev-sc-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ev-sc-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ev-sc-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid}
+.ev-sc-actions{display:flex;gap:5px}
+.ev-sc-btn{font-size:10px;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:700}
+.ev-metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px;margin-bottom:14px}
+.ev-metric-card{background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px}
+.ev-metric-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px}
+.ev-metric-bignum{font-size:22px;font-weight:800;color:#0D1B3E}
+.ev-metric-bar-track{height:5px;background:#E8EBF4;border-radius:3px;margin:6px 0 3px}
+.ev-metric-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.ev-dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.ev-dim-card{background:#fff;border:1px solid #D0D5E0;border-radius:10px;overflow:hidden}
+.ev-dim-hdr{padding:10px 13px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;justify-content:space-between}
+.ev-dim-body{padding:0 13px 10px;border-top:1px solid #EEF0F5}
 
 /* ── Q&A answer ── */
 .qa-answer-panel{margin-top:12px;border-radius:10px;overflow:hidden;border:1.5px solid #B8D4F5}
@@ -218,33 +224,55 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
           </div>
         </div>
 
-        <!-- Active scorecard -->
+        <!-- Active scorecard — same visual grammar as ROI Parameters panel -->
         <div id="ax-ev-panel" style="display:none">
 
-          <!-- Scorecard header row -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:7px;padding-bottom:10px;border-bottom:1px solid #C5E8DC">
-            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-              <div id="ax-ev-tier"></div>
+          <!-- Header: icon + title + signal/tier badges | action buttons -->
+          <div class="ev-sc-header">
+            <div class="ev-sc-badges">
+              <span style="font-size:14px">📊</span>
+              <span style="font-size:13px;font-weight:800;color:#0D1B3E">Evidence Scorecard</span>
               <div id="ax-ev-loading" style="display:none;align-items:center;gap:6px;color:var(--muted);font-style:italic;font-size:11px">
                 <div class="spin" style="border-top-color:#0B6E4F"></div>Scoring 18 indicators…
               </div>
+              <span id="ax-ev-signal-pill" style="display:none"></span>
+              <span id="ax-ev-tier" style="display:none"></span>
             </div>
-            <div style="display:flex;gap:5px">
-              <button onclick="resetEvWeights()" style="font-size:10px;padding:4px 10px;border-radius:7px;background:var(--white);color:#0B6E4F;border:1.5px solid #0B9E80;cursor:pointer;font-weight:700">Reset weights</button>
-              <button onclick="runEvidenceStrength()" style="font-size:10px;padding:4px 10px;border-radius:7px;background:#0B6E4F;color:#fff;border:none;cursor:pointer;font-weight:700">↻ Re-score</button>
+            <div class="ev-sc-actions">
+              <button onclick="resetEvWeights()" class="ev-sc-btn" style="background:#fff;color:#0B6E4F;border:1.5px solid #0B9E80">Reset weights</button>
+              <button onclick="evCopyJson(this)" class="ev-sc-btn" style="background:#fff;color:#555;border:1px solid #D0D5E0">⬇ Copy JSON</button>
+              <button onclick="runEvidenceStrength()" class="ev-sc-btn" style="background:#0B6E4F;color:#fff;border:none">↻ Re-score</button>
             </div>
           </div>
 
-          <!-- Radar + Verdict -->
-          <div class="ev-scorecard-grid" style="margin-bottom:12px">
-            <div class="ev-radar-box">
-              <canvas id="ax-ev-radar" style="width:100%;height:auto;display:block"></canvas>
+          <!-- Top metric grid: Overall Score | Radar | Investment Readiness -->
+          <div class="ev-metric-grid">
+            <!-- Overall Score card -->
+            <div class="ev-metric-card">
+              <div class="ev-metric-label">Overall Evidence Score</div>
+              <div style="display:flex;align-items:flex-end;gap:4px">
+                <span id="ax-ev-total" class="ev-metric-bignum">—</span>
+                <span style="font-size:11px;color:#7A869A;margin-bottom:4px">/30</span>
+              </div>
+              <div class="ev-metric-bar-track">
+                <div id="ax-ev-total-bar" class="ev-metric-bar-fill" style="background:linear-gradient(90deg,#0B9E80,#1A6BC4);width:0%"></div>
+              </div>
+              <div id="ax-ev-tier-inline" style="margin-top:8px"></div>
             </div>
-            <div id="ax-ev-verdict" style="display:none" class="ev-verdict-box"></div>
+            <!-- Radar chart card -->
+            <div class="ev-metric-card" style="padding:10px">
+              <div class="ev-metric-label" style="margin-bottom:6px">Dimension Profile</div>
+              <canvas id="ax-ev-radar" style="width:100%;height:auto;display:block;max-height:170px"></canvas>
+            </div>
+            <!-- Investment Readiness card -->
+            <div class="ev-metric-card" id="ax-ev-verdict">
+              <div class="ev-metric-label">Investment Readiness</div>
+              <div id="ax-ev-verdict-text" style="font-size:11.5px;color:#0D1B3E;line-height:1.65"></div>
+            </div>
           </div>
 
-          <!-- Dimension cards -->
-          <div id="ax-ev-cards" class="ev-cards-col"></div>
+          <!-- Dimension grid — mirrors ROI proxy-studies grid -->
+          <div id="ax-ev-cards" class="ev-dim-grid"></div>
         </div>
       </div>
     </div>
@@ -564,6 +592,15 @@ let _evChart = null, _evScores = {}, _evWeights = {};
 function _evGetWeightId(dk, ik) { return `ew_${dk}_${ik}`; }
 function _evWeight(dk, ik) { return parseFloat(document.getElementById(_evGetWeightId(dk, ik))?.value ?? 1); }
 
+function _evRenderTier(tier, total) {
+  const tierEl = document.getElementById('ax-ev-tier-inline');
+  if (tierEl) tierEl.innerHTML = `<span class="ev-sc-pill" style="background:${tier.bg};color:${tier.color};border-color:${tier.border}">${tier.label}</span>`;
+  const totEl = document.getElementById('ax-ev-total');
+  if (totEl) totEl.textContent = total.toFixed(1);
+  const barEl = document.getElementById('ax-ev-total-bar');
+  if (barEl) barEl.style.width = (total / 30 * 100).toFixed(1) + '%';
+}
+
 function recalcEvidence() {
   if (!Object.keys(_evScores).length) return;
   const dimScores = EV_DIMS.map(dim => {
@@ -586,8 +623,15 @@ function recalcEvidence() {
   }));
   const total=dimScores.reduce((a,b)=>a+b,0);
   const tier=EV_TIERS.find(t=>total>=t.min&&total<=t.max)||EV_TIERS[3];
-  const tierEl=document.getElementById('ax-ev-tier');
-  if(tierEl){ tierEl.textContent=tier.label+` (${total.toFixed(1)}/30)`; tierEl.style.cssText=`font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:${tier.bg};color:${tier.color};border:1.5px solid ${tier.border};display:inline-block`; }
+  _evRenderTier(tier, total);
+}
+
+function evCopyJson(btn) {
+  const data = { paper: axPaper?.title, scores: _evScores };
+  navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+    const orig = btn.textContent; btn.textContent = '✓ Copied'; btn.style.color = '#0B6E4F';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1600);
+  });
 }
 
 function resetEvWeights() {
@@ -604,14 +648,20 @@ async function runEvidenceStrength() {
   const idle=document.getElementById('ax-ev-idle');
   const loading=document.getElementById('ax-ev-loading');
   const cards=document.getElementById('ax-ev-cards');
-  const verdict=document.getElementById('ax-ev-verdict');
-  const tierEl=document.getElementById('ax-ev-tier');
   if(idle) idle.style.display='none';
   panel.style.display='block';
   loading.style.display='flex';
   cards.innerHTML='';
-  verdict.style.display='none';
-  tierEl.style.display='none';
+  // Reset header pills
+  const sigPillReset=document.getElementById('ax-ev-signal-pill');
+  const tierPillReset=document.getElementById('ax-ev-tier');
+  if(sigPillReset) sigPillReset.style.display='none';
+  if(tierPillReset) tierPillReset.style.display='none';
+  // Reset score card
+  const totReset=document.getElementById('ax-ev-total'); if(totReset) totReset.textContent='—';
+  const barReset=document.getElementById('ax-ev-total-bar'); if(barReset) barReset.style.width='0%';
+  const tInline=document.getElementById('ax-ev-tier-inline'); if(tInline) tInline.innerHTML='';
+  const vText=document.getElementById('ax-ev-verdict-text'); if(vText) vText.innerHTML='';
   if(_evChart){ _evChart.destroy(); _evChart=null; }
   _evScores={}; _evWeights={};
 
@@ -633,71 +683,102 @@ async function runEvidenceStrength() {
   } catch(e){ loading.style.display='none'; cards.innerHTML='<p style="color:#E0522A;font-size:12px">Scoring failed — try again.</p>'; return; }
 
   loading.style.display='none';
+
+  // ── Compute dim scores ──
   const dimScores=EV_DIMS.map(dim=>{
     const s=dim.indicators.reduce((a,ind)=>a+(_evScores[dim.key]?.[ind.key]?.score||0),0)/dim.indicators.length;
     return Math.round(s*10)/10;
   });
-  const radarShortLabels=['Study Rigor','Sample & Scale','Effect Precision','Replication','Equity & Fit','Actionability'];
+  const total=dimScores.reduce((a,b)=>a+b,0);
+  const tier=EV_TIERS.find(t=>total>=t.min&&total<=t.max)||EV_TIERS[3];
+
+  // ── Overall Score card ──
+  _evRenderTier(tier, total);
+
+  // ── Investment Readiness card ──
+  const sig=_evScores._signal||'';
+  const sigStyles={
+    Strong:  { color:'#065C3A', bg:'#D6F5EC', border:'#0B9E80' },
+    Moderate:{ color:'#0A3C6E', bg:'#DFF0FF', border:'#1A6BC4' },
+    Cautious:{ color:'#6B4A00', bg:'#FFF3DC', border:'#D4921A' },
+    Insufficient:{ color:'#7A2A10', bg:'#FFE8DC', border:'#E0522A' },
+  };
+  const ss=sigStyles[sig]||{color:'#555',bg:'#F2F2F2',border:'#ccc'};
+  const verdictTextEl=document.getElementById('ax-ev-verdict-text');
+  if(verdictTextEl && _evScores._verdict){
+    verdictTextEl.innerHTML=`<div style="font-size:11.5px;line-height:1.65;margin-bottom:10px;color:#0D1B3E">${_evScores._verdict}</div>
+      ${sig?`<span class="ev-sc-pill" style="background:${ss.bg};color:${ss.color};border-color:${ss.border};font-size:11px;padding:4px 12px">Signal: ${sig}</span>`:''}`;
+  }
+
+  // ── Signal pill in header ──
+  const sigPill=document.getElementById('ax-ev-signal-pill');
+  if(sigPill && sig){
+    sigPill.className='ev-sc-pill';
+    sigPill.style.cssText=`background:${ss.bg};color:${ss.color};border-color:${ss.border}`;
+    sigPill.textContent=sig;
+    sigPill.style.display='inline-block';
+  }
+  const tierPill=document.getElementById('ax-ev-tier');
+  if(tierPill){
+    tierPill.className='ev-sc-pill';
+    tierPill.style.cssText=`background:${tier.bg};color:${tier.color};border-color:${tier.border}`;
+    tierPill.textContent=`${tier.label} · ${total.toFixed(1)}/30`;
+    tierPill.style.display='inline-block';
+  }
+
+  // ── Radar chart ──
   const radarCtx=document.getElementById('ax-ev-radar').getContext('2d');
   _evChart=new Chart(radarCtx,{
     type:'radar',
-    data:{labels:radarShortLabels,datasets:[{label:'Evidence',data:dimScores,backgroundColor:'rgba(11,110,79,0.12)',borderColor:'#0B9E80',borderWidth:2,pointBackgroundColor:EV_DIMS.map(d=>d.color),pointRadius:5,pointHoverRadius:7}]},
+    data:{labels:['Rigor','Sample','Effect','Replication','Equity','Actionability'],datasets:[{label:'Evidence',data:dimScores,backgroundColor:'rgba(11,110,79,0.12)',borderColor:'#0B9E80',borderWidth:2,pointBackgroundColor:EV_DIMS.map(d=>d.color),pointRadius:4,pointHoverRadius:6}]},
     options:{
       responsive:true, maintainAspectRatio:true,
-      layout:{padding:{top:14,bottom:14,left:14,right:14}},
-      scales:{r:{min:0,max:5,ticks:{stepSize:1,font:{size:9},color:'#aaa',backdropColor:'transparent'},pointLabels:{font:{size:10,weight:'bold'},color:'#1A1A3A',padding:6},grid:{color:'rgba(0,0,0,0.06)'},angleLines:{color:'rgba(0,0,0,0.09)'}}},
+      layout:{padding:{top:8,bottom:8,left:8,right:8}},
+      scales:{r:{min:0,max:5,ticks:{stepSize:1,font:{size:8},color:'#aaa',backdropColor:'transparent'},pointLabels:{font:{size:9,weight:'bold'},color:'#1A1A3A',padding:4},grid:{color:'rgba(0,0,0,0.06)'},angleLines:{color:'rgba(0,0,0,0.09)'}}},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${EV_DIMS[c.dataIndex]?.label}: ${c.raw}/5`}}},
     },
   });
 
+  // ── Dimension cards — same card-grid visual as ROI proxy-studies ──
+  const scColor5=['','#E0522A','#D4921A','#7B5EA7','#1A6BC4','#0B9E80'];
   cards.innerHTML=EV_DIMS.map(dim=>{
     const dimSc=(_evScores[dim.key]?Object.values(_evScores[dim.key]).reduce((a,v)=>a+(v.score||0),0)/dim.indicators.length:0);
     const pct=dimSc/5*100;
-    return `<div class="ev-dim-card" style="border-left:3px solid ${dim.color}">
+    return `<div class="ev-dim-card" style="border-top:3px solid ${dim.color}">
       <div class="ev-dim-hdr" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-        <span style="font-size:12px;font-weight:700;color:var(--navy);min-width:0;flex:1">${dim.icon} ${dim.label}</span>
-        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-          <div style="width:60px;height:5px;border-radius:3px;background:var(--border)"><div id="evdb_${dim.key}" style="height:5px;border-radius:3px;background:${dim.color};width:${pct}%;transition:width .4s"></div></div>
-          <span id="evds_${dim.key}" style="font-size:13px;font-weight:800;color:${dim.color};min-width:28px;text-align:right">${dimSc.toFixed(1)}</span>
-          <span style="font-size:10px;color:var(--muted)">/5 ▾</span>
+        <div>
+          <div class="ev-metric-label" style="margin-bottom:2px">${dim.icon} ${dim.label}</div>
+          <div class="ev-metric-bar-track" style="width:90px;margin:0">
+            <div id="evdb_${dim.key}" class="ev-metric-bar-fill" style="background:${dim.color};width:${pct}%"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+          <span id="evds_${dim.key}" style="font-size:16px;font-weight:800;color:${dim.color}">${dimSc.toFixed(1)}</span>
+          <span style="font-size:9px;color:#7A869A">/5 ▾</span>
         </div>
       </div>
-      <div class="ev-dim-body">
+      <div class="ev-dim-body" style="display:block">
         ${dim.indicators.map(ind=>{
           const sc=_evScores[dim.key]?.[ind.key]?.score||0;
           const rat=_evScores[dim.key]?.[ind.key]?.rationale||'';
           const wid=_evGetWeightId(dim.key,ind.key);
-          const scColor=['','#E0522A','#D4921A','#5E52D4','#1A6BC4','#0B9E80'][Math.min(sc,5)]||'#888';
-          return `<div style="border-top:1px solid var(--border);padding:7px 0">
+          const ic=scColor5[Math.min(sc,5)]||'#888';
+          return `<div style="padding:8px 0;border-bottom:1px solid #F0F2F7">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px">
-              <span style="font-size:11px;font-weight:600;color:var(--navy);min-width:0;flex:1;line-height:1.4">${ind.label}</span>
-              <span style="font-size:13px;font-weight:800;color:${scColor};flex-shrink:0;white-space:nowrap">${sc}<span style="font-size:9px;color:var(--muted);font-weight:400">/5</span></span>
+              <span style="font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:#7A869A;flex:1;line-height:1.4">${ind.label}</span>
+              <span style="font-size:14px;font-weight:800;color:${ic};flex-shrink:0">${sc}<span style="font-size:9px;color:#7A869A;font-weight:400">/5</span></span>
             </div>
-            <div style="font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:5px;word-break:break-word">${rat}</div>
-            <div style="display:flex;align-items:center;gap:7px;min-width:0">
-              <span style="font-size:9px;color:var(--muted);white-space:nowrap;flex-shrink:0">Weight</span>
-              <input type="range" id="${wid}" min="0" max="2" step="0.1" value="1" style="flex:1;min-width:0;accent-color:${dim.color};height:3px;cursor:pointer" oninput="recalcEvidence()">
-              <span id="${wid}_lbl" style="font-size:9px;font-weight:700;color:${dim.color};min-width:32px;flex-shrink:0;text-align:right">1.0×</span>
+            <div style="font-size:10.5px;color:#596577;line-height:1.5;margin-bottom:5px">${rat}</div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:9px;color:#7A869A;white-space:nowrap">Weight</span>
+              <input type="range" id="${wid}" min="0" max="2" step="0.1" value="1" style="flex:1;accent-color:${dim.color};height:3px;cursor:pointer" oninput="recalcEvidence()">
+              <span id="${wid}_lbl" style="font-size:9px;font-weight:700;color:${dim.color};min-width:32px;text-align:right">1.0×</span>
             </div>
           </div>`;
         }).join('')}
       </div>
     </div>`;
   }).join('');
-
-  const sig=_evScores._signal||'';
-  const sigColors={Strong:'#065C3A',Moderate:'#0A3C6E',Cautious:'#6B4A00',Insufficient:'#7A2A10'};
-  const sigBg={Strong:'#D6F5EC',Moderate:'#DFF0FF',Cautious:'#FFF3DC',Insufficient:'#FFE8DC'};
-  if (_evScores._verdict) {
-    verdict.innerHTML=`<div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px">Investment Readiness Verdict</div>
-    <div style="font-size:12px;line-height:1.7;margin-bottom:10px;color:var(--text)">${_evScores._verdict}</div>
-    ${sig?`<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:${sigBg[sig]||'#f5f5f5'};border:1.5px solid ${sigColors[sig]||'#ccc'}"><span style="font-size:10px;color:var(--muted);font-weight:600">Signal:</span><span style="font-size:12px;font-weight:800;color:${sigColors[sig]||'#333'}">${sig}</span></div>`:''}`;
-    verdict.style.display='block';
-  }
-  const total=dimScores.reduce((a,b)=>a+b,0);
-  const tier=EV_TIERS.find(t=>total>=t.min&&total<=t.max)||EV_TIERS[3];
-  tierEl.textContent=tier.label+` (${total.toFixed(1)}/30)`;
-  tierEl.style.cssText=`font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:${tier.bg};color:${tier.color};border:1.5px solid ${tier.border};display:inline-block`;
 }
 
 // ── Related Papers ──
