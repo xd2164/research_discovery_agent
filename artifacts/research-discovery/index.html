@@ -869,10 +869,48 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
-      <!-- Module 1: Intelligence Frontier -->
+      <!-- Module 1: Open-weights vs Proprietary -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
           <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 1</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Compare capability, cost, and speed between open-weights and proprietary models across the full benchmark.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Open-weights models have closed the capability gap at a fraction of the cost, reducing dependency on proprietary providers.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Grantees and program teams can deploy high-quality open-weights models without vendor lock-in or per-token fees.</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Open-weights vs Proprietary</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Intelligence · Coding · Math · Price · Speed — averaged across all models in each category</div>
+          <div id="aa-ow-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Capability Comparison</div>
+            <canvas id="aa-chart-ow-capability" height="60"></canvas>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Open-weights Models</div>
+              <div id="aa-ow-top" style="font-size:11px;color:#333;line-height:1.8"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Proprietary Models</div>
+              <div id="aa-prop-top" style="font-size:11px;color:#333;line-height:1.8"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 2: Intelligence Frontier -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 2</div>
           <div>
             <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
             <div style="font-size:11px;color:#333;line-height:1.5">Show which models lead the intelligence benchmark and which providers dominate the frontier.</div>
@@ -893,10 +931,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
-      <!-- Module 2: Creator Capability Landscape -->
+      <!-- Module 3: Creator Capability Landscape -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
-          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 2</div>
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 3</div>
           <div>
             <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
             <div style="font-size:11px;color:#333;line-height:1.5">Compare average Intelligence, Coding, and Math scores across the top 10 providers.</div>
@@ -917,10 +955,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
-      <!-- Module 3: Value Frontier -->
+      <!-- Module 4: Value Frontier -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
-          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 3</div>
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 4</div>
           <div>
             <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
             <div style="font-size:11px;color:#333;line-height:1.5">Map intelligence performance against output cost to surface disproportionate value models.</div>
@@ -941,10 +979,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
-      <!-- Module 4: Speed vs Capability -->
+      <!-- Module 5: Speed vs Capability -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
-          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 4</div>
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 5</div>
           <div>
             <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
             <div style="font-size:11px;color:#333;line-height:1.5">Understand the speed–capability tradeoff across providers and model tiers.</div>
@@ -965,11 +1003,11 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
-      <!-- Module 5: Global vs. U.S. Watch -->
+      <!-- Module 6: Global vs. U.S. Watch -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
           <div style="white-space:nowrap;align-self:center">
-            <div style="font-size:11px;font-weight:800;color:var(--navy)">Module 5</div>
+            <div style="font-size:11px;font-weight:800;color:var(--navy)">Module 6</div>
             <div style="font-size:9px;font-weight:700;color:#F5C518;margin-top:2px">&#127758; Global Lens</div>
           </div>
           <div>
@@ -1036,47 +1074,6 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
           <div style="margin-top:14px">
             <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Benchmark Coverage — models with scores</div>
             <canvas id="aa-chart-coverage" height="55"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Module 6: Open-weights vs Proprietary -->
-      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-top:14px">
-        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
-          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 6</div>
-          <div>
-            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
-            <div style="font-size:11px;color:#333;line-height:1.5">Compare capability, cost, and speed between open-weights and proprietary models across the full benchmark.</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
-            <div style="font-size:11px;color:#333;line-height:1.5">Open-weights models have closed the capability gap at a fraction of the cost, reducing dependency on proprietary providers.</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
-            <div style="font-size:11px;color:#333;line-height:1.5">Grantees and program teams can deploy high-quality open-weights models without vendor lock-in or per-token fees.</div>
-          </div>
-        </div>
-        <div style="padding:16px">
-          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Open-weights vs Proprietary</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Intelligence · Coding · Math · Price · Speed — averaged across all models in each category</div>
-          <!-- summary cards -->
-          <div id="aa-ow-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
-          <!-- grouped bar -->
-          <div style="margin-bottom:16px">
-            <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Capability Comparison</div>
-            <canvas id="aa-chart-ow-capability" height="60"></canvas>
-          </div>
-          <!-- top models list -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div>
-              <div style="font-size:10px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Open-weights Models</div>
-              <div id="aa-ow-top" style="font-size:11px;color:#333;line-height:1.8"></div>
-            </div>
-            <div>
-              <div style="font-size:10px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Proprietary Models</div>
-              <div id="aa-prop-top" style="font-size:11px;color:#333;line-height:1.8"></div>
-            </div>
           </div>
         </div>
       </div>
