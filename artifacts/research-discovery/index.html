@@ -327,7 +327,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
     <div class="sb-item" id="nav-fpa" onclick="go('fpa')">
       <div class="sb-icon" style="background:#1A0D40">&#129504;</div>
-      <div><div class="sb-name">FP&amp;A Research Agent <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;background:rgba(212,146,26,.35);color:#FFC97A;vertical-align:middle;letter-spacing:.3px">POC</span></div><div class="sb-tag">Deep research synthesis</div>
+      <div><div class="sb-name">Research Agent Demo <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;background:rgba(212,146,26,.35);color:#FFC97A;vertical-align:middle;letter-spacing:.3px">POC</span></div><div class="sb-tag">Deep research synthesis</div>
       <div class="sb-pips"><div class="sb-pip" style="background:#5E52D4"></div><div class="sb-pip" style="background:#1A6BC4"></div></div></div>
     </div>
 
@@ -1820,12 +1820,29 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
 
 
-<!-- ════ FP&A RESEARCH AGENT ════ -->
-<div id="pane-fpa" class="pane" style="height:100vh">
-  <iframe
-    src="/fpa-standalone.html"
+<!-- ════ RESEARCH AGENT DEMO ════ -->
+<div id="pane-fpa" class="pane" style="height:100vh;position:relative">
+  <!-- Password gate -->
+  <div id="fpa-gate" style="position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0D0B1E 0%,#15103A 60%,#0D1B2A 100%)">
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:44px 48px;max-width:380px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.6)">
+      <div style="font-size:36px;margin-bottom:16px">&#129504;</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:6px">Research Agent Demo</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px">Enter the access code to continue</div>
+      <form onsubmit="fpaUnlock();return false;">
+        <input id="fpa-pw-input" type="password" placeholder="Access code" autocomplete="current-password"
+          style="width:100%;box-sizing:border-box;padding:11px 16px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-size:15px;outline:none;margin-bottom:12px;letter-spacing:2px;text-align:center"
+        />
+        <div id="fpa-pw-err" style="font-size:12px;color:#E05A4A;min-height:18px;margin-bottom:10px"></div>
+        <button type="submit"
+          style="width:100%;padding:12px;border-radius:9px;border:none;background:linear-gradient(90deg,#5E52D4,#1A6BC4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px">
+          Unlock
+        </button>
+      </form>
+    </div>
+  </div>
+  <!-- Actual content (lazy-loaded after unlock) -->
+  <iframe id="fpa-iframe"
     style="width:100%;height:100%;border:none;display:block"
-    loading="lazy"
   ></iframe>
 </div>
 
@@ -2625,6 +2642,34 @@ function startAIMktTimer(){
     if(el) el.textContent = fmtCountdown(aiMktSecsLeft);
     if(aiMktSecsLeft <= 0){ refreshAIMkt(); }
   }, 1000);
+}
+
+// ══ RESEARCH AGENT DEMO — PASSWORD GATE ══
+(function(){
+  const KEY='fpa_unlocked';
+  if(sessionStorage.getItem(KEY)==='1'){
+    const gate=document.getElementById('fpa-gate');
+    const iframe=document.getElementById('fpa-iframe');
+    if(gate) gate.style.display='none';
+    if(iframe&&!iframe.src) iframe.src='/fpa-standalone.html';
+  }
+})();
+
+function fpaUnlock(){
+  const input=document.getElementById('fpa-pw-input');
+  const err=document.getElementById('fpa-pw-err');
+  if(!input) return;
+  if(input.value.trim().toLowerCase()==='datahub'){
+    sessionStorage.setItem('fpa_unlocked','1');
+    const gate=document.getElementById('fpa-gate');
+    const iframe=document.getElementById('fpa-iframe');
+    if(gate){ gate.style.opacity='0';gate.style.transition='opacity .3s';setTimeout(()=>gate.style.display='none',300); }
+    if(iframe&&!iframe.src) iframe.src='/fpa-standalone.html';
+  } else {
+    if(err) err.textContent='Incorrect access code — try again.';
+    input.value='';
+    input.focus();
+  }
 }
 
 // ══ INIT ══
