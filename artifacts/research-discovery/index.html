@@ -2014,14 +2014,14 @@ async function loadAAModels(){
       lcr:m.evaluations?.lcr??null,
       terminalbench:m.evaluations?.terminalbench_hard??null,
       tau2:m.evaluations?.tau2??null,
-      // Pricing
-      blended_price:m.pricing?.price_1m_blended_3_to_1??null,
-      input_price:m.pricing?.price_1m_input_tokens??null,
-      output_price:m.pricing?.price_1m_output_tokens??null,
-      // Performance
-      speed:m.median_output_tokens_per_second??null,
-      ttft:m.median_time_to_first_token_seconds??null,
-      ttfa:m.median_time_to_first_answer_token??null,
+      // Pricing (0 = no data, not genuinely free — treat as null)
+      blended_price:m.pricing?.price_1m_blended_3_to_1||null,
+      input_price:m.pricing?.price_1m_input_tokens||null,
+      output_price:m.pricing?.price_1m_output_tokens||null,
+      // Performance (0 = no benchmark data yet — treat as null)
+      speed:m.median_output_tokens_per_second||null,
+      ttft:m.median_time_to_first_token_seconds||null,
+      ttfa:m.median_time_to_first_answer_token||null,
     }));
     aaLoaded=true;
     const isFallback=json._source==='fallback';
