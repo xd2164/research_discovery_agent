@@ -1894,6 +1894,10 @@ function _applyRoute(paneId,tabIdx,pushState){
   }
   _skipHash=false;
   if(pushState) _pushHash(paneId,tabIdx);
+  // Fire data-load side-effects that are normally in onclick handlers
+  if(paneId==='market'&&TAB_ROUTES.market&&TAB_ROUTES.market[tabIdx]==='deepdive'&&!aaLoaded){
+    loadAAModels();
+  }
 }
 
 window.addEventListener('popstate',e=>{
@@ -2448,14 +2452,15 @@ function renderAACharts(){
 
   // ── 6. Open-weights vs Proprietary ──
   const OW_CREATORS=new Set([
-    'Meta','Mistral','DeepSeek','Allen Institute for AI','Databricks','IBM',
+    'Meta','Mistral','Mistral AI','DeepSeek','Allen Institute for AI','Databricks','IBM',
     'NVIDIA','Nous Research','OpenChat','Prime Intellect','Sarvam','ServiceNow',
     'Snowflake','Swiss AI Initiative','TII UAE','Arcee AI','Deep Cogito',
     'Inception','LongCat','Nanbeige','InclusionAI','Trillion Labs',
     'MBZUAI Institute of Foundation Models','Alibaba','Microsoft Azure',
+    'Z AI','Shanghai AI Lab','Kimi','Moonshot AI',
   ]);
   // Also flag by name keyword (catches gpt-oss, gemma, phi, etc.)
-  const OW_KEYWORDS=['llama','mistral','deepseek','qwen','gemma','falcon','phi-','oss','mixtral','starling','openchat','dbrx','granite','nemotron','arctic','olmo','solar','nous','command-r'];
+  const OW_KEYWORDS=['llama','mistral','deepseek','qwen','gemma','falcon','phi-','oss','mixtral','starling','openchat','dbrx','granite','nemotron','arctic','olmo','solar','nous','command-r','mimo','kimi'];
   const isOpenWeights=m=>OW_CREATORS.has(m.creator)||OW_KEYWORDS.some(k=>m.name.toLowerCase().includes(k)||m.id?.toLowerCase().includes(k));
 
   const owModels=aaData.filter(m=>isOpenWeights(m));
