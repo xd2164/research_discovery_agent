@@ -1006,6 +1006,40 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         </div>
       </div>
 
+      <!-- Module 7: Full Benchmark Suite -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);white-space:nowrap;align-self:center">Module 7</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Purpose</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Surface the full 12-benchmark landscape across all evaluated models — beyond the three composite indexes.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#5E52D4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Hypothesis</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Frontier leaders differ by benchmark domain — no single model dominates all dimensions simultaneously.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#D4921A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Implications</div>
+            <div style="font-size:11px;color:#333;line-height:1.5">Procurement decisions should match model strengths to the specific task domain (reasoning, coding, science, instruction).</div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px">Full Benchmark Leaderboard</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Top 25 models by intelligence index · all 12 raw benchmarks · heat-map coloured by percentile within each column</div>
+          <!-- per-benchmark leaders strip -->
+          <div id="aa-bench-leaders" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+          <!-- heatmap table -->
+          <div style="overflow-x:auto">
+            <table id="aa-bench-table" style="width:100%;border-collapse:collapse;font-size:10px"></table>
+          </div>
+          <!-- coverage bar -->
+          <div style="margin-top:14px">
+            <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Benchmark Coverage — models with scores</div>
+            <canvas id="aa-chart-coverage" height="55"></canvas>
+          </div>
+        </div>
+      </div>
+
       <!-- Module 6: Open-weights vs Proprietary -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-top:14px">
         <div style="background:#F8F9FB;border-bottom:1.5px solid var(--border);padding:12px 16px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:start">
@@ -1888,13 +1922,31 @@ async function loadAAModels(){
       name:m.name||'—',
       creator:m.model_creator?.name||'—',
       release:m.release_date||'',
+      // AA composite indexes
       intel:m.evaluations?.artificial_analysis_intelligence_index??null,
       code:m.evaluations?.artificial_analysis_coding_index??null,
       math:m.evaluations?.artificial_analysis_math_index??null,
+      // Raw benchmarks (0–1 scale)
+      mmlu_pro:m.evaluations?.mmlu_pro??null,
+      gpqa:m.evaluations?.gpqa??null,
+      hle:m.evaluations?.hle??null,
+      livecodebench:m.evaluations?.livecodebench??null,
+      scicode:m.evaluations?.scicode??null,
+      math_500:m.evaluations?.math_500??null,
+      aime:m.evaluations?.aime??null,
+      aime_25:m.evaluations?.aime_25??null,
+      ifbench:m.evaluations?.ifbench??null,
+      lcr:m.evaluations?.lcr??null,
+      terminalbench:m.evaluations?.terminalbench_hard??null,
+      tau2:m.evaluations?.tau2??null,
+      // Pricing
+      blended_price:m.pricing?.price_1m_blended_3_to_1??null,
       input_price:m.pricing?.price_1m_input_tokens??null,
       output_price:m.pricing?.price_1m_output_tokens??null,
+      // Performance
       speed:m.median_output_tokens_per_second??null,
       ttft:m.median_time_to_first_token_seconds??null,
+      ttfa:m.median_time_to_first_answer_token??null,
     }));
     aaLoaded=true;
     const isFallback=json._source==='fallback';
@@ -2202,6 +2254,122 @@ function renderAACharts(){
       </span>`;
     }).join('');
   }
+
+  // ── 7. Full Benchmark Suite ──
+  const BENCHMARKS=[
+    {key:'mmlu_pro',  label:'MMLU-Pro',     desc:'General knowledge',   color:'#1A6BC4'},
+    {key:'gpqa',      label:'GPQA',          desc:'Graduate science',    color:'#0B9E80'},
+    {key:'hle',       label:'HLE',           desc:'Humanity\'s Last Exam',color:'#5E52D4'},
+    {key:'livecodebench',label:'LiveCode',   desc:'Live coding',         color:'#D4921A'},
+    {key:'scicode',   label:'SciCode',       desc:'Scientific coding',   color:'#C04070'},
+    {key:'math_500',  label:'MATH-500',      desc:'Math problems',       color:'#059669'},
+    {key:'aime',      label:'AIME',          desc:'Math Olympiad',       color:'#7C3AED'},
+    {key:'aime_25',   label:'AIME 2025',     desc:'Math Olympiad \'25',  color:'#DC2626'},
+    {key:'ifbench',   label:'IFBench',       desc:'Instruction follow',  color:'#0891B2'},
+    {key:'lcr',       label:'LCR',           desc:'Long context recall', color:'#B45309'},
+    {key:'terminalbench',label:'TermBench',  desc:'Terminal tasks',      color:'#374151'},
+    {key:'tau2',      label:'TAU2',          desc:'Tool & agent use',    color:'#6D28D9'},
+  ];
+
+  // Compute percentile rank for heat-map coloring
+  const pctRank=(val,allVals)=>{
+    if(val===null)return null;
+    const sorted=allVals.filter(v=>v!==null).sort((a,b)=>a-b);
+    if(!sorted.length)return 0;
+    const pos=sorted.findIndex(v=>v>=val);
+    return pos<0?1:pos/sorted.length;
+  };
+  const pctColor=p=>{
+    if(p===null)return{bg:'#F8F9FB',txt:'#CBD5E1'};
+    if(p>=0.9)return{bg:'#D1FAE5',txt:'#065F46'};
+    if(p>=0.7)return{bg:'#ECFDF5',txt:'#047857'};
+    if(p>=0.5)return{bg:'#F0FDF4',txt:'#15803D'};
+    if(p>=0.3)return{bg:'#FFF7ED',txt:'#B45309'};
+    return{bg:'#FEF2F2',txt:'#B91C1C'};
+  };
+
+  // Top 25 by intelligence index
+  const top25=aaData.filter(m=>m.intel!==null).sort((a,b)=>b.intel-a.intel).slice(0,25);
+
+  // Per-column value arrays for percentile calc
+  const colVals={};
+  BENCHMARKS.forEach(b=>{colVals[b.key]=aaData.map(m=>m[b.key]).filter(v=>v!==null);});
+
+  // Per-benchmark leader pills
+  const leadersEl=document.getElementById('aa-bench-leaders');
+  if(leadersEl){
+    leadersEl.innerHTML=BENCHMARKS.map(b=>{
+      const best=aaData.filter(m=>m[b.key]!==null).sort((a,b2)=>b2[b.key]-a[b.key])[0];
+      if(!best)return '';
+      return `<span style="background:${b.color}12;border:1px solid ${b.color}44;border-radius:6px;padding:4px 9px;font-size:9px;line-height:1.6">
+        <b style="color:${b.color}">${b.label}</b>
+        <span style="color:#374151"> ${best.name.length>22?best.name.slice(0,20)+'…':best.name}</span>
+        <span style="color:#94A3B8"> ${(best[b.key]*100).toFixed(1)}%</span>
+      </span>`;
+    }).join('');
+  }
+
+  // Heatmap table
+  const benchTable=document.getElementById('aa-bench-table');
+  if(benchTable){
+    const thStyle='padding:5px 6px;text-align:center;font-weight:700;font-size:9px;color:#64748B;border-bottom:2px solid #E2E8F0;white-space:nowrap;position:sticky;top:0;background:#F8F9FB';
+    const rankThStyle='padding:5px 4px;text-align:center;font-weight:700;font-size:9px;color:#64748B;border-bottom:2px solid #E2E8F0;background:#F8F9FB;position:sticky;top:0;white-space:nowrap';
+    let html=`<thead><tr>
+      <th style="${rankThStyle}">#</th>
+      <th style="padding:5px 8px;text-align:left;font-weight:700;font-size:9px;color:#64748B;border-bottom:2px solid #E2E8F0;background:#F8F9FB;position:sticky;top:0;min-width:160px">Model</th>
+      <th style="${thStyle}">Intel</th>
+      ${BENCHMARKS.map(b=>`<th style="${thStyle}" title="${b.desc}">${b.label}</th>`).join('')}
+    </tr></thead><tbody>`;
+
+    top25.forEach((m,i)=>{
+      const rowBg=i%2===0?'#fff':'#F8F9FB';
+      const intelPct=pctRank(m.intel,aaData.map(x=>x.intel));
+      const ic=pctColor(intelPct);
+      html+=`<tr style="background:${rowBg}">
+        <td style="padding:4px 4px;text-align:center;color:#94A3B8;font-size:9px;border-bottom:1px solid #F1F5F9">${i+1}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #F1F5F9">
+          <div style="font-weight:700;font-size:10px;color:#0B2A50;line-height:1.3">${m.name.length>34?m.name.slice(0,32)+'…':m.name}</div>
+          <div style="font-size:9px;color:#94A3B8">${m.creator}</div>
+        </td>
+        <td style="padding:4px 6px;text-align:center;border-bottom:1px solid #F1F5F9;background:${ic.bg};font-weight:700;font-size:10px;color:${ic.txt}">${m.intel!=null?m.intel.toFixed(1):'—'}</td>
+        ${BENCHMARKS.map(b=>{
+          const v=m[b.key];
+          const p=pctRank(v,colVals[b.key]);
+          const c=pctColor(p);
+          return `<td style="padding:4px 6px;text-align:center;border-bottom:1px solid #F1F5F9;background:${c.bg};color:${c.txt};font-weight:${p!==null&&p>=0.7?'700':'400'};font-size:9px">${v!==null?(v*100).toFixed(1)+'%':'—'}</td>`;
+        }).join('')}
+      </tr>`;
+    });
+    html+='</tbody>';
+    benchTable.innerHTML=html;
+  }
+
+  // Coverage bar chart
+  const covLabels=BENCHMARKS.map(b=>b.label);
+  const covCounts=BENCHMARKS.map(b=>aaData.filter(m=>m[b.key]!==null&&m[b.key]>0).length);
+  mk('aa-chart-coverage',{
+    type:'bar',
+    data:{
+      labels:covLabels,
+      datasets:[{
+        label:'Models with scores',
+        data:covCounts,
+        backgroundColor:BENCHMARKS.map(b=>b.color+'BB'),
+        borderColor:BENCHMARKS.map(b=>b.color),
+        borderWidth:1.5,borderRadius:4,
+      }]
+    },
+    options:{
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.raw} of ${aaData.length} models scored`}}
+      },
+      scales:{
+        x:{ticks:{font:{size:9}}},
+        y:{title:{display:true,text:'Models with scores',font:{size:9}},grid:{color:'rgba(0,0,0,.05)'}}
+      }
+    }
+  });
 
   // ── 6. Open-weights vs Proprietary ──
   const OW_CREATORS=new Set([
