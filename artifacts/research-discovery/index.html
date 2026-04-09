@@ -1835,6 +1835,56 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 <script>
 // ══ NAVIGATION ══
 const PANES=['research','market','agents','fpa'];
+
+// ── URL Routing ──────────────────────────────────────────────
+const PANE_SLUG={research:'research',market:'market-insights',agents:'edu-agent',fpa:'fpa-research-agent'};
+const PANE_FROM_SLUG=Object.fromEntries(Object.entries(PANE_SLUG).map(([k,v])=>[v,k]));
+const TAB_ROUTES={
+  research:['synthesis-guide','patterns'],
+  market:['overview','market-insights','deepdive','architecture','patterns'],
+  agents:['overview','edu-agent','evidence-scout','architecture','patterns'],
+  fpa:[],
+};
+
+let _skipHash=false;
+
+function _pushHash(paneId,tabIdx){
+  if(_skipHash)return;
+  const ps=PANE_SLUG[paneId]||paneId;
+  const tabs=TAB_ROUTES[paneId]||[];
+  const ts=tabIdx>0&&tabs[tabIdx]?'/'+tabs[tabIdx]:'';
+  const hash='#'+ps+ts;
+  if(location.hash!==hash) history.pushState({paneId,tabIdx},document.title,hash);
+}
+
+function _parseHash(){
+  const raw=location.hash.replace('#','');
+  if(!raw)return{paneId:'research',tabIdx:0};
+  const [ps,ts]=raw.split('/');
+  const paneId=PANE_FROM_SLUG[ps]||ps||'research';
+  const tabs=TAB_ROUTES[paneId]||[];
+  const tabIdx=ts?Math.max(0,tabs.indexOf(ts)):0;
+  return{paneId,tabIdx};
+}
+
+function _applyRoute(paneId,tabIdx,pushState){
+  _skipHash=!pushState;
+  go(paneId);
+  const pane=document.getElementById('pane-'+paneId);
+  if(pane){
+    const tabs=[...pane.querySelectorAll('.tnav .tb')];
+    if(tabs[tabIdx]) stab(tabs[tabIdx]);
+  }
+  _skipHash=false;
+  if(pushState) _pushHash(paneId,tabIdx);
+}
+
+window.addEventListener('popstate',e=>{
+  const{paneId,tabIdx}=e.state||_parseHash();
+  _applyRoute(paneId,tabIdx,false);
+});
+// ─────────────────────────────────────────────────────────────
+
 function toggleSidebar(){
   const sb=document.querySelector('.sidebar');
   const ov=document.getElementById('sb-overlay');
@@ -1846,7 +1896,7 @@ function closeSidebar(){
   document.getElementById('sb-overlay').classList.remove('open');
 }
 
-function go(id){
+function go(id,_internal){
   PANES.forEach(p=>{
     const el=document.getElementById('pane-'+p);
     if(el) el.classList.toggle('on',p===id);
@@ -1856,11 +1906,12 @@ function go(id){
     el.classList.toggle('on',eid===id);
   });
   document.getElementById('main').scrollTop=0;
-  // Auto-close sidebar on mobile after navigation
   if(window.innerWidth<=700) closeSidebar();
+  if(!_internal&&!_skipHash) _pushHash(id,0);
 }
+
 function goTab(id,tabIdx){
-  go(id);
+  go(id,true);
   const pane=document.getElementById('pane-'+id);
   if(!pane) return;
   const tabs=[...pane.querySelector('.tnav').querySelectorAll('.tb')];
@@ -1879,6 +1930,11 @@ function stab(el){
   tabs.forEach((t,i)=>t.classList.toggle('on',i===idx));
   const tcs=[...pane.children].filter(c=>c.classList.contains('tc'));
   tcs.forEach((c,i)=>{c.style.display=i===idx?'block':'none';});
+  // update URL
+  if(!_skipHash){
+    const paneId=pane.id?.replace('pane-','');
+    if(paneId) _pushHash(paneId,idx);
+  }
 }
 
 function initTabs(){
@@ -1886,6 +1942,11 @@ function initTabs(){
     const tcs=[...pane.children].filter(c=>c.classList.contains('tc'));
     tcs.forEach((tc,i)=>{tc.style.display=i===0?'block':'none';});
   });
+  // Restore from URL hash on first load
+  const{paneId,tabIdx}=_parseHash();
+  _applyRoute(paneId,tabIdx,false);
+  // Set initial history state
+  history.replaceState({paneId,tabIdx},document.title,location.hash||('#'+PANE_SLUG[paneId]));
 }
 
 // ══ CHARTS ══
@@ -2568,7 +2629,6 @@ function startAIMktTimer(){
 
 // ══ INIT ══
 initTabs();
-go('research');
 startAIMktTimer();
 </script>
 </body>
