@@ -1954,6 +1954,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
         <option value="needs_update">Needs Update</option>
       </select>
       <button onclick="k12Reset()" style="font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid #D1D9E0;background:#fff;color:#7A8A9B;cursor:pointer;font-weight:600">Clear</button>
+      <button onclick="k12ExportDoc()" title="Download as Word / Google Doc" style="font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid #0B9E80;background:#0B9E80;color:#fff;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap">⬇ Download .doc</button>
       <span class="k12-count" id="k12-count"></span>
     </div>
     <div class="k12-cards" id="k12-browse-cards"></div>
@@ -2898,6 +2899,54 @@ function k12Render(){
 function k12Reset(){
   ['k12-f-aud','k12-f-topic','k12-f-level','k12-f-fmt','k12-f-fresh'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   k12Render();
+}
+
+function k12ExportDoc(){
+  const aud=document.getElementById('k12-f-aud')?.value||'';
+  const topic=document.getElementById('k12-f-topic')?.value||'';
+  const level=document.getElementById('k12-f-level')?.value||'';
+  const fmt=document.getElementById('k12-f-fmt')?.value||'';
+  const fresh=document.getElementById('k12-f-fresh')?.value||'';
+  const filtered=K12_RESOURCES.filter(r=>{
+    if(aud&&!r.audience.includes(aud))return false;
+    if(topic&&!r.topic.includes(topic))return false;
+    if(level&&r.level!==level)return false;
+    if(fmt&&r.format!==fmt)return false;
+    if(fresh&&r.freshness!==fresh)return false;
+    return true;
+  });
+  const filterDesc=[
+    aud?'Audience: '+aud:'',
+    topic?'Topic: '+topic:'',
+    level?'Level: '+level:'',
+    fmt?'Format: '+fmt:'',
+    fresh?'Freshness: '+fresh:''
+  ].filter(Boolean).join(' · ')||'All resources';
+  const freshnessLabel={current:'Current',foundational:'Foundational',needs_update:'Needs Update'};
+  const rows=filtered.map((r,i)=>`
+    <h2 style="font-size:14pt;color:#0B9E80;margin:24pt 0 4pt;border-bottom:1px solid #cce8e3;padding-bottom:4pt">${i+1}. ${r.title}</h2>
+    <p style="margin:2pt 0 6pt;font-size:10pt;color:#666">${r.source}&nbsp;&nbsp;·&nbsp;&nbsp;${r.format.toUpperCase()}&nbsp;&nbsp;·&nbsp;&nbsp;${r.audience.join(', ')}&nbsp;&nbsp;·&nbsp;&nbsp;${freshnessLabel[r.freshness]||r.freshness}</p>
+    <p style="font-size:11pt;margin:0 0 8pt;color:#1a1a2e">${r.summary}</p>
+    ${r.why?`<p style="margin:0 0 4pt"><b style="color:#0B9E80">Why useful:</b> <span style="font-size:11pt">${r.why}</span></p>`:''}
+    ${r.watch?`<p style="margin:0 0 4pt"><b style="color:#C2410C">Watch out:</b> <span style="font-size:11pt">${r.watch}</span></p>`:''}
+    ${r.url?`<p style="margin:0 0 4pt;font-size:10pt"><a href="${r.url}">${r.url}</a></p>`:''}
+    <p style="margin:6pt 0 0;font-size:9pt;color:#888">${(r.tags||[]).join(' · ')}</p>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8">
+    <style>body{font-family:Calibri,Arial,sans-serif;margin:72pt 72pt 72pt 72pt;color:#1a1a2e}
+    h1{font-size:18pt;color:#1a1a2e;margin:0 0 4pt}
+    .meta{font-size:10pt;color:#888;margin:0 0 16pt}</style></head><body>
+    <h1>AI in K–12 Resource Navigator</h1>
+    <p class="meta">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub<br>
+    Exported ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · Filter: ${filterDesc} · ${filtered.length} resource${filtered.length!==1?'s':''}</p>
+    ${rows}
+    <p style="font-size:9pt;color:#aaa;margin-top:32pt;border-top:1px solid #eee;padding-top:8pt">Generated from the Data &amp; AI Enablement Hub — researchdiscovery.replit.app</p>
+    </body></html>`;
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='K12-AI-Resources.doc';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function k12Init(){
