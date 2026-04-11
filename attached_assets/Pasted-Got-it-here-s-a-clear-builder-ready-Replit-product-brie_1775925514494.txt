@@ -1,0 +1,269 @@
+Got it—here’s a **clear, builder-ready Replit product brief** you can drop directly into a project or share with a dev team.
+
+---
+
+## Product Brief: AI in K–12 Resource Navigator
+
+**Platform:** Replit (lightweight web app)
+**Goal:** Build a continuously curated, practitioner-facing “AI resource wiki” that helps users quickly find trusted, current, and role-relevant resources on AI in K–12 education and equity.
+
+---
+
+## 1. Problem to Solve
+
+Users (SPOs, grantees, educators) are facing:
+
+* Too many AI resources, unclear quality
+* Outdated materials still circulating
+* No clear “starting point” based on role or knowledge level
+* Lack of trusted voices and curated pathways
+
+This tool should **reduce noise and guide decisions**, not just aggregate content.
+
+---
+
+## 2. Core Product Concept
+
+A **simple, fast, searchable web app** that:
+
+* Curates high-quality AI resources (articles, videos, reports, tools)
+* Organizes them by **audience, topic, and level**
+* Adds **human-readable annotations**
+* Flags **freshness and relevance**
+* Evolves over time like a **lightweight public wiki**
+
+---
+
+## 3. Key User Flows
+
+### Flow 1: “I’m new—where do I start?”
+
+User clicks:
+→ “Start Here”
+→ Sees 5–10 essential resources with simple explanations
+
+---
+
+### Flow 2: “I need resources for my partners”
+
+User filters by:
+→ Audience: “K–12 practitioners”
+→ Topic: “AI & Equity”
+→ Gets curated list with summaries
+
+---
+
+### Flow 3: “What’s current vs outdated?”
+
+User sees:
+→ Tags: “Foundational”, “Current”, “Needs update”
+→ Optional “What’s changing now” section
+
+---
+
+### Flow 4: “Who should I trust?”
+
+User opens:
+→ “Trusted Voices”
+→ Sees organizations (e.g., National Center on Education and the Economy)
+→ Short explanation of why they matter
+
+---
+
+## 4. MVP Feature Set (Build This First)
+
+### A. Resource Database (core schema)
+
+Each resource = one record:
+
+```
+{
+  id: string,
+  title: string,
+  url: string,
+  source: string,
+  format: "article" | "video" | "podcast" | "report" | "tool",
+  audience: ["practitioner", "grantee", "leader", "internal"],
+  topic: ["AI in K12", "Equity", "Classroom", "Policy", "Market"],
+  level: "beginner" | "intermediate" | "advanced",
+  summary: string,
+  why_useful: string,
+  watch_out: string,
+  freshness: "foundational" | "current" | "needs_update",
+  date_added: timestamp
+}
+```
+
+---
+
+### B. Core Pages
+
+#### 1. Home
+
+* Title: “AI in K–12 Resource Navigator”
+* Sections:
+
+  * Start Here
+  * Browse by Audience
+  * Browse by Topic
+  * Trusted Voices
+
+---
+
+#### 2. Start Here
+
+* Static curated list (5–10 items)
+* Beginner-friendly
+* High-confidence resources only
+
+---
+
+#### 3. Browse Page
+
+Filters:
+
+* Audience (multi-select)
+* Topic
+* Level
+* Format
+
+Sort:
+
+* Most relevant
+* Most recent
+
+---
+
+#### 4. Resource Detail Card
+
+Display:
+
+* Title
+* Source
+* Tags (audience, topic, level)
+* Summary
+* Why useful
+* Watch-outs
+* Freshness badge
+
+---
+
+#### 5. Trusted Voices Page
+
+Static + expandable list:
+
+* Organization name
+* Short description
+* Why it matters
+* Link out
+
+Include:
+
+* National Center on Education and the Economy (highlighted)
+* Others can be added later
+
+---
+
+## 5. UI/UX Guidelines
+
+Keep it:
+
+* Clean, minimal, fast
+* Card-based layout
+* No heavy dashboards
+
+Visual elements:
+
+* Color-coded freshness tags:
+
+  * Green = Current
+  * Gray = Foundational
+  * Yellow = Needs update
+
+* Tag pills for:
+
+  * Audience
+  * Topic
+  * Level
+
+---
+
+## 6. Tech Stack (Replit-friendly)
+
+Frontend:
+
+* React (preferred) or simple HTML/CSS/JS
+* Tailwind for styling
+
+Backend:
+
+* Node.js + Express OR Replit DB (lightweight)
+
+Database:
+
+* Start with JSON or Replit DB
+* Later upgrade to Postgres if needed
+
+---
+
+## 7. Data Input (Initial Seeding)
+
+Phase 1:
+
+* Manually add ~20–30 high-quality resources
+* Focus on:
+
+  * AI in K–12 overview
+  * AI & equity
+  * Classroom applications
+  * Trusted org outputs
+
+---
+
+## 8. Admin / Update Flow (Simple First)
+
+No full CMS needed yet.
+
+Option 1 (fastest):
+
+* Edit JSON directly in Replit
+
+Option 2:
+
+* Simple “Add Resource” form (protected route)
+
+---
+
+## 9. Future Features (Do NOT build yet)
+
+* AI-powered recommendations
+* Auto-refresh from research agent
+* User accounts
+* Personalization
+* Analytics dashboard
+
+---
+
+## 10. Success Criteria (MVP)
+
+The tool works if:
+
+* A user can find **3–5 relevant, high-quality resources in <2 minutes**
+* They understand **why each resource matters**
+* They can distinguish **current vs outdated thinking**
+* They can **confidently share with partners**
+
+---
+
+## 11. Build Prompt (for Replit / AI coding agent)
+
+You can paste this directly:
+
+“Build a lightweight web app called ‘AI in K–12 Resource Navigator.’ It should display a curated list of AI education resources with filtering by audience, topic, and level. Each resource should have a summary, why it’s useful, and a freshness tag (foundational, current, needs update). Include a ‘Start Here’ page and a ‘Trusted Voices’ page. Use a clean card-based UI. Store data in a simple JSON or lightweight database. Prioritize speed, clarity, and ease of updating over complexity.”
+
+---
+
+If you want next step, I can:
+
+* generate the **actual starter code (React + JSON data)**
+* or pre-fill the first **20 high-quality resources** so you can launch immediately

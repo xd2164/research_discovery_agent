@@ -275,6 +275,43 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   .metrics,.osb-g,.arch-comps{grid-template-columns:1fr!important}
   .t-title{font-size:18px}
 }
+/* ── K-12 Resource Navigator ──────────────────────────────────── */
+.k12-hdr{padding:32px 32px 0;border-bottom:1px solid #E8EDF2}
+.k12-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;padding:28px 32px}
+.k12-card{background:#fff;border:1px solid #E4E9F0;border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s}
+.k12-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.k12-card-title{font-size:14px;font-weight:700;color:#0D1B2A;line-height:1.35}
+.k12-card-source{font-size:11px;color:#7A8A9B;font-weight:600;letter-spacing:.3px}
+.k12-card-summary{font-size:12.5px;color:#3D4F62;line-height:1.55}
+.k12-card-why{font-size:11.5px;color:#0D5F40;background:#EAF7F2;border-radius:6px;padding:7px 10px;line-height:1.5}
+.k12-card-watch{font-size:11.5px;color:#7A4A00;background:#FEF6E4;border-radius:6px;padding:7px 10px;line-height:1.5}
+.k12-card-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.k12-fresh{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.4px}
+.k12-fresh-current{background:#D1FAE5;color:#065F46}
+.k12-fresh-foundational{background:#E5E7EB;color:#374151}
+.k12-fresh-needs_update{background:#FEF3C7;color:#92400E}
+.k12-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#EEF2FF;color:#4338CA}
+.k12-pill-aud{background:#FDF4FF;color:#7C3AED}
+.k12-pill-fmt{background:#F0F9FF;color:#0369A1}
+.k12-link{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:#0B9E80;text-decoration:none;margin-top:auto}
+.k12-link:hover{text-decoration:underline}
+.k12-featured-badge{font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:6px;background:#FFF7ED;color:#C2410C;letter-spacing:.5px;border:1px solid #FED7AA}
+.k12-filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:18px 32px;background:#F7F9FC;border-bottom:1px solid #E4E9F0}
+.k12-filter-bar select{padding:6px 10px;border-radius:7px;border:1px solid #D1D9E0;font-size:12px;color:#3D4F62;background:#fff;cursor:pointer;outline:none}
+.k12-filter-bar label{font-size:11px;font-weight:700;color:#7A8A9B;letter-spacing:.3px;text-transform:uppercase}
+.k12-count{font-size:12px;color:#7A8A9B;margin-left:auto}
+.k12-empty{padding:60px 32px;text-align:center;color:#A0ADB8;font-size:14px}
+.k12-voice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:28px 32px}
+.k12-voice-card{background:#fff;border:1px solid #E4E9F0;border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.k12-voice-card.highlight{border:2px solid #0B9E80;background:linear-gradient(135deg,#F0FDF9,#fff)}
+.k12-voice-name{font-size:14px;font-weight:800;color:#0D1B2A}
+.k12-voice-desc{font-size:12.5px;color:#3D4F62;line-height:1.5}
+.k12-voice-why{font-size:11.5px;color:#0D5F40;background:#EAF7F2;border-radius:6px;padding:7px 10px;line-height:1.5}
+.k12-start-intro{padding:32px 32px 0;max-width:720px}
+.k12-start-intro h2{font-size:20px;font-weight:800;color:#0D1B2A;margin:0 0 8px}
+.k12-start-intro p{font-size:13.5px;color:#3D4F62;line-height:1.6;margin:0}
+.k12-section-hd{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#A0ADB8;padding:0 32px;margin-top:28px}
+@media(max-width:700px){.k12-cards,.k12-voice-grid{padding:16px}.k12-filter-bar{padding:12px 16px}}
 </style>
 </head>
 <body>
@@ -329,6 +366,12 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <div class="sb-icon" style="background:#1A0D40">&#129504;</div>
       <div><div class="sb-name">Research Agent Demo <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;background:rgba(212,146,26,.35);color:#FFC97A;vertical-align:middle;letter-spacing:.3px">POC</span></div><div class="sb-tag">Deep research synthesis</div>
       <div class="sb-pips"><div class="sb-pip" style="background:#5E52D4"></div><div class="sb-pip" style="background:#1A6BC4"></div></div></div>
+    </div>
+
+    <div class="sb-item" id="nav-k12" onclick="go('k12')">
+      <div class="sb-icon" style="background:#0D2A1A">&#128218;</div>
+      <div><div class="sb-name">K–12 Resource Navigator</div><div class="sb-tag">AI in education resource hub</div>
+      <div class="sb-pips"><div class="sb-pip" style="background:#0B9E80"></div><div class="sb-pip" style="background:#3B82F6"></div></div></div>
     </div>
 
 
@@ -1846,21 +1889,102 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
   ></iframe>
 </div>
 
+<!-- ════ K-12 RESOURCE NAVIGATOR ════ -->
+<div id="pane-k12" class="pane">
+  <div class="t-hdr" style="background:#fff;border-bottom:1px solid #E8EDF2;padding-bottom:0">
+    <div class="t-ey" style="color:#0B9E80">Research &amp; Discovery · Sensemaking Tools</div>
+    <div class="t-title">AI in K–12 Resource Navigator</div>
+    <div class="t-tag">A curated, practitioner-facing hub for trusted, current, and role-relevant resources on AI in K–12 education and equity. Reduce noise. Guide decisions.</div>
+    <div class="tnav" style="margin:0 -32px;padding:0 32px">
+      <div class="tb on" onclick="stab(this)">Start Here</div>
+      <div class="tb" onclick="stab(this)">Browse Resources</div>
+      <div class="tb" onclick="stab(this)">Trusted Voices</div>
+    </div>
+  </div>
+
+  <!-- ── Tab 1: Start Here ───────────────────────────────────── -->
+  <div class="tc" style="display:block;overflow-y:auto">
+    <div class="k12-start-intro">
+      <h2>New to AI in K–12? Start here.</h2>
+      <p>8 essential resources — hand-picked for clarity, credibility, and actionability. Each has a plain-language summary, why it matters, and things to watch out for.</p>
+    </div>
+    <div class="k12-cards" id="k12-start-cards"></div>
+  </div>
+
+  <!-- ── Tab 2: Browse ───────────────────────────────────────── -->
+  <div class="tc" style="display:none;overflow-y:auto">
+    <div class="k12-filter-bar">
+      <label>Audience</label>
+      <select id="k12-f-aud" onchange="k12Render()">
+        <option value="">All</option>
+        <option value="practitioner">Practitioner</option>
+        <option value="grantee">Grantee</option>
+        <option value="leader">Leader / Admin</option>
+        <option value="internal">Internal Team</option>
+      </select>
+      <label>Topic</label>
+      <select id="k12-f-topic" onchange="k12Render()">
+        <option value="">All</option>
+        <option value="AI in K12">AI in K–12</option>
+        <option value="Equity">Equity</option>
+        <option value="Classroom">Classroom</option>
+        <option value="Policy">Policy</option>
+        <option value="Market">Market</option>
+      </select>
+      <label>Level</label>
+      <select id="k12-f-level" onchange="k12Render()">
+        <option value="">All</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+      <label>Format</label>
+      <select id="k12-f-fmt" onchange="k12Render()">
+        <option value="">All</option>
+        <option value="article">Article</option>
+        <option value="report">Report</option>
+        <option value="tool">Tool</option>
+        <option value="video">Video</option>
+      </select>
+      <label>Freshness</label>
+      <select id="k12-f-fresh" onchange="k12Render()">
+        <option value="">All</option>
+        <option value="current">Current</option>
+        <option value="foundational">Foundational</option>
+        <option value="needs_update">Needs Update</option>
+      </select>
+      <button onclick="k12Reset()" style="font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid #D1D9E0;background:#fff;color:#7A8A9B;cursor:pointer;font-weight:600">Clear</button>
+      <span class="k12-count" id="k12-count"></span>
+    </div>
+    <div class="k12-cards" id="k12-browse-cards"></div>
+  </div>
+
+  <!-- ── Tab 3: Trusted Voices ──────────────────────────────── -->
+  <div class="tc" style="display:none;overflow-y:auto">
+    <div class="k12-start-intro">
+      <h2>Who to trust</h2>
+      <p>A curated list of organizations producing high-quality, reliable guidance on AI in K–12 education. These are the sources we monitor and recommend to partners.</p>
+    </div>
+    <div class="k12-voice-grid" id="k12-voices-grid"></div>
+  </div>
+</div>
+
 </div><!-- end main -->
 </div><!-- end body-layout -->
 
 <script>
 // ══ NAVIGATION ══
-const PANES=['research','market','agents','fpa'];
+const PANES=['research','market','agents','fpa','k12'];
 
 // ── URL Routing ──────────────────────────────────────────────
-const PANE_SLUG={research:'research',market:'market-insights',agents:'edu-agent',fpa:'fpa-research-agent'};
+const PANE_SLUG={research:'research',market:'market-insights',agents:'edu-agent',fpa:'fpa-research-agent',k12:'k12-navigator'};
 const PANE_FROM_SLUG=Object.fromEntries(Object.entries(PANE_SLUG).map(([k,v])=>[v,k]));
 const TAB_ROUTES={
   research:['synthesis-guide','patterns'],
   market:['overview','market-insights','deepdive','architecture','patterns'],
   agents:['overview','edu-agent','evidence-scout','architecture','patterns'],
   fpa:[],
+  k12:['start-here','browse','trusted-voices'],
 };
 
 let _skipHash=false;
@@ -2680,6 +2804,115 @@ function fpaUnlock(){
 // ══ INIT ══
 initTabs();
 startAIMktTimer();
+
+// ══ K-12 RESOURCE NAVIGATOR ══════════════════════════════════════════════════
+const K12_RESOURCES=[
+  {id:'ai4k12-big-ideas',title:'Big Ideas in AI — 5 Concepts & 17 Competencies for K–12',url:'https://ai4k12.org/resources/big-ideas-video/',source:'AI4K12 Initiative',format:'video',audience:['practitioner','leader'],topic:['AI in K12'],level:'beginner',summary:'The definitive framework for teaching AI in K–12. Defines 5 Big Ideas — Perception, Representation & Reasoning, Learning, Natural Interaction, and Societal Impact — with 17 student competencies mapped by grade band.',why_useful:'The starting point for any educator or grantee designing AI curriculum. The competency framework is widely adopted and referenced in state standards discussions.',watch_out:'Framework focuses on concept fluency, not tool usage. Pair with classroom-facing resources for implementation.',freshness:'foundational',featured:true},
+  {id:'day-of-ai',title:'Day of AI — Free Classroom AI Curriculum',url:'https://dayofai.org',source:'MIT RAISE',format:'tool',audience:['practitioner'],topic:['Classroom','AI in K12'],level:'beginner',summary:'Free, standards-aligned curriculum for middle and high school. Covers how AI works, real-world applications, and ethical implications. Ready-to-use lesson plans and teacher guides included.',why_useful:'One of the most classroom-ready AI curricula available. No coding prerequisites. Actively maintained by MIT.',watch_out:'Some lessons require 45–60 minute blocks. Check level tags — some modules suit grades 6–8, others 9–12.',freshness:'current',featured:true},
+  {id:'khanmigo',title:'Khanmigo — Khan Academy\'s AI Tutor',url:'https://www.khanmigo.ai',source:'Khan Academy',format:'tool',audience:['practitioner','grantee'],topic:['Classroom','AI in K12'],level:'beginner',summary:'AI-powered tutor built on GPT-4, integrated into Khan Academy. Helps students with math, writing, and coding through Socratic dialogue. Includes teacher tools for lesson planning.',why_useful:'The most widely used AI tutoring tool in K–12. Useful both as a direct classroom tool and as a case study in responsible AI deployment.',watch_out:'Free for teachers during pilot. Effectiveness research is still emerging — monitor for updates.',freshness:'current',featured:true},
+  {id:'common-sense-ai',title:'ChatGPT and Beyond: How to Handle AI in the Classroom',url:'https://www.commonsense.org/education/articles/chatgpt-and-beyond-how-to-handle-ai-in-the-classroom',source:'Common Sense Media',format:'article',audience:['practitioner','leader'],topic:['Classroom','Policy'],level:'beginner',summary:'Practical guide for educators on navigating generative AI in schools. Covers academic integrity, talking with students about AI, and policy considerations. Includes conversation starters and policy templates.',why_useful:'Most-shared practitioner guide of 2023–24. Balanced, jargon-free, and updated regularly.',watch_out:'Policy recommendations evolve quickly. Cross-reference with your district\'s policies and check for updates.',freshness:'current',featured:true},
+  {id:'unesco-ai-competency',title:'AI Competency Framework for Students',url:'https://www.unesco.org/en/digital-education/ai-competency-framework',source:'UNESCO',format:'report',audience:['leader','grantee'],topic:['Policy','AI in K12'],level:'intermediate',summary:'UNESCO\'s framework defining AI competencies across cognitive, social-emotional, and metacognitive dimensions. Used by ministries of education globally to inform curriculum design.',why_useful:'The authoritative international policy reference. Essential for grantees working on systemic, policy-level AI education initiatives.',watch_out:'High-level framework that requires translation into local curriculum standards. Best paired with implementation resources.',freshness:'current',featured:true},
+  {id:'equity-ai-education',title:'Equity in the Age of AI: Promises and Pitfalls for K–12',url:'https://www.kaporfoundation.org',source:'Kapor Foundation',format:'report',audience:['grantee','leader'],topic:['Equity','AI in K12'],level:'intermediate',summary:'Examines how AI tools can widen or narrow opportunity gaps in K–12. Covers algorithm bias, differential access, and data privacy concerns for underserved communities.',why_useful:'The most equity-centered analysis of AI in K–12. Required reading for programs focused on underserved students.',watch_out:'Research base is still developing. Frame findings as "questions to ask" rather than definitive conclusions.',freshness:'current',featured:true},
+  {id:'teachable-machine',title:'Teachable Machine — Train Your Own AI Model',url:'https://teachablemachine.withgoogle.com',source:'Google',format:'tool',audience:['practitioner'],topic:['Classroom','AI in K12'],level:'beginner',summary:'Free browser-based tool that lets students train simple machine learning models using images, sounds, or poses — no coding required. Ideal for hands-on AI concept exploration.',why_useful:'Fastest way to give students a concrete, memorable experience of how machine learning works. Runs on any device with a camera.',watch_out:'Models are not cloud-saved by default — students should export before closing. Best for conceptual intro, not production use.',freshness:'foundational',featured:true},
+  {id:'stanford-hai-k12',title:'AI in K–12: Priorities for School System Leaders',url:'https://hai.stanford.edu/k-12-ai-education',source:'Stanford HAI',format:'report',audience:['leader','grantee','internal'],topic:['Policy','AI in K12'],level:'intermediate',summary:'Policy brief outlining five priorities for school system leaders: equity, teacher preparation, data governance, curriculum standards, and vendor accountability.',why_useful:'Rigorous, evidence-based policy framing. Useful for grantees advocating for or designing systemic AI education programs.',watch_out:'Published 2023 — some tool references have moved quickly. Core policy framework remains highly relevant.',freshness:'current',featured:true},
+  {id:'iste-ai',title:'ISTE AI in Education Resource Hub',url:'https://www.iste.org/areas-of-focus/AI-in-education',source:'ISTE',format:'article',audience:['practitioner','leader'],topic:['AI in K12','Classroom'],level:'beginner',summary:'Continuously updated collection of practitioner resources, webinars, and policy guides. Organized by role and use case.',why_useful:'The main professional organization resource hub for ed-tech practitioners. Good for ongoing professional development.',watch_out:'Some content requires ISTE membership. Filter for free resources when sharing broadly.',freshness:'current',featured:false},
+  {id:'cosn-ai',title:'AI in K–12 Schools: A Guide for District Technology Leaders',url:'https://www.cosn.org/edtech-topics/ai/',source:'CoSN',format:'report',audience:['leader'],topic:['Policy','AI in K12'],level:'intermediate',summary:'Practical guidance for district CTOs on AI policy, vendor evaluation, data governance, and professional development. Includes sample RFP criteria and acceptable use policy language.',why_useful:'Best resource for district-level decision makers. Covers infrastructure and governance that curriculum resources skip.',watch_out:'Focused on district administration. Less applicable for classroom teachers or state-level policy.',freshness:'current',featured:false},
+  {id:'mit-raise-k12',title:'MIT RAISE K–12 AI Education Programs',url:'https://raise.mit.edu',source:'MIT RAISE',format:'tool',audience:['practitioner','grantee'],topic:['Classroom','AI in K12'],level:'beginner',summary:'MIT\'s portfolio of K–12 AI education tools and curricula, including Day of AI, AI Literacy for Middle School, and professional development programs.',why_useful:'MIT credibility plus hands-on tools. Good for grantees looking for research-validated curricula from a trusted institution.',watch_out:'Programs vary in maturity and support availability. Verify each sub-project\'s status before recommending to partners.',freshness:'current',featured:false},
+  {id:'cdt-ai-equity',title:'Automated Decision Systems in Education: Equity Risks',url:'https://cdt.org/area-of-focus/privacy-data/artificial-intelligence/',source:'Center for Democracy & Technology',format:'report',audience:['grantee','leader','internal'],topic:['Equity','Policy'],level:'intermediate',summary:'Analysis of how algorithmic and AI tools in schools affect civil rights and equity, particularly for students with disabilities and students of color. Includes policy red flags and recommendations.',why_useful:'Essential for equity-focused programs. Provides the civil rights and legal lens missing from most AI education discussions.',watch_out:'Technical in places. Consider summarizing key findings for practitioner audiences.',freshness:'current',featured:false},
+  {id:'edweek-ai-policies',title:'What Schools Can and Can\'t Do With AI: A Policy Primer',url:'https://www.edweek.org/technology/ai-in-schools',source:'Education Week',format:'article',audience:['practitioner','leader'],topic:['Policy','Classroom'],level:'beginner',summary:'Education Week\'s ongoing coverage of AI policy in K–12, including district policies, state legislation, and practical guidance for educators.',why_useful:'Best source for current policy news and practitioner perspectives. Good for staying current on a rapidly evolving landscape.',watch_out:'Some articles are paywalled. Look for free access or check library subscriptions.',freshness:'current',featured:false},
+  {id:'cs-for-all',title:'AI Literacy: What Students Need to Know',url:'https://www.csforall.org',source:'CS for All',format:'article',audience:['practitioner','grantee'],topic:['AI in K12','Classroom'],level:'beginner',summary:'Framework for AI literacy as a component of computer science education. Connects AI concepts to existing CS standards and identifies skills across grade levels.',why_useful:'Useful for programs connecting AI education to CS for All and broader digital literacy initiatives.',watch_out:'Primarily focused on CS integration context. Less applicable for arts or humanities-focused AI programs.',freshness:'current',featured:false},
+  {id:'ml-for-kids',title:'ML for Kids — Machine Learning via Scratch',url:'https://machinelearningforkids.co.uk',source:'IBM / ML for Kids',format:'tool',audience:['practitioner'],topic:['Classroom','AI in K12'],level:'beginner',summary:'Adds a machine learning extension to Scratch, allowing students to train text, image, or number classifiers and use them in projects — no coding required.',why_useful:'Bridges Scratch (widely known by teachers) with machine learning concepts. Projects are tangible and shareable.',watch_out:'Some exercises require IBM Watson credentials — check setup time before class.',freshness:'foundational',featured:false},
+  {id:'ncee-ai',title:'Preparing for an AI-Transformed Economy: K–12 Implications',url:'https://ncee.org',source:'National Center on Education and the Economy',format:'report',audience:['grantee','leader','internal'],topic:['Policy','Market','Equity'],level:'intermediate',summary:'Analysis of how AI reshapes workforce demands and what it means for K–12 curriculum design, particularly in relation to college, career readiness, and economic mobility.',why_useful:'Provides workforce and economic context that most AI education resources skip. Trusted source for policy and philanthropy audiences.',watch_out:'NCEE\'s lens leans toward accountability frameworks. Consider equity implications when applying recommendations.',freshness:'current',featured:false},
+  {id:'ai-special-ed',title:'AI Tools for Students with Disabilities: Opportunities and Cautions',url:'https://www.understood.org/en/articles/artificial-intelligence-and-learning-disabilities',source:'Understood.org',format:'article',audience:['practitioner','grantee'],topic:['Equity','Classroom'],level:'intermediate',summary:'Reviews how AI-powered tools (text-to-speech, writing assistants, adaptive platforms) can support students with learning disabilities, while flagging over-reliance risks and access inequities.',why_useful:'Critical for programs serving diverse learners. Fills a gap in most AI education resources.',watch_out:'Specific tool recommendations shift quickly. Focus on the evaluation framework rather than individual tools.',freshness:'current',featured:false},
+  {id:'future-of-life',title:'Teaching AI Safety: A Guide for Educators',url:'https://futureoflife.org',source:'Future of Life Institute',format:'article',audience:['practitioner','leader'],topic:['AI in K12','Policy'],level:'intermediate',summary:'Introduces AI safety concepts (alignment, misuse, systemic risk) in accessible language for educators. Includes discussion frameworks and student activities.',why_useful:'Unique in addressing AI safety rather than just AI literacy. Helps students think critically about long-term AI impacts.',watch_out:'Some concepts are abstract for younger students. Designed primarily for high school contexts.',freshness:'foundational',featured:false},
+  {id:'cset-ai-education',title:'AI and K–12 Education: Landscape Analysis',url:'https://cset.georgetown.edu',source:'Georgetown CSET',format:'report',audience:['internal','grantee'],topic:['Market','Policy','AI in K12'],level:'advanced',summary:'Rigorous analysis of the AI in education market, including major vendors, research gaps, international comparisons, and federal funding landscape.',why_useful:'The most comprehensive market analysis of AI in education. Essential for internal strategy and grantee landscape work.',watch_out:'Advanced policy document with significant jargon. Best for internal teams and sophisticated grantees.',freshness:'current',featured:false},
+  {id:'ai-detection-tools',title:'AI Detection Tools in Schools: What Works and What Doesn\'t',url:'https://www.commonsense.org/education',source:'Common Sense Media',format:'article',audience:['practitioner','leader'],topic:['Policy','Classroom'],level:'beginner',summary:'Evaluates the accuracy and fairness of AI detection tools. Finds significant error rates, especially for non-native English speakers. Recommends alternative approaches to academic integrity.',why_useful:'Essential for practitioners being pressured to use AI detectors. Evidence-based pushback on a widely misused approach.',watch_out:'The AI detection landscape evolves rapidly. Check for updated research before making policy recommendations.',freshness:'current',featured:false},
+  {id:'holoniq-market',title:'EdTech & AI in Education: Market Intelligence',url:'https://www.holoniq.com/edtech',source:'HolonIQ',format:'report',audience:['internal','grantee'],topic:['Market'],level:'advanced',summary:'Leading market intelligence on AI in education: investment trends, vendor landscape, and global market sizing. Used by investors, philanthropies, and policy organizations.',why_useful:'Best source for market sizing, investment trends, and vendor landscape data. Essential for internal strategy discussions.',watch_out:'Full reports are expensive. Free summaries exist but are limited.',freshness:'current',featured:false},
+  {id:'pbs-ai',title:'What is Artificial Intelligence? (For K–8 Students)',url:'https://www.pbslearningmedia.org',source:'PBS LearningMedia',format:'video',audience:['practitioner'],topic:['Classroom','AI in K12'],level:'beginner',summary:'PBS video collection explaining AI concepts for elementary and middle school students. Includes video segments, discussion guides, and cross-curricular connections.',why_useful:'Best-in-class for elementary audiences. PBS brand is trusted by parents and administrators. Free with PBS LearningMedia account.',watch_out:'Primarily conceptual, not hands-on. Pair with Teachable Machine for active learning.',freshness:'foundational',featured:false},
+  {id:'ncte-ai-writing',title:'AI and Writing: A Position Statement for ELA Educators',url:'https://ncte.org/statement/ai-and-writing/',source:'NCTE',format:'article',audience:['practitioner','leader'],topic:['Classroom','Policy'],level:'intermediate',summary:'NCTE\'s position on generative AI and writing instruction. Emphasizes centering student voice, rethinking assessment, and addressing equity concerns. Includes pedagogical principles.',why_useful:'Authoritative guidance for ELA educators. More nuanced than most policy documents on AI and writing.',watch_out:'Deliberately avoids prescriptive rules. Practitioners wanting clearer guidance should pair with district-specific policies.',freshness:'current',featured:false},
+];
+
+const K12_VOICES=[
+  {name:'National Center on Education and the Economy (NCEE)',url:'https://ncee.org',desc:'Nonpartisan policy organization focused on high-performing education systems globally.',why:'Leading voice on workforce readiness and the economic implications of AI for education. Trusted by philanthropy and state policy audiences.',highlighted:true},
+  {name:'AI4K12 Initiative',url:'https://ai4k12.org',desc:'Joint initiative of CSTA and AAAI developing national K–12 AI education guidelines.',why:'Produced the "Five Big Ideas" framework — the most widely adopted AI curriculum framework in the US. Backed by major CS education organizations.',highlighted:true},
+  {name:'Stanford HAI (Human-Centered AI)',url:'https://hai.stanford.edu/k-12-ai-education',desc:'Stanford research institute bridging AI development with human and societal needs.',why:'Rigorous, peer-reviewed policy research. Their K–12 policy briefs are widely cited by education departments and philanthropy.',highlighted:false},
+  {name:'MIT RAISE',url:'https://raise.mit.edu',desc:'MIT initiative for Responsible AI for Social Empowerment.',why:'Produces classroom-ready curricula (Day of AI) and conducts research on AI education effectiveness. Strong credibility with educators.',highlighted:false},
+  {name:'Common Sense Media',url:'https://www.commonsense.org/education',desc:'Nonprofit helping families and educators navigate technology safely.',why:'Most trusted consumer-facing voice on AI in schools. Guides are consistently balanced, evidence-based, and widely shared by practitioners.',highlighted:false},
+  {name:'ISTE (International Society for Technology in Education)',url:'https://www.iste.org/areas-of-focus/AI-in-education',desc:'Global nonprofit driving educational technology innovation.',why:'Professional home for ed-tech practitioners. Their AI standards and resources are widely adopted and practitioner-trusted.',highlighted:false},
+  {name:'CoSN (Consortium for School Networking)',url:'https://www.cosn.org/edtech-topics/ai/',desc:'National association for district technology leaders.',why:'Best resource for district-level infrastructure, governance, and vendor accountability concerns.',highlighted:false},
+  {name:'Center for Democracy & Technology (CDT)',url:'https://cdt.org/area-of-focus/privacy-data/artificial-intelligence/',desc:'Civil liberties organization focused on digital rights.',why:'Authoritative voice on civil rights, equity, and privacy in ed-tech AI deployments. Essential for equity-centered programs.',highlighted:false},
+  {name:'Georgetown CSET',url:'https://cset.georgetown.edu',desc:'Center for Security and Emerging Technology at Georgetown University.',why:'Rigorous policy and market analysis of AI in education. Best for internal strategy teams and sophisticated philanthropy audiences.',highlighted:false},
+  {name:'Education Week',url:'https://www.edweek.org/technology/ai-in-schools',desc:'Leading trade publication for K–12 education professionals.',why:'Best source for current news, practitioner perspectives, and policy tracking. Indispensable for staying current on the landscape.',highlighted:false},
+];
+
+function k12Card(r){
+  const freshLabel={current:'Current',foundational:'Foundational',needs_update:'Needs Update'};
+  const fmtIcon={article:'📄',report:'📋',tool:'🔧',video:'▶',podcast:'🎙'};
+  return`<div class="k12-card">
+    <div style="display:flex;align-items:flex-start;gap:6px;justify-content:space-between">
+      <div class="k12-card-title">${r.title}</div>
+      ${r.featured?'<span class="k12-featured-badge">★ START HERE</span>':''}
+    </div>
+    <div class="k12-card-source">${fmtIcon[r.format]||'📌'} ${r.source} &nbsp;·&nbsp; ${r.format.toUpperCase()}</div>
+    <div class="k12-card-summary">${r.summary}</div>
+    <div class="k12-card-why"><b>Why useful:</b> ${r.why_useful}</div>
+    ${r.watch_out?`<div class="k12-card-watch"><b>Watch out:</b> ${r.watch_out}</div>`:''}
+    <div class="k12-card-footer">
+      <span class="k12-fresh k12-fresh-${r.freshness}">${freshLabel[r.freshness]||r.freshness}</span>
+      <span class="k12-pill k12-pill-fmt">${r.level}</span>
+      ${r.audience.map(a=>`<span class="k12-pill k12-pill-aud">${a}</span>`).join('')}
+      ${r.topic.map(t=>`<span class="k12-pill">${t}</span>`).join('')}
+    </div>
+    <a class="k12-link" href="${r.url}" target="_blank" rel="noopener">Open resource ↗</a>
+  </div>`;
+}
+
+function k12Render(){
+  const aud=document.getElementById('k12-f-aud')?.value||'';
+  const topic=document.getElementById('k12-f-topic')?.value||'';
+  const level=document.getElementById('k12-f-level')?.value||'';
+  const fmt=document.getElementById('k12-f-fmt')?.value||'';
+  const fresh=document.getElementById('k12-f-fresh')?.value||'';
+  const filtered=K12_RESOURCES.filter(r=>{
+    if(aud&&!r.audience.includes(aud))return false;
+    if(topic&&!r.topic.includes(topic))return false;
+    if(level&&r.level!==level)return false;
+    if(fmt&&r.format!==fmt)return false;
+    if(fresh&&r.freshness!==fresh)return false;
+    return true;
+  });
+  const el=document.getElementById('k12-browse-cards');
+  const count=document.getElementById('k12-count');
+  if(count)count.textContent=filtered.length+' of '+K12_RESOURCES.length+' resources';
+  if(!el)return;
+  if(!filtered.length){el.innerHTML='<div class="k12-empty">No resources match your filters. <button onclick="k12Reset()" style="background:none;border:none;color:#0B9E80;font-size:14px;cursor:pointer;font-weight:700;text-decoration:underline">Clear filters</button></div>';return;}
+  el.innerHTML=filtered.map(k12Card).join('');
+}
+
+function k12Reset(){
+  ['k12-f-aud','k12-f-topic','k12-f-level','k12-f-fmt','k12-f-fresh'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  k12Render();
+}
+
+function k12Init(){
+  // Start Here tab
+  const start=document.getElementById('k12-start-cards');
+  if(start)start.innerHTML=K12_RESOURCES.filter(r=>r.featured).map(k12Card).join('');
+  // Browse tab
+  k12Render();
+  // Voices tab
+  const voices=document.getElementById('k12-voices-grid');
+  if(voices)voices.innerHTML=K12_VOICES.map(v=>`
+    <div class="k12-voice-card${v.highlighted?' highlight':''}">
+      ${v.highlighted?'<div style="font-size:10px;font-weight:800;color:#0B9E80;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">★ Highlighted</div>':''}
+      <div class="k12-voice-name"><a href="${v.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${v.name} ↗</a></div>
+      <div class="k12-voice-desc">${v.desc}</div>
+      <div class="k12-voice-why"><b>Why it matters:</b> ${v.why}</div>
+    </div>`).join('');
+}
+
+// Initialize K-12 navigator on first load (data is static, no async needed)
+k12Init();
 </script>
 </body>
 </html>
