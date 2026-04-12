@@ -1899,103 +1899,10 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 </div>
 
 <!-- ════ K-12 RESOURCE NAVIGATOR ════ -->
-<div id="pane-k12" class="pane">
-  <div class="t-hdr" style="background:#fff;border-bottom:1px solid #E8EDF2">
-    <div class="t-ey" style="color:#0B9E80">Research &amp; Discovery · Sensemaking Tools</div>
-    <div class="t-title">AI Literacy &amp; Equity in K–12</div>
-    <div class="t-tag">A curated resource hub anchored in equity. Who has access to AI tools? Who shapes them? Who gets left behind? These questions drive every curation decision.</div>
-    <div style="padding:10px 0 6px;display:flex;align-items:center;gap:10px">
-      <a href="/navigator.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 14px;border-radius:7px;border:1.5px solid #0B9E80;color:#0B9E80;text-decoration:none;background:#fff" title="Open standalone one-pager navigator">&#128203; Open Resource Navigator (one-pager) ↗</a>
-      <span style="font-size:11px;color:#A0ADB8">5 categories · 17 resources · 74-paper bibliography · printable</span>
-    </div>
-  </div>
+<div id="pane-k12" class="pane" style="display:flex;flex-direction:column">
 
-  <div style="overflow-y:auto;height:calc(100vh - 130px)">
+  <iframe src="/navigator.html" style="flex:1;width:100%;border:none;min-height:calc(100vh - 56px)" title="AI Literacy &amp; Equity Resource Navigator"></iframe>
 
-    <!-- ── Equity lens banner ──────────────────────────────────────── -->
-    <div class="k12-equity-banner">
-      <div class="k12-eq-title">Our Lens: AI Literacy &amp; Equity Are Inseparable</div>
-      <div class="k12-eq-body">AI in education is not a neutral force. Tools trained on unrepresentative data, policies that accelerate access for some while widening gaps for others, and curricula that treat AI as inevitable rather than designed — all have equity consequences. This hub centers three questions with every resource: <strong>Who has access?</strong> &nbsp;·&nbsp; <strong>Who decides?</strong> &nbsp;·&nbsp; <strong>Who benefits?</strong></div>
-      <div class="k12-eq-pills">
-        <span class="k12-eq-pill">Algorithm Bias</span>
-        <span class="k12-eq-pill">Digital Divide</span>
-        <span class="k12-eq-pill">Data Privacy</span>
-        <span class="k12-eq-pill">Disability Inclusion</span>
-        <span class="k12-eq-pill">Racial Justice</span>
-        <span class="k12-eq-pill">Teacher Capacity</span>
-        <span class="k12-eq-pill">Community Voice</span>
-      </div>
-    </div>
-
-    <!-- ── Equity Essentials ──────────────────────────────────────── -->
-    <div class="k12-section-hdr">
-      <div class="k12-section-label">Equity Essentials</div>
-      <div class="k12-section-title">Start here when equity is your lens</div>
-      <div class="k12-section-sub">Four resources that directly address access, justice, and inclusion in AI education — curated for practitioners, grantees, and system leaders.</div>
-    </div>
-    <div class="k12-cards" id="k12-equity-cards"></div>
-
-    <!-- ── Full Resource Library ──────────────────────────────────── -->
-    <div class="k12-section-hdr" style="border-top:1px solid #E4E9F0;margin-top:8px">
-      <div class="k12-section-label">Full Resource Library</div>
-      <div class="k12-section-title">29 resources — filter by audience, topic, level &amp; format</div>
-      <div class="k12-section-sub">Use the filters below to find what's right for your context. Download the current selection as a Word doc to share with partners.</div>
-    </div>
-    <div class="k12-filter-bar">
-      <label>Audience</label>
-      <select id="k12-f-aud" onchange="k12Render()">
-        <option value="">All</option>
-        <option value="practitioner">Practitioner</option>
-        <option value="grantee">Grantee</option>
-        <option value="leader">Leader / Admin</option>
-        <option value="internal">Internal Team</option>
-      </select>
-      <label>Topic</label>
-      <select id="k12-f-topic" onchange="k12Render()">
-        <option value="">All</option>
-        <option value="Equity">Equity</option>
-        <option value="AI in K12">AI in K–12</option>
-        <option value="Classroom">Classroom</option>
-        <option value="Policy">Policy</option>
-        <option value="Market">Market</option>
-      </select>
-      <label>Level</label>
-      <select id="k12-f-level" onchange="k12Render()">
-        <option value="">All</option>
-        <option value="beginner">Beginner</option>
-        <option value="intermediate">Intermediate</option>
-        <option value="advanced">Advanced</option>
-      </select>
-      <label>Format</label>
-      <select id="k12-f-fmt" onchange="k12Render()">
-        <option value="">All</option>
-        <option value="article">Article</option>
-        <option value="report">Report</option>
-        <option value="tool">Tool</option>
-        <option value="video">Video</option>
-      </select>
-      <label>Freshness</label>
-      <select id="k12-f-fresh" onchange="k12Render()">
-        <option value="">All</option>
-        <option value="current">Current</option>
-        <option value="foundational">Foundational</option>
-        <option value="needs_update">Needs Update</option>
-      </select>
-      <button onclick="k12Reset()" style="font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid #D1D9E0;background:#fff;color:#7A8A9B;cursor:pointer;font-weight:600">Clear</button>
-      <button onclick="k12ExportDoc()" title="Download as Word / Google Doc" style="font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid #0B9E80;background:#0B9E80;color:#fff;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap">⬇ Download .doc</button>
-      <span class="k12-count" id="k12-count"></span>
-    </div>
-    <div class="k12-cards" id="k12-browse-cards"></div>
-
-    <!-- ── Trusted Voices ─────────────────────────────────────────── -->
-    <div class="k12-section-hdr" style="border-top:1px solid #E4E9F0;margin-top:8px">
-      <div class="k12-section-label">Trusted Voices</div>
-      <div class="k12-section-title">Organizations we monitor and recommend to partners</div>
-      <div class="k12-section-sub">Curated for credibility, equity orientation, and ongoing relevance. Highlighted orgs are our highest-signal sources.</div>
-    </div>
-    <div class="k12-voice-grid" id="k12-voices-grid"></div>
-
-  </div>
 </div>
 
 </div><!-- end main -->
