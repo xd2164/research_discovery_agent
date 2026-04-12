@@ -71,6 +71,35 @@ a:hover{text-decoration:underline}
 .tag-eric{background:#F0FDF9;color:#0B9E80;border:1px solid #A7F3D0}
 .tag-other{background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE}
 
+/* ── User-added card ─────────────────────────── */
+.rc-user-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:1px 6px;border-radius:6px;background:#FEF9C3;color:#92400E;border:1px solid #FDE68A;flex-shrink:0}
+.rc-delete{margin-left:auto;font-size:10px;color:#CBD5E1;background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;flex-shrink:0}
+.rc-delete:hover{color:#EF4444;background:#FEF2F2}
+.rc-notes{font-size:11.5px;color:#7A8A9B;font-style:italic;line-height:1.4}
+
+/* ── Add resource button ─────────────────────── */
+.add-btn{font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:7px;border:1.5px solid #0B9E80;color:#fff;background:#0B9E80;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.add-btn:hover{background:#0A8A70}
+
+/* ── Modal ───────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:28px 32px;width:100%;max-width:500px;box-shadow:0 8px 40px rgba(0,0,0,.18)}
+.modal-title{font-size:17px;font-weight:800;color:#0D1B2A;margin-bottom:4px}
+.modal-sub{font-size:12.5px;color:#7A8A9B;margin-bottom:20px}
+.modal-field{margin-bottom:14px}
+.modal-label{display:block;font-size:11.5px;font-weight:700;color:#3D4F62;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.modal-input,.modal-select,.modal-textarea{width:100%;border:1.5px solid #E4E9F0;border-radius:7px;padding:8px 12px;font-size:13.5px;color:#0D1B2A;font-family:inherit;transition:border-color .15s}
+.modal-input:focus,.modal-select:focus,.modal-textarea:focus{outline:none;border-color:#0B9E80}
+.modal-textarea{resize:vertical;min-height:64px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.modal-cancel{font-size:13px;font-weight:700;padding:8px 18px;border-radius:7px;border:1.5px solid #E4E9F0;color:#7A8A9B;background:#fff;cursor:pointer}
+.modal-cancel:hover{background:#F7F9FC}
+.modal-submit{font-size:13px;font-weight:700;padding:8px 20px;border-radius:7px;border:none;color:#fff;background:#0B9E80;cursor:pointer}
+.modal-submit:hover{background:#0A8A70}
+.modal-submit:disabled{opacity:.5;cursor:not-allowed}
+.modal-err{font-size:12px;color:#EF4444;margin-top:8px}
+
 /* ── Footer ───────────────────────────────────── */
 .footer{background:#fff;border-top:1px solid #E4E9F0;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .footer-left{font-size:11.5px;color:#A0ADB8}
@@ -128,7 +157,52 @@ a:hover{text-decoration:underline}
       <button class="cat-pill" onclick="filterCat('tools',this)">EdTech Tools</button>
     </div>
   </div>
-  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="add-btn" onclick="openModal()">＋ Add resource</button>
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+</div>
+
+<!-- ── Add Resource Modal ─────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal-title" id="modal-heading">Add a Resource</div>
+    <div class="modal-sub">Your addition will be saved to the shared database and appear in the list immediately.</div>
+
+    <div class="modal-field">
+      <label class="modal-label" for="f-title">Title *</label>
+      <input class="modal-input" id="f-title" type="text" placeholder="e.g. UNESCO AI Competency Framework for Teachers" autocomplete="off">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="f-source">Source / Organisation *</label>
+      <input class="modal-input" id="f-source" type="text" placeholder="e.g. UNESCO" autocomplete="off">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="f-url">URL *</label>
+      <input class="modal-input" id="f-url" type="url" placeholder="https://…" autocomplete="off">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="f-cat">Category *</label>
+      <select class="modal-select" id="f-cat">
+        <option value="">— choose a category —</option>
+        <option value="policy">Policy &amp; Frameworks</option>
+        <option value="literacy">AI Literacy &amp; Ethics</option>
+        <option value="workforce">Workforce Signals</option>
+        <option value="change">Org Change</option>
+        <option value="tools">EdTech Tools</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="f-notes">Notes (optional)</label>
+      <textarea class="modal-textarea" id="f-notes" placeholder="Why is this resource relevant? Any watch-outs?"></textarea>
+    </div>
+
+    <div class="modal-err" id="modal-err" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-submit" id="modal-submit" onclick="submitResource()">Save Resource</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── Single consolidated resource list ─────────── -->
@@ -388,7 +462,8 @@ a:hover{text-decoration:underline}
 </footer>
 
 <script>
-const CATS = {
+// ── Category labels ───────────────────────────────────────────────────────
+const CAT_LABELS = {
   policy:   'Policy &amp; Frameworks',
   literacy: 'AI Literacy &amp; Ethics',
   workforce:'Workforce Signals',
@@ -396,22 +471,161 @@ const CATS = {
   tools:    'EdTech Tools'
 };
 
+// ── Active filter state ───────────────────────────────────────────────────
+let currentCat = 'all';
+
+// ── Filter handler ────────────────────────────────────────────────────────
 function filterCat(cat, btn){
+  currentCat = cat;
   document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
+  applyFilter();
+}
+
+function applyFilter(){
   const cards = document.querySelectorAll('.resource-card');
   let visible = 0;
   cards.forEach(c=>{
-    const show = cat==='all' || c.dataset.cat===cat;
+    const show = currentCat==='all' || c.dataset.cat===currentCat;
     c.classList.toggle('hidden', !show);
     if(show) visible++;
   });
+  const activePill = document.querySelector('.cat-pill.active');
+  const label = activePill ? activePill.textContent.replace(/&amp;/g,'&') : 'All';
   document.getElementById('count-label').textContent =
-    cat==='all'
+    currentCat==='all'
       ? `Showing all ${visible} resources`
-      : `Showing ${visible} resource${visible!==1?'s':''} · ${btn.textContent}`;
+      : `Showing ${visible} resource${visible!==1?'s':''} · ${label}`;
 }
 
+// ── Build a card element for a DB resource ────────────────────────────────
+function buildDbCard(r){
+  const catKey = r.category;
+  const catLabel = CAT_LABELS[catKey] || catKey;
+  const hostname = (() => { try { return new URL(r.url).hostname.replace(/^www\./,''); } catch{ return r.url; } })();
+
+  const card = document.createElement('div');
+  card.className = 'resource-card';
+  card.dataset.cat = catKey;
+  card.dataset.dbid = r.id;
+  card.innerHTML = `
+    <div class="rc-top">
+      <div class="rc-source">${escHtml(r.source)}</div>
+      <span class="rc-cat rc-cat-${catKey}">${catLabel}</span>
+      <span class="rc-user-badge">Added</span>
+      <button class="rc-delete" title="Remove this resource" onclick="deleteResource(${r.id},this)">✕</button>
+    </div>
+    <div class="rc-title">${escHtml(r.title)}</div>
+    ${r.notes ? `<div class="rc-notes">${escHtml(r.notes)}</div>` : ''}
+    <a class="rc-link" href="${escHtml(r.url)}" target="_blank" rel="noopener">${escHtml(hostname)} ↗</a>`;
+  return card;
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Load DB resources on startup ──────────────────────────────────────────
+async function loadDbResources(){
+  try {
+    const res = await fetch('/api/resources');
+    if(!res.ok) return;
+    const { resources } = await res.json();
+    const grid = document.getElementById('resource-grid');
+    resources.forEach(r => grid.appendChild(buildDbCard(r)));
+    applyFilter();
+  } catch(e){ console.warn('Could not load saved resources:', e); }
+}
+
+// ── Delete a resource ─────────────────────────────────────────────────────
+async function deleteResource(id, btn){
+  if(!confirm('Remove this resource?')) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/api/resources/${id}`, { method:'DELETE' });
+    if(res.ok){
+      const card = btn.closest('.resource-card');
+      card.remove();
+      applyFilter();
+    } else {
+      btn.disabled = false;
+      alert('Could not delete resource. Try again.');
+    }
+  } catch(e){ btn.disabled = false; alert('Network error. Try again.'); }
+}
+
+// ── Modal open / close ────────────────────────────────────────────────────
+function openModal(){
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-title').focus();
+  document.getElementById('modal-err').style.display='none';
+  document.getElementById('modal-err').textContent='';
+  // Pre-select current filter category
+  if(currentCat !== 'all') document.getElementById('f-cat').value = currentCat;
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  // reset form
+  ['f-title','f-source','f-url','f-notes'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('f-cat').value='';
+}
+
+function overlayClick(e){
+  if(e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// ── Submit new resource ───────────────────────────────────────────────────
+async function submitResource(){
+  const title    = document.getElementById('f-title').value.trim();
+  const source   = document.getElementById('f-source').value.trim();
+  const url      = document.getElementById('f-url').value.trim();
+  const category = document.getElementById('f-cat').value;
+  const notes    = document.getElementById('f-notes').value.trim();
+
+  const errEl = document.getElementById('modal-err');
+  errEl.style.display='none';
+
+  if(!title)    { showErr('Title is required'); return; }
+  if(!source)   { showErr('Source / Organisation is required'); return; }
+  if(!url)      { showErr('URL is required'); return; }
+  if(!category) { showErr('Please choose a category'); return; }
+  if(!/^https?:\/\//i.test(url)) { showErr('URL must start with http:// or https://'); return; }
+
+  const btn = document.getElementById('modal-submit');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch('/api/resources', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, source, url, category, notes: notes || undefined })
+    });
+    const data = await res.json();
+    if(!res.ok){ showErr(data.error || 'Failed to save. Try again.'); return; }
+
+    // Append new card to grid
+    const grid = document.getElementById('resource-grid');
+    const card = buildDbCard(data.resource);
+    grid.appendChild(card);
+    applyFilter();
+    closeModal();
+  } catch(e){
+    showErr('Network error. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Resource';
+  }
+}
+
+function showErr(msg){
+  const el = document.getElementById('modal-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ── Bibliography toggle ───────────────────────────────────────────────────
 function toggleBib(btn){
   const list = document.getElementById('bib-list');
   const open = list.classList.toggle('open');
@@ -420,6 +634,9 @@ function toggleBib(btn){
     : 'Academic Research Bibliography — 74 peer-reviewed papers';
   document.getElementById('bib-arrow').textContent = open ? '▲' : '▼';
 }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadDbResources();
 </script>
 </body>
 </html>

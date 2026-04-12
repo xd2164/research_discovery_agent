@@ -6,6 +6,7 @@ import arxivRouter from "./arxiv";
 import papersRouter from "./papers";
 import historyRouter from "./history";
 import trackRouter from "./track";
+import resourcesRouter from "./resources";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(arxivRouter);
 router.use(papersRouter);
 router.use(historyRouter);
 router.use(trackRouter);
+router.use(resourcesRouter);
 
 export default router;
