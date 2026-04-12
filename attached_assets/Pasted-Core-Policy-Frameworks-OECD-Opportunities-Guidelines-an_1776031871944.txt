@@ -1,0 +1,114 @@
+Core Policy & Frameworks
+OECD – Opportunities, Guidelines and Guardrails for AI in Education
+https://www.oecd.org/education/artificial-intelligence-in-education/
+OECD – Digital Education Outlook (2023)
+https://www.oecd.org/education/digital-education-outlook/
+U.S. DOE – AI and the Future of Teaching and Learning
+Artificial Intelligence and the Future of Teaching and Learning (PDF)
+TeachAI – AI Guidance for Schools Toolkit
+https://teachai.org/toolkit/
+ISTE – Artificial Intelligence in Education
+ISTE | Artificial Intelligence in Education
+AI Literacy & Ethics Resources
+Code.org – AI 101 for Teachers
+https://code.org/ai/pl/101
+ISTE – Bringing AI to School (Guide for Leaders)
+https://www.iste.org/resources/product?id=5547
+AI Literacy Institute - Resources 
+https://ailiteracy.institute/#
+Workforce & Economic Signals
+World Economic Forum – Jobs of Tomorrow (LLMs Toolkit)
+Jobs of Tomorrow: Large Language Models and Jobs – A Business Toolkit | World Economic Forum
+Deloitte – Global Human Capital Trends (2024)
+https://www2.deloitte.com/us/en/insights/focus/human-capital-trends.html
+Burning Glass Institute
+https://burningglassinstitute.org/
+McKinsey – Future of Work / Gig Economy
+https://www.mckinsey.com/featured-insights/future-of-work
+IMF – AI 
+Artificial Intelligence
+Learning & Organizational Change
+Harvard Business Review – Learning in the Flow of Work
+https://hbr.org/2023/02/how-to-help-your-team-learn-in-the-flow-of-work
+CoSN – Driving K-12 Innovation (2024)
+https://www.cosn.org/edtech-topics/innovation/
+EdTech Tools Mentioned
+Khan Academy – Khanmigo
+https://www.khanacademy.org/khan-labs
+HMH – Amira Learning
+https://www.amiralearning.com
+Bibliography
+[1]  OpenAlex  Revolutionizing healthcare: the role of artificial intelligence in clinical practice  —  Alowais, Alghamdi et al., 2023  ·  2601 cites
+[2]  OpenAlex  Digital Twin: Values, Challenges and Enablers From a Modeling Perspective  —  Rasheed, San et al., 2020  ·  1611 cites
+[3]  OpenAlex  The Ethics of AI Ethics: An Evaluation of Guidelines  —  Hagendorff, 2020  ·  1546 cites
+[4]  OpenAlex  Interpreting Black-Box Models: A Review on Explainable Artificial Intelligence  —  Hassija, Chamola et al., 2023  ·  1509 cites
+[5]  OpenAlex  Data Feminism  —  D'Ignazio, Klein, 2020  ·  1393 cites
+[6]  OpenAlex  Consumers and Artificial Intelligence: An Experiential Perspective  —  Puntoni, Reczek et al., 2020  ·  932 cites
+[7]  OpenAlex  Ethical principles for artificial intelligence in education  —  Nguyen, Ngo et al., 2022  ·  929 cites
+[8]  OpenAlex  New Era of Artificial Intelligence in Education: Towards a Sustainable Multifaceted Revolution  —  Kamalov, Santandreu Calonge et al., 2023  ·  853 cites
+[9]  OpenAlex  Unlocking the value of AI in human resource management through AI capability framework  —  Chowdhury, Dey et al., 2022  ·  754 cites
+[10]  OpenAlex  A Review of the Role of Artificial Intelligence in Healthcare  —  Al Kuwaiti, Nazer et al., 2023  ·  752 cites
+[11]  OpenAlex  Climate change and COP26: Are digital technologies and information management part of the problem or the solution?  —  Dwivedi, Hughes et al., 2021  ·  697 cites
+[12]  OpenAlex  Is Metaverse in education a blessing or a curse: a combined content and bibliometric analysis  —  Tlili, Huang et al., 2022  ·  575 cites
+[13]  OpenAlex  Algorithmic fairness in artificial intelligence for medicine and healthcare  —  Chen, Wang et al., 2023  ·  513 cites
+[14]  OpenAlex  2020 EDUCAUSE Horizon Report: Teaching and Learning Edition  —  Brown, McCormack et al., 2020  ·  505 cites
+[15]  OpenAlex  The dark side of generative artificial intelligence: A critical analysis of controversies and risks of ChatGPT  —  Wach, Duong et al., 2023  ·  481 cites
+[16]  OpenAlex  Towards a standard for identifying and managing bias in artificial intelligence  —  Schwartz, Vassilev et al., 2022  ·  479 cites
+[17]  OpenAlex  Six Human-Centered Artificial Intelligence Grand Challenges  —  Garibay, Winslow et al., 2023  ·  406 cites
+[18]  OpenAlex  AI-driven adaptive learning for sustainable educational transformation  —  Striełkowski et al., 2024  ·  307 cites
+[19]  OpenAlex  Bias and Unfairness in Machine Learning Models: A Systematic Review on Datasets, Tools, Fairness Metrics, and Identification and Mitigation Methods  —  Pagano, Loureiro et al., 2023  ·  246 cites
+[20]  OpenAlex  The value of standards for health datasets in AI-based applications  —  Arora, Alderman et al., 2023  ·  244 cites
+[21]  OpenAlex  Use of Artificial Intelligence in Improving Outcomes in Heart Disease  —  Armoundas, Narayan et al., 2024  ·  216 cites
+[22]  OpenAlex  A Call to Action on Assessing and Mitigating Bias in AI Applications for Mental Health  —  Timmons, Duong et al., 2022  ·  207 cites
+[23]  arXiv  Creative Problem Solving in Artificially Intelligent Agents: A Survey and Framework  —  Gizzi, Nair et al., 2022
+[24]  arXiv  A Review on Explainable Artificial Intelligence for Healthcare: Why, How, and When?  —  Bharati, Mondal et al., 2023
+[25]  arXiv  Connecting Three Pivotal Concepts in K-12 Science State Standards and Maps of Conceptual Growth to Research in Physics Education  —  Singh, Schunn, 2016
+[26]  arXiv  Games for Artificial Intelligence Research: A Review and Perspectives  —  Hu, Zhao et al., 2023
+[27]  arXiv  The Artificial Scientist: Logicist, Emergentist, and Universalist Approaches to AGI  —  Bennett, Maruyama, 2021
+[28]  arXiv  Experts' View on Challenges and Needs for Fairness in Artificial Intelligence for Education  —  Fenu, Galici et al., 2022
+[29]  ERIC  The Ethics of Using AI in K-12 Education: A Systematic Literature Review  —  Gouseti, James et al., 2025
+[30]  ERIC  Artificial Intelligence in Primary Education: A Systematic Literature Review 2020-2025  —  Bagdonaite, Dagiene, 2025
+[31]  ERIC  Design Language Learning with AI Chatbots Based on Activity Theory from a Systematic Review  —  Li, Zhou et al., 2025
+[32]  ERIC  Systematic Review of the Impact of Artificial Intelligence in Higher Education  —  Figueroa de la Fuente, Farhadian, 2025
+[33]  ERIC  Automated Writing Evaluation Systems: A Systematic Review of Grammarly, Pigai, and Criterion  —  Ding, Zou, 2024
+[34]  ERIC  The Trajectory of Artificial Intelligence for Competency-Based Personalised Learning: Past, Present and Future  —  Dastane, Turner et al., 2024
+[35]  arXiv  Second Order WinoBias Test Set for Latent Gender Bias Detection in Coreference Resolution  —  Dawkins, 2021
+[36]  arXiv  The Rise of Artificial Intelligence in Educational Measurement: Opportunities and Ethical Challenges  —  Bulut, Beiting-Parrish et al., 2024
+[37]  arXiv  Compression, The Fermi Paradox and Artificial Super-Intelligence  —  Bennett, 2021
+[38]  arXiv  Equity in College Physics Student Learning: a Critical Quantitative Intersectionality Investigation  —  Van Dusen, Nissen, 2018
+[39]  ERIC  Algorithmic Bias in Education  —  Baker, Hawn, 2022
+[40]  ERIC  Can AI Be Racist? Color-Evasiveness in the Application of Machine Learning to Science Assessments  —  Cheuk, Tina, 2021
+[41]  ERIC  Interrogating Algorithmic Bias: From Speculative Fiction to Liberatory Design  —  Gaskins, Nettrice, 2023
+[42]  ERIC  Examining the Algorithmic Fairness in Predicting High School Dropouts  —  Pan, Zhang, 2024
+[43]  ERIC  A Psychometric Framework for Evaluating Fairness in Algorithmic Decision Making  —  Suk, Han, 2024
+[44]  ERIC  Algorithmic Foucault: Digital Feminism, the Panopticon, & the Role of AI in Shaping Musical Identities & Pedagogies  —  Zhu, Mila, 2025
+[45]  arXiv  Towards Equity and Algorithmic Fairness in Student Grade Prediction  —  Jiang, Pardos, 2021
+[46]  arXiv  Integration of AI in STEM Education, Addressing Ethical Challenges in K-12 Settings  —  Lodhi, Lodhi, 2025
+[47]  arXiv  AI for Accessible Education: Personalized Audio-Based Learning for Blind Students  —  Yang, Taele, 2025
+[48]  arXiv  Fairness in AI: challenges in bridging the gap between algorithms and law  —  Giannopoulos, Psalla et al., 2024
+[49]  arXiv  Reinforcement Learning with Stepwise Fairness Constraints  —  Deng, Sun et al., 2022
+[50]  arXiv  Algorithmic Fairness  —  Pessach, Shmueli, 2020
+[51]  ERIC  Generative AI-Driven Personalization of the Community of Inquiry Model  —  Anderson, Nguyen et al., 2025
+[52]  ERIC  Personalized Online Learning, Test Fairness, and Educational Measurement  —  Katz, Huggins-Manley et al., 2022
+[53]  ERIC  AI Differences in Vocational and Undergraduate Applications in Higher Education: A Systematic Review  —  Gao, Tan, 2025
+[54]  ERIC  Evaluating How Personalized AI Agents Influence Decision-Making, Self-Presentation, and Digital Identity Management  —  Ogunsola, 2026
+[55]  arXiv  Mapping AI Risk Mitigations: Evidence Scan and Preliminary AI Risk Mitigation Taxonomy  —  Saeri, Lloyd George et al., 2025
+[56]  arXiv  Ethical AI for Young Digital Citizens: A Call to Action on Privacy Governance  —  Shouli, Barthwal et al., 2025
+[57]  arXiv  Beyond principlism: Practical strategies for ethical AI use in research practices  —  Lin, 2024
+[58]  arXiv  Competing Visions of Ethical AI: A Case Study of OpenAI  —  Wilfley, Ai et al., 2026
+[59]  arXiv  Towards Standardizing AI Bias Exploration  —  Krasanakis, Papadopoulos, 2024
+[60]  ERIC  Safeguarding the Digital Economy: Librarians' Perspectives on Data Privacy and Ethical Use of Public AI Chatbots  —  Olusipe, Adetayo et al., 2024
+[61]  ERIC  A Delphi Study on Ethical Challenges and Ensuring Academic Integrity Regarding AI Research in Higher Education  —  Gunes, Liman Kaban, 2025
+[62]  ERIC  Integrating Artificial Intelligence (AI) into Adult Education: Opportunities, Challenges, and Future Directions  —  Storey, Wagner, 2024
+[63]  ERIC  Considerations for the Use of Generative Artificial Intelligence in the Counseling Profession  —  Norton, 2025
+[64]  ERIC  What Students Really Think: Unpacking AI Ethics in Educational Assessments through a Triadic Framework  —  Lim, Gottipati et al., 2025
+[65]  ERIC  Preparing the Next Generation of Health Education Teachers for the Ethical Use of AI  —  Haithcox-Dennis, Johnson, 2025
+[66]  Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification  —  Buolamwini, Gebru, 2018
+[67]   Actionable Auditing Revisited: Investigating the Impact of Publicly Naming Biased Performance Results of Commercial AI Products  —  Raji, Buolamwini, 2023
+[68]   Who Audits the Auditors? Recommendations from a Field Scan of the Algorithmic Auditing Ecosystem  —  Costanza-Chock, Raji, Buolamwini et al., 2022
+[69]   Unmasking AI: My Mission to Protect What Is Human in a World of Machines  —  Buolamwini, 2023
+[70]  Comply to Fly? A Report on Traveler Experiences with TSA Facial Recognition Technology  —  Algorithmic Justice League, 2025
+[71]  Towards responsible artificial intelligence in education: a systematic review on identifying and mitigating ethical risks  —  Zhu et al., 2025
+[72]   Algorithmic bias in educational systems: Examining the impact of AI-driven decision making in modern education  —  Boateng, Boateng, 2025
+[73]  FairAIED: Navigating Fairness, Bias, and Ethics in Educational AI Applications  —  Chinta et al., 2024
+[74]   Investigating algorithmic bias in student progress monitoring  —  Idowu, 2024

@@ -302,6 +302,15 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 .k12-count{font-size:12px;color:#7A8A9B;margin-left:auto}
 .k12-empty{padding:60px 32px;text-align:center;color:#A0ADB8;font-size:14px}
 .k12-voice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:28px 32px}
+.k12-equity-banner{background:linear-gradient(135deg,#0D4F3C 0%,#0B6E52 60%,#0B9E80 100%);padding:28px 32px;color:#fff}
+.k12-eq-title{font-size:15px;font-weight:800;letter-spacing:.3px;margin-bottom:10px;color:#A7F3D0}
+.k12-eq-body{font-size:13px;line-height:1.7;color:#D1FAE5;max-width:820px}
+.k12-eq-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.k12-eq-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.12);color:#fff;letter-spacing:.2px;border:1px solid rgba(255,255,255,0.2)}
+.k12-section-hdr{padding:22px 32px 0}
+.k12-section-label{font-size:10.5px;font-weight:800;color:#0B9E80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.k12-section-title{font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:5px}
+.k12-section-sub{font-size:13px;color:#7A8A9B;line-height:1.5;max-width:680px;margin-bottom:4px}
 .k12-voice-card{background:#fff;border:1px solid #E4E9F0;border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
 .k12-voice-card.highlight{border:2px solid #0B9E80;background:linear-gradient(135deg,#F0FDF9,#fff)}
 .k12-voice-name{font-size:14px;font-weight:800;color:#0D1B2A}
@@ -370,7 +379,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
     <div class="sb-item" id="nav-k12" onclick="go('k12')">
       <div class="sb-icon" style="background:#0D2A1A">&#128218;</div>
-      <div><div class="sb-name">K–12 Resource Navigator</div><div class="sb-tag">AI in education resource hub</div>
+      <div><div class="sb-name">AI Literacy &amp; Equity — K–12</div><div class="sb-tag">Equity-anchored resource hub</div>
       <div class="sb-pips"><div class="sb-pip" style="background:#0B9E80"></div><div class="sb-pip" style="background:#3B82F6"></div></div></div>
     </div>
 
@@ -1891,28 +1900,43 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 
 <!-- ════ K-12 RESOURCE NAVIGATOR ════ -->
 <div id="pane-k12" class="pane">
-  <div class="t-hdr" style="background:#fff;border-bottom:1px solid #E8EDF2;padding-bottom:0">
+  <div class="t-hdr" style="background:#fff;border-bottom:1px solid #E8EDF2">
     <div class="t-ey" style="color:#0B9E80">Research &amp; Discovery · Sensemaking Tools</div>
-    <div class="t-title">AI in K–12 Resource Navigator</div>
-    <div class="t-tag">A curated, practitioner-facing hub for trusted, current, and role-relevant resources on AI in K–12 education and equity. Reduce noise. Guide decisions.</div>
-    <div class="tnav" style="margin:0 -32px;padding:0 32px">
-      <div class="tb on" onclick="stab(this)">Start Here</div>
-      <div class="tb" onclick="stab(this)">Browse Resources</div>
-      <div class="tb" onclick="stab(this)">Trusted Voices</div>
-    </div>
+    <div class="t-title">AI Literacy &amp; Equity in K–12</div>
+    <div class="t-tag">A curated resource hub anchored in equity. Who has access to AI tools? Who shapes them? Who gets left behind? These questions drive every curation decision.</div>
   </div>
 
-  <!-- ── Tab 1: Start Here ───────────────────────────────────── -->
-  <div class="tc" style="display:block;overflow-y:auto">
-    <div class="k12-start-intro">
-      <h2>New to AI in K–12? Start here.</h2>
-      <p>8 essential resources — hand-picked for clarity, credibility, and actionability. Each has a plain-language summary, why it matters, and things to watch out for.</p>
-    </div>
-    <div class="k12-cards" id="k12-start-cards"></div>
-  </div>
+  <div style="overflow-y:auto;height:calc(100vh - 130px)">
 
-  <!-- ── Tab 2: Browse ───────────────────────────────────────── -->
-  <div class="tc" style="display:none;overflow-y:auto">
+    <!-- ── Equity lens banner ──────────────────────────────────────── -->
+    <div class="k12-equity-banner">
+      <div class="k12-eq-title">Our Lens: AI Literacy &amp; Equity Are Inseparable</div>
+      <div class="k12-eq-body">AI in education is not a neutral force. Tools trained on unrepresentative data, policies that accelerate access for some while widening gaps for others, and curricula that treat AI as inevitable rather than designed — all have equity consequences. This hub centers three questions with every resource: <strong>Who has access?</strong> &nbsp;·&nbsp; <strong>Who decides?</strong> &nbsp;·&nbsp; <strong>Who benefits?</strong></div>
+      <div class="k12-eq-pills">
+        <span class="k12-eq-pill">Algorithm Bias</span>
+        <span class="k12-eq-pill">Digital Divide</span>
+        <span class="k12-eq-pill">Data Privacy</span>
+        <span class="k12-eq-pill">Disability Inclusion</span>
+        <span class="k12-eq-pill">Racial Justice</span>
+        <span class="k12-eq-pill">Teacher Capacity</span>
+        <span class="k12-eq-pill">Community Voice</span>
+      </div>
+    </div>
+
+    <!-- ── Equity Essentials ──────────────────────────────────────── -->
+    <div class="k12-section-hdr">
+      <div class="k12-section-label">Equity Essentials</div>
+      <div class="k12-section-title">Start here when equity is your lens</div>
+      <div class="k12-section-sub">Four resources that directly address access, justice, and inclusion in AI education — curated for practitioners, grantees, and system leaders.</div>
+    </div>
+    <div class="k12-cards" id="k12-equity-cards"></div>
+
+    <!-- ── Full Resource Library ──────────────────────────────────── -->
+    <div class="k12-section-hdr" style="border-top:1px solid #E4E9F0;margin-top:8px">
+      <div class="k12-section-label">Full Resource Library</div>
+      <div class="k12-section-title">29 resources — filter by audience, topic, level &amp; format</div>
+      <div class="k12-section-sub">Use the filters below to find what's right for your context. Download the current selection as a Word doc to share with partners.</div>
+    </div>
     <div class="k12-filter-bar">
       <label>Audience</label>
       <select id="k12-f-aud" onchange="k12Render()">
@@ -1925,8 +1949,8 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <label>Topic</label>
       <select id="k12-f-topic" onchange="k12Render()">
         <option value="">All</option>
-        <option value="AI in K12">AI in K–12</option>
         <option value="Equity">Equity</option>
+        <option value="AI in K12">AI in K–12</option>
         <option value="Classroom">Classroom</option>
         <option value="Policy">Policy</option>
         <option value="Market">Market</option>
@@ -1958,15 +1982,15 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
       <span class="k12-count" id="k12-count"></span>
     </div>
     <div class="k12-cards" id="k12-browse-cards"></div>
-  </div>
 
-  <!-- ── Tab 3: Trusted Voices ──────────────────────────────── -->
-  <div class="tc" style="display:none;overflow-y:auto">
-    <div class="k12-start-intro">
-      <h2>Who to trust</h2>
-      <p>A curated list of organizations producing high-quality, reliable guidance on AI in K–12 education. These are the sources we monitor and recommend to partners.</p>
+    <!-- ── Trusted Voices ─────────────────────────────────────────── -->
+    <div class="k12-section-hdr" style="border-top:1px solid #E4E9F0;margin-top:8px">
+      <div class="k12-section-label">Trusted Voices</div>
+      <div class="k12-section-title">Organizations we monitor and recommend to partners</div>
+      <div class="k12-section-sub">Curated for credibility, equity orientation, and ongoing relevance. Highlighted orgs are our highest-signal sources.</div>
     </div>
     <div class="k12-voice-grid" id="k12-voices-grid"></div>
+
   </div>
 </div>
 
@@ -1985,7 +2009,7 @@ const TAB_ROUTES={
   market:['overview','market-insights','deepdive','architecture','patterns'],
   agents:['overview','edu-agent','evidence-scout','architecture','patterns'],
   fpa:[],
-  k12:['start-here','browse','trusted-voices'],
+  k12:[],
 };
 
 let _skipHash=false;
@@ -2936,7 +2960,7 @@ function k12ExportDoc(){
     <style>body{font-family:Calibri,Arial,sans-serif;margin:72pt 72pt 72pt 72pt;color:#1a1a2e}
     h1{font-size:18pt;color:#1a1a2e;margin:0 0 4pt}
     .meta{font-size:10pt;color:#888;margin:0 0 16pt}</style></head><body>
-    <h1>AI in K–12 Resource Navigator</h1>
+    <h1>AI Literacy &amp; Equity in K–12 — Resource Hub</h1>
     <p class="meta">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub<br>
     Exported ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · Filter: ${filterDesc} · ${filtered.length} resource${filtered.length!==1?'s':''}</p>
     ${rows}
@@ -2951,12 +2975,13 @@ function k12ExportDoc(){
 }
 
 function k12Init(){
-  // Start Here tab
-  const start=document.getElementById('k12-start-cards');
-  if(start)start.innerHTML=K12_RESOURCES.filter(r=>r.featured).map(k12Card).join('');
-  // Browse tab
+  // Equity Essentials: hand-pick the 4 most equity-direct resources
+  const EQUITY_IDS=['equity-ai-education','cdt-ai-equity','ai-special-ed','ncee-human-flourishing'];
+  const eq=document.getElementById('k12-equity-cards');
+  if(eq)eq.innerHTML=K12_RESOURCES.filter(r=>EQUITY_IDS.includes(r.id)).sort((a,b)=>EQUITY_IDS.indexOf(a.id)-EQUITY_IDS.indexOf(b.id)).map(k12Card).join('');
+  // Full library
   k12Render();
-  // Voices tab
+  // Voices
   const voices=document.getElementById('k12-voices-grid');
   if(voices)voices.innerHTML=K12_VOICES.map(v=>`
     <div class="k12-voice-card${v.highlighted?' highlight':''}">
