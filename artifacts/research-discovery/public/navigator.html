@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Literacy &amp; Equity — Resource Navigator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#F7F9FC;color:#1a1a2e;font-size:14px;line-height:1.5}
+a{color:#0B9E80;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── Header ─────────────────────────────────── */
+.site-header{background:linear-gradient(135deg,#0D4F3C 0%,#0B6E52 55%,#0B9E80 100%);padding:36px 48px 32px;color:#fff}
+.site-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#A7F3D0;margin-bottom:8px}
+.site-title{font-size:28px;font-weight:900;color:#fff;margin-bottom:8px}
+.site-sub{font-size:14px;color:#D1FAE5;max-width:680px;margin-bottom:20px;line-height:1.6}
+.lens-qs{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.lens-q{font-size:12px;font-weight:800;padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.35);color:#fff;background:rgba(255,255,255,0.1)}
+.eq-tags{display:flex;gap:8px;flex-wrap:wrap}
+.eq-tag{font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:14px;background:rgba(255,255,255,0.1);color:#A7F3D0;border:1px solid rgba(255,255,255,0.18);letter-spacing:.2px}
+
+/* ── Top bar ─────────────────────────────────── */
+.top-bar{background:#fff;border-bottom:1px solid #E4E9F0;padding:12px 48px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.top-bar-left{font-size:11.5px;color:#7A8A9B}
+.print-btn{font-size:11.5px;font-weight:700;padding:6px 16px;border-radius:7px;border:1.5px solid #0B9E80;color:#0B9E80;background:#fff;cursor:pointer}
+.print-btn:hover{background:#0B9E80;color:#fff}
+
+/* ── Main layout ─────────────────────────────── */
+.main{max-width:1200px;margin:0 auto;padding:32px 48px 64px}
+
+/* ── Section ─────────────────────────────────── */
+.section{margin-bottom:40px}
+.section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#0B9E80;margin-bottom:4px}
+.section-title{font-size:19px;font-weight:800;color:#0D1B2A;margin-bottom:4px}
+.section-desc{font-size:13px;color:#7A8A9B;margin-bottom:16px;max-width:720px}
+.divider{border:none;border-top:2px solid #E4E9F0;margin-bottom:24px}
+
+/* ── Resource grid ───────────────────────────── */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.resource-card{background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-color .15s}
+.resource-card:hover{box-shadow:0 2px 12px rgba(11,158,128,.1);border-color:#0B9E80}
+.rc-source{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#7A8A9B}
+.rc-title{font-size:13.5px;font-weight:700;color:#0D1B2A;line-height:1.35}
+.rc-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#F0FDF9;color:#0B9E80;border:1px solid #A7F3D0;margin-top:2px}
+.rc-link{font-size:11px;color:#0B9E80;font-weight:700;margin-top:auto;padding-top:6px}
+
+/* ── Bibliography ────────────────────────────── */
+.bib-toggle{width:100%;text-align:left;background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:14px 18px;cursor:pointer;font-size:14px;font-weight:700;color:#0D1B2A;display:flex;justify-content:space-between;align-items:center}
+.bib-toggle:hover{background:#F0FDF9;border-color:#0B9E80}
+.bib-arrow{transition:transform .2s;font-size:12px;color:#7A8A9B}
+.bib-list{display:none;padding:16px 18px 4px;background:#fff;border:1px solid #E4E9F0;border-top:none;border-radius:0 0 10px 10px;max-height:480px;overflow-y:auto}
+.bib-list.open{display:block}
+.bib-item{font-size:12px;color:#3D4F62;padding:7px 0;border-bottom:1px solid #F0F4F8;display:flex;gap:10px}
+.bib-item:last-child{border-bottom:none}
+.bib-num{font-weight:800;color:#0B9E80;min-width:28px;flex-shrink:0}
+.bib-source-tag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;flex-shrink:0;align-self:flex-start;margin-top:1px}
+.tag-openalex{background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.tag-arxiv{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
+.tag-eric{background:#F0FDF9;color:#0B9E80;border:1px solid #A7F3D0}
+.tag-other{background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE}
+
+/* ── Footer ─────────────────────────────────── */
+.footer{background:#fff;border-top:1px solid #E4E9F0;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.footer-left{font-size:11.5px;color:#A0ADB8}
+.footer-back{font-size:11.5px;color:#0B9E80;font-weight:700}
+
+/* ── Print ───────────────────────────────────── */
+@media print{
+  .top-bar,.print-btn,.footer,.bib-toggle{display:none!important}
+  body{background:#fff;font-size:12px}
+  .main{padding:16px 24px}
+  .site-header{padding:24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .resource-card{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+  .bib-list{display:block!important;max-height:none}
+  .section{break-inside:avoid}
+}
+@media(max-width:640px){
+  .site-header,.main,.top-bar,.footer{padding-left:20px;padding-right:20px}
+  .resource-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────── -->
+<header class="site-header">
+  <div class="site-eyebrow">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub</div>
+  <h1 class="site-title">AI Literacy &amp; Equity — Resource Navigator</h1>
+  <p class="site-sub">A curated one-pager of the most relevant policy, research, and practitioner resources on AI in education. Anchored in three questions that belong in every resource and program decision:</p>
+  <div class="lens-qs">
+    <span class="lens-q">Who has access?</span>
+    <span class="lens-q">Who decides?</span>
+    <span class="lens-q">Who benefits?</span>
+  </div>
+  <div class="eq-tags">
+    <span class="eq-tag">Algorithm Bias</span>
+    <span class="eq-tag">Digital Divide</span>
+    <span class="eq-tag">Data Privacy</span>
+    <span class="eq-tag">Disability Inclusion</span>
+    <span class="eq-tag">Racial Justice</span>
+    <span class="eq-tag">Teacher Capacity</span>
+    <span class="eq-tag">Community Voice</span>
+  </div>
+</header>
+
+<!-- ── Top bar ────────────────────────────────────── -->
+<div class="top-bar">
+  <span class="top-bar-left">5 categories · 17 resources · 74-item research bibliography · Last curated April 2026</span>
+  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<main class="main">
+
+  <!-- ── 1. Core Policy & Frameworks ───────────────── -->
+  <section class="section">
+    <div class="section-label">Category 1</div>
+    <div class="section-title">Core Policy &amp; Frameworks</div>
+    <div class="section-desc">The governance infrastructure shaping how AI enters education — from OECD international guidelines to US federal guidance. Essential for system leaders and policy advocates.</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="rc-source">OECD</div>
+        <div class="rc-title">Opportunities, Guidelines and Guardrails for AI in Education</div>
+        <span class="rc-tag">Policy</span>
+        <a class="rc-link" href="https://www.oecd.org/education/artificial-intelligence-in-education/" target="_blank" rel="noopener">oecd.org/education/artificial-intelligence… ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">OECD</div>
+        <div class="rc-title">Digital Education Outlook 2023</div>
+        <span class="rc-tag">Policy</span>
+        <a class="rc-link" href="https://www.oecd.org/education/digital-education-outlook/" target="_blank" rel="noopener">oecd.org/education/digital-education-outlook ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">U.S. Department of Education</div>
+        <div class="rc-title">AI and the Future of Teaching and Learning</div>
+        <span class="rc-tag">Policy</span>
+        <a class="rc-link" href="https://www2.ed.gov/documents/ai-report/ai-report.pdf" target="_blank" rel="noopener">ed.gov — AI Report (PDF) ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">TeachAI · Code.org, ISTE, Khan Academy, ETS, WEF</div>
+        <div class="rc-title">AI Guidance for Schools Toolkit</div>
+        <span class="rc-tag">Policy</span>
+        <a class="rc-link" href="https://teachai.org/toolkit/" target="_blank" rel="noopener">teachai.org/toolkit ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">ISTE</div>
+        <div class="rc-title">Artificial Intelligence in Education</div>
+        <span class="rc-tag">Policy</span>
+        <a class="rc-link" href="https://www.iste.org/areas-of-focus/AI-in-education" target="_blank" rel="noopener">iste.org/areas-of-focus/AI-in-education ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 2. AI Literacy & Ethics ────────────────────── -->
+  <section class="section">
+    <div class="section-label">Category 2</div>
+    <div class="section-title">AI Literacy &amp; Ethics Resources</div>
+    <div class="section-desc">Practitioner and leader resources for building the knowledge and judgment to use AI responsibly. Spans classroom teacher training to district leadership guidance and open frameworks.</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="rc-source">Code.org</div>
+        <div class="rc-title">AI 101 for Teachers — Professional Learning</div>
+        <span class="rc-tag">Literacy · Tool</span>
+        <a class="rc-link" href="https://code.org/ai/pl/101" target="_blank" rel="noopener">code.org/ai/pl/101 ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">ISTE</div>
+        <div class="rc-title">Bringing AI to School: A Guide for Leaders</div>
+        <span class="rc-tag">Literacy · Leader</span>
+        <a class="rc-link" href="https://www.iste.org/resources/product?id=5547" target="_blank" rel="noopener">iste.org/resources (product #5547) ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">AI Literacy Institute</div>
+        <div class="rc-title">AI Literacy Institute — Open Resources Hub</div>
+        <span class="rc-tag">Literacy · Framework</span>
+        <a class="rc-link" href="https://ailiteracy.institute/#" target="_blank" rel="noopener">ailiteracy.institute ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 3. Workforce & Economic Signals ───────────── -->
+  <section class="section">
+    <div class="section-label">Category 3</div>
+    <div class="section-title">Workforce &amp; Economic Signals</div>
+    <div class="section-desc">Labor market and economic research on what AI is changing in the world of work — and what that means for what schools must prepare students for. Critical context for any K–12 or workforce strategy.</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="rc-source">World Economic Forum</div>
+        <div class="rc-title">Jobs of Tomorrow: Large Language Models and Jobs — A Business Toolkit</div>
+        <span class="rc-tag">Workforce</span>
+        <a class="rc-link" href="https://www.weforum.org/publications/jobs-of-tomorrow-large-language-models-and-jobs/" target="_blank" rel="noopener">weforum.org ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">Deloitte</div>
+        <div class="rc-title">Global Human Capital Trends 2024</div>
+        <span class="rc-tag">Workforce</span>
+        <a class="rc-link" href="https://www2.deloitte.com/us/en/insights/focus/human-capital-trends.html" target="_blank" rel="noopener">deloitte.com/human-capital-trends ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">Burning Glass Institute</div>
+        <div class="rc-title">Skills &amp; Labor Market Intelligence for AI Era</div>
+        <span class="rc-tag">Workforce · Data</span>
+        <a class="rc-link" href="https://burningglassinstitute.org/" target="_blank" rel="noopener">burningglassinstitute.org ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">McKinsey Global Institute</div>
+        <div class="rc-title">The Future of Work / Gig Economy Research</div>
+        <span class="rc-tag">Workforce</span>
+        <a class="rc-link" href="https://www.mckinsey.com/featured-insights/future-of-work" target="_blank" rel="noopener">mckinsey.com/future-of-work ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">International Monetary Fund</div>
+        <div class="rc-title">AI and the Global Economy — IMF Research Hub</div>
+        <span class="rc-tag">Workforce · Policy</span>
+        <a class="rc-link" href="https://www.imf.org/en/Topics/Artificial-Intelligence" target="_blank" rel="noopener">imf.org/en/Topics/Artificial-Intelligence ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 4. Learning & Organizational Change ──────── -->
+  <section class="section">
+    <div class="section-label">Category 4</div>
+    <div class="section-title">Learning &amp; Organizational Change</div>
+    <div class="section-desc">How do schools and districts build the capacity to adapt? These resources address the change management, professional learning, and innovation leadership dimensions of AI adoption.</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="rc-source">Harvard Business Review</div>
+        <div class="rc-title">How to Help Your Team Learn in the Flow of Work</div>
+        <span class="rc-tag">Change · Learning</span>
+        <a class="rc-link" href="https://hbr.org/2023/02/how-to-help-your-team-learn-in-the-flow-of-work" target="_blank" rel="noopener">hbr.org ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">CoSN</div>
+        <div class="rc-title">Driving K-12 Innovation 2024</div>
+        <span class="rc-tag">Change · K–12</span>
+        <a class="rc-link" href="https://www.cosn.org/edtech-topics/innovation/" target="_blank" rel="noopener">cosn.org/edtech-topics/innovation ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 5. EdTech Tools ────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Category 5</div>
+    <div class="section-title">EdTech Tools</div>
+    <div class="section-desc">Specific AI-powered tools being deployed in K–12 contexts. Evaluate against your equity criteria: Who has access? What data is collected? What does the evidence say about outcomes for underserved students?</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="rc-source">Khan Academy</div>
+        <div class="rc-title">Khanmigo — AI Tutor &amp; Teaching Assistant</div>
+        <span class="rc-tag">Tool · Classroom</span>
+        <a class="rc-link" href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noopener">khanacademy.org/khan-labs ↗</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-source">HMH · Amira Learning</div>
+        <div class="rc-title">Amira Learning — AI Reading Tutor</div>
+        <span class="rc-tag">Tool · Literacy</span>
+        <a class="rc-link" href="https://www.amiralearning.com" target="_blank" rel="noopener">amiralearning.com ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 6. Academic Bibliography ───────────────────── -->
+  <section class="section">
+    <div class="section-label">Category 6</div>
+    <div class="section-title">Academic Research Bibliography</div>
+    <div class="section-desc">74 peer-reviewed and pre-print papers underpinning the equity, ethics, fairness, and AI-in-education conversation. Drawn from OpenAlex, arXiv, and ERIC.</div>
+
+    <button class="bib-toggle" onclick="toggleBib(this)">
+      <span>Show 74 papers ↓</span>
+      <span class="bib-arrow" id="bib-arrow">▼</span>
+    </button>
+    <div class="bib-list" id="bib-list">
+      <!-- OpenAlex papers [1]–[22] -->
+      <div class="bib-item"><span class="bib-num">[1]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Revolutionizing healthcare: the role of artificial intelligence in clinical practice — Alowais, Alghamdi et al., 2023 · 2601 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[2]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Digital Twin: Values, Challenges and Enablers From a Modeling Perspective — Rasheed, San et al., 2020 · 1611 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[3]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>The Ethics of AI Ethics: An Evaluation of Guidelines — Hagendorff, 2020 · 1546 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[4]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Interpreting Black-Box Models: A Review on Explainable Artificial Intelligence — Hassija, Chamola et al., 2023 · 1509 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[5]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Data Feminism — D'Ignazio, Klein, 2020 · 1393 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[6]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Consumers and Artificial Intelligence: An Experiential Perspective — Puntoni, Reczek et al., 2020 · 932 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[7]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Ethical principles for artificial intelligence in education — Nguyen, Ngo et al., 2022 · 929 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[8]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>New Era of Artificial Intelligence in Education: Towards a Sustainable Multifaceted Revolution — Kamalov et al., 2023 · 853 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[9]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Unlocking the value of AI in human resource management through AI capability framework — Chowdhury, Dey et al., 2022 · 754 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[10]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>A Review of the Role of Artificial Intelligence in Healthcare — Al Kuwaiti, Nazer et al., 2023 · 752 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[11]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Climate change and COP26: Are digital technologies and information management part of the problem or the solution? — Dwivedi, Hughes et al., 2021 · 697 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[12]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Is Metaverse in education a blessing or a curse: a combined content and bibliometric analysis — Tlili, Huang et al., 2022 · 575 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[13]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Algorithmic fairness in artificial intelligence for medicine and healthcare — Chen, Wang et al., 2023 · 513 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[14]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>2020 EDUCAUSE Horizon Report: Teaching and Learning Edition — Brown, McCormack et al., 2020 · 505 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[15]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>The dark side of generative artificial intelligence: A critical analysis of controversies and risks of ChatGPT — Wach, Duong et al., 2023 · 481 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[16]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Towards a standard for identifying and managing bias in artificial intelligence — Schwartz, Vassilev et al., 2022 · 479 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[17]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Six Human-Centered Artificial Intelligence Grand Challenges — Garibay, Winslow et al., 2023 · 406 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[18]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>AI-driven adaptive learning for sustainable educational transformation — Striełkowski et al., 2024 · 307 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[19]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Bias and Unfairness in Machine Learning Models: A Systematic Review — Pagano, Loureiro et al., 2023 · 246 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[20]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>The value of standards for health datasets in AI-based applications — Arora, Alderman et al., 2023 · 244 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[21]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>Use of Artificial Intelligence in Improving Outcomes in Heart Disease — Armoundas, Narayan et al., 2024 · 216 cites</span></div>
+      <div class="bib-item"><span class="bib-num">[22]</span><span class="bib-source-tag tag-openalex">OpenAlex</span><span>A Call to Action on Assessing and Mitigating Bias in AI Applications for Mental Health — Timmons, Duong et al., 2022 · 207 cites</span></div>
+      <!-- arXiv papers -->
+      <div class="bib-item"><span class="bib-num">[23]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Creative Problem Solving in Artificially Intelligent Agents: A Survey and Framework — Gizzi, Nair et al., 2022</span></div>
+      <div class="bib-item"><span class="bib-num">[24]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>A Review on Explainable Artificial Intelligence for Healthcare: Why, How, and When? — Bharati, Mondal et al., 2023</span></div>
+      <div class="bib-item"><span class="bib-num">[25]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Connecting Three Pivotal Concepts in K-12 Science State Standards to Research in Physics Education — Singh, Schunn, 2016</span></div>
+      <div class="bib-item"><span class="bib-num">[26]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Games for Artificial Intelligence Research: A Review and Perspectives — Hu, Zhao et al., 2023</span></div>
+      <div class="bib-item"><span class="bib-num">[27]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>The Artificial Scientist: Logicist, Emergentist, and Universalist Approaches to AGI — Bennett, Maruyama, 2021</span></div>
+      <div class="bib-item"><span class="bib-num">[28]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Experts' View on Challenges and Needs for Fairness in Artificial Intelligence for Education — Fenu, Galici et al., 2022</span></div>
+      <!-- ERIC papers -->
+      <div class="bib-item"><span class="bib-num">[29]</span><span class="bib-source-tag tag-eric">ERIC</span><span>The Ethics of Using AI in K-12 Education: A Systematic Literature Review — Gouseti, James et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[30]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Artificial Intelligence in Primary Education: A Systematic Literature Review 2020–2025 — Bagdonaite, Dagiene, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[31]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Design Language Learning with AI Chatbots Based on Activity Theory from a Systematic Review — Li, Zhou et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[32]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Systematic Review of the Impact of Artificial Intelligence in Higher Education — Figueroa de la Fuente, Farhadian, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[33]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Automated Writing Evaluation Systems: A Systematic Review of Grammarly, Pigai, and Criterion — Ding, Zou, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[34]</span><span class="bib-source-tag tag-eric">ERIC</span><span>The Trajectory of Artificial Intelligence for Competency-Based Personalised Learning — Dastane, Turner et al., 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[35]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Second Order WinoBias Test Set for Latent Gender Bias Detection in Coreference Resolution — Dawkins, 2021</span></div>
+      <div class="bib-item"><span class="bib-num">[36]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>The Rise of Artificial Intelligence in Educational Measurement: Opportunities and Ethical Challenges — Bulut, Beiting-Parrish et al., 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[37]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Compression, The Fermi Paradox and Artificial Super-Intelligence — Bennett, 2021</span></div>
+      <div class="bib-item"><span class="bib-num">[38]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Equity in College Physics Student Learning: a Critical Quantitative Intersectionality Investigation — Van Dusen, Nissen, 2018</span></div>
+      <div class="bib-item"><span class="bib-num">[39]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Algorithmic Bias in Education — Baker, Hawn, 2022</span></div>
+      <div class="bib-item"><span class="bib-num">[40]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Can AI Be Racist? Color-Evasiveness in the Application of Machine Learning to Science Assessments — Cheuk, Tina, 2021</span></div>
+      <div class="bib-item"><span class="bib-num">[41]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Interrogating Algorithmic Bias: From Speculative Fiction to Liberatory Design — Gaskins, Nettrice, 2023</span></div>
+      <div class="bib-item"><span class="bib-num">[42]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Examining the Algorithmic Fairness in Predicting High School Dropouts — Pan, Zhang, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[43]</span><span class="bib-source-tag tag-eric">ERIC</span><span>A Psychometric Framework for Evaluating Fairness in Algorithmic Decision Making — Suk, Han, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[44]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Algorithmic Foucault: Digital Feminism, the Panopticon, &amp; the Role of AI in Shaping Musical Identities &amp; Pedagogies — Zhu, Mila, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[45]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Towards Equity and Algorithmic Fairness in Student Grade Prediction — Jiang, Pardos, 2021</span></div>
+      <div class="bib-item"><span class="bib-num">[46]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Integration of AI in STEM Education, Addressing Ethical Challenges in K-12 Settings — Lodhi, Lodhi, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[47]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>AI for Accessible Education: Personalized Audio-Based Learning for Blind Students — Yang, Taele, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[48]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Fairness in AI: challenges in bridging the gap between algorithms and law — Giannopoulos, Psalla et al., 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[49]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Reinforcement Learning with Stepwise Fairness Constraints — Deng, Sun et al., 2022</span></div>
+      <div class="bib-item"><span class="bib-num">[50]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Algorithmic Fairness — Pessach, Shmueli, 2020</span></div>
+      <div class="bib-item"><span class="bib-num">[51]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Generative AI-Driven Personalization of the Community of Inquiry Model — Anderson, Nguyen et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[52]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Personalized Online Learning, Test Fairness, and Educational Measurement — Katz, Huggins-Manley et al., 2022</span></div>
+      <div class="bib-item"><span class="bib-num">[53]</span><span class="bib-source-tag tag-eric">ERIC</span><span>AI Differences in Vocational and Undergraduate Applications in Higher Education — Gao, Tan, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[54]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Evaluating How Personalized AI Agents Influence Decision-Making, Self-Presentation, and Digital Identity Management — Ogunsola, 2026</span></div>
+      <div class="bib-item"><span class="bib-num">[55]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Mapping AI Risk Mitigations: Evidence Scan and Preliminary AI Risk Mitigation Taxonomy — Saeri, Lloyd George et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[56]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Ethical AI for Young Digital Citizens: A Call to Action on Privacy Governance — Shouli, Barthwal et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[57]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Beyond principlism: Practical strategies for ethical AI use in research practices — Lin, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[58]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Competing Visions of Ethical AI: A Case Study of OpenAI — Wilfley, Ai et al., 2026</span></div>
+      <div class="bib-item"><span class="bib-num">[59]</span><span class="bib-source-tag tag-arxiv">arXiv</span><span>Towards Standardizing AI Bias Exploration — Krasanakis, Papadopoulos, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[60]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Safeguarding the Digital Economy: Librarians' Perspectives on Data Privacy and Ethical Use of Public AI Chatbots — Olusipe, Adetayo et al., 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[61]</span><span class="bib-source-tag tag-eric">ERIC</span><span>A Delphi Study on Ethical Challenges and Ensuring Academic Integrity Regarding AI Research in Higher Education — Gunes, Liman Kaban, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[62]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Integrating Artificial Intelligence (AI) into Adult Education: Opportunities, Challenges, and Future Directions — Storey, Wagner, 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[63]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Considerations for the Use of Generative Artificial Intelligence in the Counseling Profession — Norton, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[64]</span><span class="bib-source-tag tag-eric">ERIC</span><span>What Students Really Think: Unpacking AI Ethics in Educational Assessments through a Triadic Framework — Lim, Gottipati et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[65]</span><span class="bib-source-tag tag-eric">ERIC</span><span>Preparing the Next Generation of Health Education Teachers for the Ethical Use of AI — Haithcox-Dennis, Johnson, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[66]</span><span class="bib-source-tag tag-other">Journal</span><span>Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification — Buolamwini, Gebru, 2018</span></div>
+      <div class="bib-item"><span class="bib-num">[67]</span><span class="bib-source-tag tag-other">Journal</span><span>Actionable Auditing Revisited: Investigating the Impact of Publicly Naming Biased Performance Results — Raji, Buolamwini, 2023</span></div>
+      <div class="bib-item"><span class="bib-num">[68]</span><span class="bib-source-tag tag-other">Journal</span><span>Who Audits the Auditors? Recommendations from a Field Scan of the Algorithmic Auditing Ecosystem — Costanza-Chock, Raji, Buolamwini et al., 2022</span></div>
+      <div class="bib-item"><span class="bib-num">[69]</span><span class="bib-source-tag tag-other">Book</span><span>Unmasking AI: My Mission to Protect What Is Human in a World of Machines — Buolamwini, 2023</span></div>
+      <div class="bib-item"><span class="bib-num">[70]</span><span class="bib-source-tag tag-other">Report</span><span>Comply to Fly? A Report on Traveler Experiences with TSA Facial Recognition Technology — Algorithmic Justice League, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[71]</span><span class="bib-source-tag tag-other">Journal</span><span>Towards responsible artificial intelligence in education: a systematic review on identifying and mitigating ethical risks — Zhu et al., 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[72]</span><span class="bib-source-tag tag-other">Journal</span><span>Algorithmic bias in educational systems: Examining the impact of AI-driven decision making in modern education — Boateng, Boateng, 2025</span></div>
+      <div class="bib-item"><span class="bib-num">[73]</span><span class="bib-source-tag tag-other">Journal</span><span>FairAIED: Navigating Fairness, Bias, and Ethics in Educational AI Applications — Chinta et al., 2024</span></div>
+      <div class="bib-item"><span class="bib-num">[74]</span><span class="bib-source-tag tag-other">Journal</span><span>Investigating algorithmic bias in student progress monitoring — Idowu, 2024</span></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ─────────────────────────────────────── -->
+<footer class="footer">
+  <span class="footer-left">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub · April 2026</span>
+  <a class="footer-back" href="/">← Back to Hub</a>
+</footer>
+
+<script>
+function toggleBib(btn){
+  const list=document.getElementById('bib-list');
+  const arrow=document.getElementById('bib-arrow');
+  const open=list.classList.toggle('open');
+  btn.querySelector('span').textContent=open?'Hide 74 papers ↑':'Show 74 papers ↓';
+  arrow.textContent=open?'▲':'▼';
+}
+</script>
+</body>
+</html>
