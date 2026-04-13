@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <title>AI Literacy &amp; Equity — Resource Navigator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -127,7 +129,7 @@ a:hover{text-decoration:underline}
 <header class="site-header">
   <div class="site-eyebrow">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub</div>
   <h1 class="site-title">AI Literacy &amp; Equity — Resource Navigator</h1>
-  <p class="site-sub">17 curated resources + 74 peer-reviewed papers on AI in education, equity, and the future of work.</p>
+  <p class="site-sub"><span id="resource-total">—</span> curated resources + 74 peer-reviewed papers on AI in education, equity, and the future of work.</p>
   <div class="eq-tags">
     <span class="eq-tag">Algorithm Bias</span>
     <span class="eq-tag">Digital Divide</span>
@@ -142,7 +144,7 @@ a:hover{text-decoration:underline}
 <!-- ── Top bar / filters ──────────────────────────── -->
 <div class="top-bar">
   <div class="top-bar-left">
-    <span class="count-badge" id="count-label">Showing 17 resources</span>
+    <span class="count-badge" id="count-label">Loading resources…</span>
     <div class="cat-filter">
       <button class="cat-pill active" onclick="filterCat('all',this)">All</button>
       <button class="cat-pill" onclick="filterCat('policy',this)">Policy &amp; Frameworks</button>
@@ -495,11 +497,13 @@ function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
 // ── Load DB resources on startup ──────────────────────────────────────────
 async function loadDbResources(){
   try {
-    const res = await fetch('/api/resources');
+    const res = await fetch('/api/resources?_=' + Date.now());
     if(!res.ok) return;
     const { resources } = await res.json();
     const grid = document.getElementById('resource-grid');
     resources.forEach(r => grid.appendChild(buildDbCard(r)));
+    const totalEl = document.getElementById('resource-total');
+    if(totalEl) totalEl.textContent = document.querySelectorAll('.resource-card').length;
     applyFilter();
   } catch(e){ console.warn('Could not load saved resources:', e); }
 }
