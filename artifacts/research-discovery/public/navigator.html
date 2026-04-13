@@ -630,33 +630,101 @@ function toggleBib(btn){
   document.getElementById('bib-arrow').textContent = open ? '▲' : '▼';
 }
 
+// ── Direct URLs for all 74 bibliography papers ────────────────────────────
+const BIB_URLS = {
+  1:  'https://doi.org/10.1186/s12909-023-04698-z',
+  2:  'https://doi.org/10.1109/access.2020.2970143',
+  3:  'https://doi.org/10.1007/s11023-020-09517-8',
+  4:  'https://doi.org/10.1007/s12559-023-10179-8',
+  5:  'https://doi.org/10.7551/mitpress/11805.001.0001',
+  6:  'https://doi.org/10.1177/0022242920953847',
+  7:  'https://doi.org/10.1007/s10639-022-11316-w',
+  8:  'https://doi.org/10.3390/su151612451',
+  9:  'https://doi.org/10.1016/j.hrmr.2022.100899',
+  10: 'https://doi.org/10.3390/jpm13060951',
+  11: 'https://doi.org/10.1016/j.ijinfomgt.2021.102456',
+  12: 'https://doi.org/10.1186/s40561-022-00205-x',
+  13: 'https://doi.org/10.1038/s41551-023-01056-8',
+  14: 'https://openalex.org/W3009239856',
+  15: 'https://doi.org/10.15678/eber.2023.110201',
+  16: 'https://doi.org/10.6028/nist.sp.1270',
+  17: 'https://doi.org/10.1080/10447318.2022.2153320',
+  18: 'https://doi.org/10.1002/sd.3221',
+  19: 'https://doi.org/10.3390/bdcc7010015',
+  20: 'https://doi.org/10.1016/s2589-7500(23)00048-1',
+  21: 'https://doi.org/10.1161/cir.0000000000001201',
+  22: 'https://doi.org/10.1177/17456916221134490',
+  23: 'https://scholar.google.com/scholar?q=Creative+Problem+Solving+Artificially+Intelligent+Agents+Gizzi+2022',
+  24: 'https://arxiv.org/abs/2304.04780',
+  25: 'https://arxiv.org/abs/1603.06024',
+  26: 'https://doi.org/10.1109/tai.2024.3410935',
+  27: 'https://arxiv.org/abs/2110.01831',
+  28: 'https://arxiv.org/abs/2207.01490',
+  29: 'https://eric.ed.gov/?q=Ethics+Using+AI+K-12+Education+Systematic+Literature+Review+Gouseti',
+  30: 'https://eric.ed.gov/?q=Artificial+Intelligence+Primary+Education+Systematic+Review+Bagdonaite+Dagiene',
+  31: 'https://eric.ed.gov/?id=EJ1461841',
+  32: 'https://eric.ed.gov/?id=EJ1487741',
+  33: 'https://doi.org/10.1007/s10639-023-12402-3',
+  34: 'https://eric.ed.gov/?id=EJ1451322',
+  35: 'https://arxiv.org/abs/2109.14047',
+  36: 'https://arxiv.org/abs/2406.18900',
+  37: 'https://arxiv.org/abs/2110.01835',
+  38: 'https://doi.org/10.1002/tea.21584',
+  39: 'https://eric.ed.gov/?id=EJ1353563',
+  40: 'https://eric.ed.gov/?id=EJ1303530',
+  41: 'https://doi.org/10.1007/s11528-022-00783-0',
+  42: 'https://eric.ed.gov/?id=ED675520',
+  43: 'https://eric.ed.gov/?id=EJ1415808',
+  44: 'https://scholar.google.com/scholar?q=Algorithmic+Foucault+Digital+Feminism+AI+Musical+Identities+Pedagogies+Zhu+2025',
+  45: 'https://arxiv.org/abs/2105.06604',
+  46: 'https://arxiv.org/abs/2510.19196',
+  47: 'https://arxiv.org/abs/2504.17117',
+  48: 'https://arxiv.org/abs/1911.11631',
+  49: 'https://arxiv.org/abs/2211.03994',
+  50: 'https://doi.org/10.1145/3631326',
+  51: 'https://eric.ed.gov/?id=EJ1492219',
+  52: 'https://eric.ed.gov/?id=EJ1345451',
+  53: 'https://eric.ed.gov/?id=EJ1488506',
+  54: 'https://eric.ed.gov/?id=EJ1494423',
+  55: 'https://arxiv.org/abs/2512.11931',
+  56: 'https://doi.org/10.22541/au.174221140.03641858/v1',
+  57: 'https://arxiv.org/abs/2401.15284',
+  58: 'https://arxiv.org/abs/2601.16513',
+  59: 'https://arxiv.org/abs/2412.06830',
+  60: 'https://doi.org/10.1007/s44217-025-00813-y',
+  61: 'https://eric.ed.gov/?id=EJ1487700',
+  62: 'https://eric.ed.gov/?q=Integrating+Artificial+Intelligence+Adult+Education+Storey+Wagner+2024',
+  63: 'https://eric.ed.gov/?id=EJ1490355',
+  64: 'https://scholar.google.com/scholar?q=Students+AI+Ethics+Educational+Assessments+Triadic+Framework+Lim+Gottipati+2025',
+  65: 'https://eric.ed.gov/?id=EJ1483840',
+  66: 'http://proceedings.mlr.press/v81/buolamwini18a.html',
+  67: 'https://scholar.google.com/scholar?q=Actionable+Auditing+Revisited+Naming+Biased+AI+Products+Raji+Buolamwini+2023',
+  68: 'https://doi.org/10.1145/3531146.3533213',
+  69: 'https://mitpress.mit.edu/9780593241066/unmasking-ai/',
+  70: 'https://www.algorithmicjusticeleague.org/research/',
+  71: 'https://scholar.google.com/scholar?q=Towards+responsible+artificial+intelligence+education+systematic+review+ethical+risks+Zhu+2025',
+  72: 'https://scholar.google.com/scholar?q=Algorithmic+bias+educational+systems+AI-driven+decision+making+Boateng+2025',
+  73: 'https://doi.org/10.3389/fpsyg.2025.1550621',
+  74: 'https://scholar.google.com/scholar?q=Investigating+algorithmic+bias+student+progress+monitoring+Idowu+2024',
+};
+
 // ── Make bibliography items clickable ─────────────────────────────────────
 function makeBibClickable(){
   document.querySelectorAll('.bib-item').forEach(item => {
     const textSpan = item.querySelector('span:last-child');
     if(!textSpan || textSpan.querySelector('a')) return;
 
-    const fullText = textSpan.textContent;
-    const titlePart = fullText.split(' — ')[0].trim();
-
-    const stag = item.querySelector('.bib-stag');
-    let href;
-    if(stag && stag.classList.contains('tag-arxiv')){
-      href = `https://arxiv.org/search/?searchtype=all&query=${encodeURIComponent(titlePart)}`;
-    } else if(stag && stag.classList.contains('tag-eric')){
-      href = `https://eric.ed.gov/?q=${encodeURIComponent(titlePart)}`;
-    } else if(stag && stag.classList.contains('tag-openalex')){
-      href = `https://openalex.org/search?searchQuery=${encodeURIComponent(titlePart)}`;
-    } else {
-      href = `https://scholar.google.com/scholar?q=${encodeURIComponent(titlePart)}`;
-    }
+    const numEl = item.querySelector('.bib-num');
+    const num = numEl ? parseInt(numEl.textContent.replace(/\D/g,'')) : null;
+    const href = (num && BIB_URLS[num]) ? BIB_URLS[num] : null;
+    if(!href) return;
 
     const a = document.createElement('a');
     a.href = href;
     a.target = '_blank';
     a.rel = 'noopener';
     a.style.cssText = 'color:inherit;text-decoration:underline;text-decoration-color:#0B9E80;text-decoration-style:dotted;text-underline-offset:2px';
-    a.textContent = fullText;
+    a.textContent = textSpan.textContent;
     textSpan.replaceWith(a);
   });
 }
