@@ -630,8 +630,40 @@ function toggleBib(btn){
   document.getElementById('bib-arrow').textContent = open ? '▲' : '▼';
 }
 
+// ── Make bibliography items clickable ─────────────────────────────────────
+function makeBibClickable(){
+  document.querySelectorAll('.bib-item').forEach(item => {
+    const textSpan = item.querySelector('span:last-child');
+    if(!textSpan || textSpan.querySelector('a')) return;
+
+    const fullText = textSpan.textContent;
+    const titlePart = fullText.split(' — ')[0].trim();
+
+    const stag = item.querySelector('.bib-stag');
+    let href;
+    if(stag && stag.classList.contains('tag-arxiv')){
+      href = `https://arxiv.org/search/?searchtype=all&query=${encodeURIComponent(titlePart)}`;
+    } else if(stag && stag.classList.contains('tag-eric')){
+      href = `https://eric.ed.gov/?q=${encodeURIComponent(titlePart)}`;
+    } else if(stag && stag.classList.contains('tag-openalex')){
+      href = `https://openalex.org/search?searchQuery=${encodeURIComponent(titlePart)}`;
+    } else {
+      href = `https://scholar.google.com/scholar?q=${encodeURIComponent(titlePart)}`;
+    }
+
+    const a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.style.cssText = 'color:inherit;text-decoration:underline;text-decoration-color:#0B9E80;text-decoration-style:dotted;text-underline-offset:2px';
+    a.textContent = fullText;
+    textSpan.replaceWith(a);
+  });
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────
 loadDbResources();
+makeBibClickable();
 </script>
 </body>
 </html>
