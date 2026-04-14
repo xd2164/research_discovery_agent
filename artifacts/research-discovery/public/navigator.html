@@ -152,10 +152,16 @@ a:hover{text-decoration:underline}
       <button class="cat-pill" onclick="filterCat('tools',this)">EdTech Tools</button>
     </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <button class="add-btn" onclick="openModal()">＋ Add resource</button>
+    <span id="db-badge" style="display:none;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:12px;background:#EEF9F5;color:#0B6E52;border:1px solid #A7F3D0;white-space:nowrap">🗄 <span id="db-count">0</span> saved to database</span>
     <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
   </div>
+</div>
+
+<!-- ── Save toast ──────────────────────────────────── -->
+<div id="save-toast" style="position:fixed;bottom:24px;right:24px;background:#0B6E52;color:#fff;font-size:12.5px;font-weight:700;padding:10px 18px;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:2000;align-items:center;gap:8px;display:none">
+  ✓ Saved to database — will persist across updates
 </div>
 
 <!-- ── Add Resource Modal ─────────────────────────── -->
@@ -503,6 +509,15 @@ async function loadDbResources(){
     const totalEl = document.getElementById('resource-total');
     if(totalEl) totalEl.textContent = document.querySelectorAll('.resource-card').length;
     applyFilter();
+    // Update DB badge
+    if(resources.length > 0){
+      const badge = document.getElementById('db-badge');
+      const count = document.getElementById('db-count');
+      if(badge && count){
+        count.textContent = resources.length;
+        badge.style.display = 'inline-flex';
+      }
+    }
   } catch(e){ console.warn('Could not load saved resources:', e); }
 }
 
@@ -582,6 +597,16 @@ async function submitResource(){
     grid.appendChild(card);
     applyFilter();
     closeModal();
+    // Bump DB badge
+    const countEl = document.getElementById('db-count');
+    const badge   = document.getElementById('db-badge');
+    if(countEl && badge){
+      countEl.textContent = parseInt(countEl.textContent||'0') + 1;
+      badge.style.display = 'inline-flex';
+    }
+    // Toast
+    const toast = document.getElementById('save-toast');
+    if(toast){ toast.style.display='flex'; setTimeout(()=>{ toast.style.display='none'; }, 3500); }
   } catch(e){
     showErr('Network error. Please try again.');
   } finally {
