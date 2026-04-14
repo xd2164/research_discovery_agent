@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FP&amp;A Research Agent · EDUAgent</title>
+<title>ROI Research Agent Demo</title>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -90,7 +90,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 <!-- ── TOP BAR ── -->
 <div class="topbar">
   <div class="topbar-dot"></div>
-  <div class="topbar-brand">FP&amp;A Research Agent</div>
+  <div class="topbar-brand">ROI Research Agent Demo</div>
   <div class="topbar-tag">EDUAgent · Ambition 2045</div>
   <span class="topbar-poc" ondblclick="document.getElementById('fpa-disclaimer-modal').classList.add('open')" title="Double-click to view disclaimer" style="cursor:help">POC</span>
 </div>
@@ -98,7 +98,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
 <!-- ── TOOL HEADER ── -->
 <div class="t-hdr">
   <div class="t-ey" style="color:#5E52D4">AI in Education · Deep Research Agent</div>
-  <div class="t-title">FP&amp;A Research Agent Proof of Concept</div>
+  <div class="t-title">ROI Research Agent Demo</div>
 </div>
 
 <!-- ── DISCLAIMER STRIP ── -->
@@ -1555,7 +1555,7 @@ function fpaDownloadWord() {
 </style></head>
 <body>
   <h1>${esc(ctx.decision || 'FP&A Research Brief')}</h1>
-  <p class="meta">Generated ${date} &nbsp;·&nbsp; FP&amp;A Research Agent Proof of Concept</p>
+  <p class="meta">Generated ${date} &nbsp;·&nbsp; ROI Research Agent Demo</p>
 
   ${roiHtml}
 
