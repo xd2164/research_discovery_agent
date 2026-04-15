@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "3LU_oXJy9UY0Z-9-ELm4e"
+uri = "file://artifacts/research-discovery/public/market-insights-data.csv"
+type = "table"
+title = "Market Insights Deepdive — Full Dataset (31 models, Apr 2026)"
