@@ -488,7 +488,7 @@ Exactly 2 pairs:
 Single JSON on ONE line, no line breaks inside. Use the NSF logic-model framework: parallel named tracks flow through Activities → Outputs → Outcomes, then consolidate into Impacts. For each track bullet, surface a concrete numerical value (effect size, %, $, n=, CI) from a retrieved paper and cite its index in brackets. Use a precise qualitative finding only when no number exists. No generic phrases.
 Structure:
 - "input" and "impact" stages: use flat "items" array (2–4 bullets with citations)
-- "activities", "outputs", "outcomes" stages: use "categories" array of named parallel tracks, each with "name" and "items" array (1–2 bullets per track). Use 3–4 parallel tracks that match your research question (adapt the NSF track names: Basic Research, Use-Inspired Research, Human Capital Development, Research Infrastructure — or rename to fit the domain).
+- "activities", "outputs", "outcomes" stages: use "categories" array of named parallel tracks, each with "name" and "items" array (1–2 bullets per track). Use exactly these 4 NSF track names unless a track has no relevance at all to the domain (then replace only that one): "Basic Research", "Use-Inspired Research", "Human Capital Development", "Research Infrastructure". Adapt the *content* of each track to the specific question — keep the track names stable.
 {"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","items":["IES/NSF grants $42M for K-12 AI [1]","District device budgets, 18% gap in low-income schools [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","categories":[{"name":"Basic Research","items":["58-study meta-analysis on AI tutoring [2]"]},{"name":"Use-Inspired Research","items":["Khanmigo RCT, n=1,200 students [3]"]},{"name":"Human Capital","items":["Teacher PD programme, 72h avg [5]"]},{"name":"Infrastructure","items":["LMS platform deployed 58 schools [6]"]}]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","categories":[{"name":"Basic Research","items":["Effect size estimate 0.15 SD [2]"]},{"name":"Use-Inspired Research","items":["Engagement +0.31 SD vs control [3]"]},{"name":"Human Capital","items":["684 teachers certified [5]"]},{"name":"Infrastructure","items":["Platform uptime 99.2%, 42k sessions [6]"]}]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","categories":[{"name":"Basic Research","items":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]"]},{"name":"Use-Inspired Research","items":["Course completion +6pp, p=.08 [3]"]},{"name":"Human Capital","items":["STEM pipeline growth 12% [5]"]},{"name":"Infrastructure","items":["Research capacity — no outcome RCT yet"]}]},{"id":"impact","label":"Impacts","evidence":"speculative","note":"one clause","items":["Wage premium projected $38k over career [9]","New EdTech firms: 3 spin-outs documented [7]","Productivity growth — modelled, not measured","Equity gap reduction — speculative"]}],"stopping_point":"outcomes","trajectory":"accelerating","bridge":"one sentence on what is needed to bridge from stopping_point to impact","roi_anchored_stage":"outcomes"}
 evidence values: strong | moderate | weak | speculative
 roi_anchored_stage: the stage id the ROI model is primarily parameterising (usually the stopping_point)`
@@ -1314,15 +1314,9 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
         </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:0">${stageCards}</div>
-
-      ${data.bridge ? `<div style="margin-top:14px;background:#FFF8E1;border:1px solid #FFD54F;border-left:4px solid #F59E0B;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;color:#5D4037;line-height:1.6">
-        <strong style="color:#92400E">⟳ Bridge needed:</strong> ${data.bridge}
-      </div>` : ''}
-
       ${pipelineSteps.length ? (() => {
         const confColor = c => ({ High:'#0B9E80', 'Very High':'#1A6BC4', Moderate:'#C47800', Low:'#9E1515' }[(c||'').trim()] || '#7A869A');
-        return `<div style="margin-top:16px;border-top:1px solid #D8E3F0;padding-top:14px">
+        return `<div style="margin-bottom:16px;border-bottom:1px solid #D8E3F0;padding-bottom:14px">
           <div style="font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Pipeline Conversion Rates</div>
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px">
             ${pipelineSteps.map((ps, i) => {
@@ -1340,6 +1334,12 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
           </div>
         </div>`;
       })() : ''}
+
+      <div style="display:flex;flex-direction:column;gap:0">${stageCards}</div>
+
+      ${data.bridge ? `<div style="margin-top:14px;background:#FFF8E1;border:1px solid #FFD54F;border-left:4px solid #F59E0B;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;color:#5D4037;line-height:1.6">
+        <strong style="color:#92400E">⟳ Bridge needed:</strong> ${data.bridge}
+      </div>` : ''}
     </div>`;
 }
 
@@ -1705,6 +1705,36 @@ function fpaDownloadWord() {
           <tr>${roi.pipeline_steps.map(s=>`<th style="background:#F4F7FF;border:1pt solid #C9D5E0;padding:5pt 8pt;font-size:9pt;text-align:center">${esc(s.step||'—')}</th>`).join('<th style="border:none;padding:4pt;font-size:14pt;color:#888;text-align:center">→</th>')}</tr>
           <tr>${roi.pipeline_steps.map(s=>`<td style="border:1pt solid #C9D5E0;padding:5pt 8pt;font-size:11pt;font-weight:bold;text-align:center;color:#0A2240">${pct(s.rate)}<br><span style="font-size:9pt;font-weight:normal;color:${confColor(s.confidence)}">${esc(s.confidence||'')}</span></td>`).join('<td style="border:none"></td>')}</tr>
         </table>`;
+    }
+
+    // Causal Chain (lifecycle stages)
+    const lcd = ctx.lifecycleData;
+    if (lcd?.stages?.length) {
+      const evLabel = { strong:'Strong', moderate:'Moderate', weak:'Weak', speculative:'Speculative' };
+      roiHtml += `<h3 style="font-size:12pt;color:#0A2240;margin:14pt 0 4pt">Causal Chain — Evidence Coverage by Stage</h3>`;
+      if (lcd.trajectory) roiHtml += `<p style="font-size:10pt;color:#596577;margin-bottom:6pt">Trajectory: <strong>${lcd.trajectory.charAt(0).toUpperCase()+lcd.trajectory.slice(1)}</strong></p>`;
+      roiHtml += `<table style="width:100%;border-collapse:collapse;margin-bottom:8pt"><tr>`;
+      roiHtml += lcd.stages.map(s => {
+        const ev = (s.evidence||'speculative').toLowerCase();
+        const cols = { strong:'#0B9E80', moderate:'#1A5CB4', weak:'#C47800', speculative:'#9E1515' };
+        const bgs  = { strong:'#E6F9F4', moderate:'#E8F1FF', weak:'#FFF3CD', speculative:'#FFE8E8' };
+        const col  = cols[ev]||'#888', bg = bgs[ev]||'#FFF';
+        const cats = Array.isArray(s.categories) ? s.categories : [];
+        const flat = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
+        const isStop = s.id === lcd.stopping_point;
+        const badges = isStop ? `<br><span style="font-size:8pt;background:${col};color:#fff;padding:1pt 4pt">◀ evidence stops here</span>` : '';
+        const trackHtml = cats.length
+          ? cats.map(cat => `<strong style="font-size:9pt;color:#596577;display:block;margin-top:5pt">${esc(cat.name)}</strong><ul style="margin:2pt 0 0 14pt;padding:0">${(cat.items||[]).map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`).join('')
+          : `<ul style="margin:4pt 0 0 14pt;padding:0">${flat.map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`;
+        return `<td style="border:1pt solid #C9D5E0;padding:7pt 8pt;vertical-align:top;background:${bg};border-top:3pt solid ${col}">
+          <strong style="font-size:11pt;color:#0A2240">${esc(s.label)}</strong>
+          <span style="display:block;font-size:8pt;font-weight:bold;color:${col};margin-top:2pt">${evLabel[ev]||ev}${badges}</span>
+          ${trackHtml}
+          ${s.note ? `<p style="font-size:8pt;font-style:italic;color:#596577;margin-top:4pt">${esc(s.note)}</p>` : ''}
+        </td>`;
+      }).join('<td style="border:none;padding:3pt;text-align:center;font-size:16pt;color:#888">→</td>');
+      roiHtml += `</tr></table>`;
+      if (lcd.bridge) roiHtml += `<p style="font-size:10pt;color:#5D4037;background:#FFF8E1;border-left:3pt solid #F59E0B;padding:6pt 10pt;margin-bottom:10pt"><strong>Bridge needed:</strong> ${esc(lcd.bridge)}</p>`;
     }
 
     // Subgroups
