@@ -1204,10 +1204,48 @@ function fpaRenderROI(r) {
       </div>
     </div>
     ${pipeSteps.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Causal Pipeline Conversion Rates</div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px">${pipeSteps.map((s,i) => `<div style="display:flex;align-items:center;gap:4px"><div style="background:#F4F7FF;border:1px solid #D0D5E0;border-radius:7px;padding:6px 10px;min-width:110px"><div style="font-size:9px;color:#7A869A;margin-bottom:2px">${s.step||'—'}</div><div style="font-size:13px;font-weight:800;color:#0D1B3E">${s.rate!=null?(s.rate<1?(s.rate*100).toFixed(0)+'%':s.rate):'—'}</div><div style="font-size:9px;font-weight:600;color:${confColor(s.confidence)}">${s.confidence||''}</div></div>${i<pipeSteps.length-1?'<span style="color:#7A869A;font-size:16px">→</span>':''}</div>`).join('')}</div></div>` : ''}
+
+    ${(() => {
+      // Track adjustments display card — NSF framework categories with current multipliers
+      const NSF_STAGES = [
+        { id:'activities', label:'Activities', cats:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'] },
+        { id:'outputs',    label:'Outputs',    cats:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'] },
+        { id:'outcomes',   label:'Outcomes',   cats:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'] },
+        { id:'impacts',    label:'Impacts',    cats:['Revenue','New firms','New industries','Productivity growth','Employment'] },
+      ];
+      const ta = r.track_adjustments || {};
+      // Get live categories from lifecycle data if available
+      const lcd = (window._fpaResearchCtx || {}).lifecycleData;
+      if (lcd?.stages) {
+        const catMap = { activities: lcd.stages.find(s=>s.id==='activities')?.categories, outputs: lcd.stages.find(s=>s.id==='outputs')?.categories, outcomes: lcd.stages.find(s=>s.id==='outcomes')?.categories };
+        ['activities','outputs','outcomes'].forEach(id => { const cats = catMap[id]; if (Array.isArray(cats) && cats.length) NSF_STAGES.find(s=>s.id===id).cats = cats.map(c=>c.name); });
+      }
+      return `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Track Adjustments (multiplier)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${NSF_STAGES.map(stage => {
+            const stageAdj = ta[stage.id] || {};
+            return `<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+              <span style="font-size:9px;font-weight:800;color:#596577;text-transform:uppercase;letter-spacing:.5px;min-width:68px;flex-shrink:0">${stage.label}</span>
+              <span style="font-size:11px;color:#445566">${stage.cats.map(cat => {
+                const val = stageAdj[cat] != null ? stageAdj[cat] : 1.0;
+                const isModified = val !== 1.0;
+                return `<span style="margin-right:10px;white-space:nowrap">${cat} <strong style="color:${isModified?'#C47800':'#7A869A'}">(${Number(val).toFixed(2)})</strong></span>`;
+              }).join('')}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    })()}
+
     ${subgroups.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Equity Subgroup Effect Modifiers</div><div style="display:flex;flex-wrap:wrap;gap:8px">${subgroups.map(sg=>{const dir=(sg.direction||'').toLowerCase(),mc=dir==='larger'?'#0B7A4E':dir==='smaller'?'#C47800':'#555',arrow=dir==='larger'?'↑':dir==='smaller'?'↓':'~';return `<div style="border:1px solid #D0D5E0;border-radius:7px;padding:7px 12px;min-width:160px"><div style="font-size:10px;font-weight:700;color:#0D1B3E">${sg.subgroup||'—'}</div><div style="font-size:16px;font-weight:800;color:${mc}">${arrow} ${sg.multiplier!=null?sg.multiplier+'×':'—'}</div><div style="font-size:9px;color:#7A869A">${sg.direction||''}</div>${sg.source ? srcCard(sg.source) : ''}</div>`}).join('')}</div></div>` : ''}
+
     <div id="fpa-roi-edit-form" style="display:none;margin-top:14px;padding:16px 20px;background:#EDF2FF;border:1px solid #C5D2EE;border-radius:10px">
       <div style="font-size:11px;font-weight:800;color:#0D1B3E;letter-spacing:.5px;margin-bottom:14px">✏️ Adjust ROI Parameters</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:14px">
+
+      <!-- Core model parameters -->
+      <div style="font-size:9px;font-weight:800;color:#596577;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;border-bottom:1px solid #C5D2EE;padding-bottom:5px">Core Model Parameters</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:16px">
         <div><label style="font-size:9px;font-weight:700;color:#7A869A;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Effect Size — Low</label><input id="fpa-e-lo" type="number" step="0.01" min="0" value="${lo}" style="width:100%;padding:6px 8px;border:1px solid #C5D2EE;border-radius:6px;font-size:13px;font-weight:700;color:#0D1B3E;background:#fff;box-sizing:border-box"></div>
         <div><label style="font-size:9px;font-weight:700;color:#1A5CB4;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Effect Size — Base ★</label><input id="fpa-e-ba" type="number" step="0.01" min="0" value="${base}" style="width:100%;padding:6px 8px;border:2px solid #1A5CB4;border-radius:6px;font-size:13px;font-weight:700;color:#1A5CB4;background:#fff;box-sizing:border-box"></div>
         <div><label style="font-size:9px;font-weight:700;color:#7A869A;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Effect Size — High</label><input id="fpa-e-hi" type="number" step="0.01" min="0" value="${hi}" style="width:100%;padding:6px 8px;border:1px solid #C5D2EE;border-radius:6px;font-size:13px;font-weight:700;color:#0D1B3E;background:#fff;box-sizing:border-box"></div>
@@ -1216,7 +1254,40 @@ function fpaRenderROI(r) {
         <div><label style="font-size:9px;font-weight:700;color:#7A869A;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Persistence — High</label><input id="fpa-pf-hi" type="number" step="0.01" min="0" max="1" value="${+(pf.high)||0}" style="width:100%;padding:6px 8px;border:1px solid #C5D2EE;border-radius:6px;font-size:13px;font-weight:700;color:#0D1B3E;background:#fff;box-sizing:border-box"></div>
         ${pipeSteps.map((s,i) => `<div><label style="font-size:9px;font-weight:700;color:#7A869A;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.step||''}">${(s.step||'Step '+(i+1)).slice(0,22)}</label><input id="fpa-pipe-${i}" type="number" step="0.01" min="0" max="1" value="${+(s.rate)||0}" style="width:100%;padding:6px 8px;border:1px solid #C5D2EE;border-radius:6px;font-size:13px;font-weight:700;color:#0D1B3E;background:#fff;box-sizing:border-box"></div>`).join('')}
       </div>
-      <div style="font-size:9px;color:#7A869A;margin-bottom:10px">★ Base values are used for point estimates in the ROI model. Changes here also update the Download report.</div>
+
+      <!-- NSF category track adjustments -->
+      ${(() => {
+        const NSF_EDIT_STAGES = [
+          { id:'activities', label:'Activities', cats:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'] },
+          { id:'outputs',    label:'Outputs',    cats:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'] },
+          { id:'outcomes',   label:'Outcomes',   cats:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'] },
+          { id:'impacts',    label:'Impacts',    cats:['Revenue','New firms','New industries','Productivity growth','Employment'] },
+        ];
+        const lcd2 = (window._fpaResearchCtx || {}).lifecycleData;
+        if (lcd2?.stages) {
+          const catMap = { activities: lcd2.stages.find(s=>s.id==='activities')?.categories, outputs: lcd2.stages.find(s=>s.id==='outputs')?.categories, outcomes: lcd2.stages.find(s=>s.id==='outcomes')?.categories };
+          ['activities','outputs','outcomes'].forEach(id => { const cats = catMap[id]; if (Array.isArray(cats) && cats.length) NSF_EDIT_STAGES.find(s=>s.id===id).cats = cats.map(c=>c.name); });
+        }
+        const ta2 = r.track_adjustments || {};
+        return NSF_EDIT_STAGES.map(stage => {
+          const stageAdj = ta2[stage.id] || {};
+          return `<div style="margin-bottom:14px">
+            <div style="font-size:9px;font-weight:800;color:#596577;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;border-bottom:1px solid #C5D2EE;padding-bottom:4px">${stage.label}</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px">
+              ${stage.cats.map(cat => {
+                const key = `fpa-ta-${stage.id}-${cat.replace(/[^a-zA-Z0-9]/g,'_')}`;
+                const val = stageAdj[cat] != null ? stageAdj[cat] : 1.0;
+                return `<div>
+                  <label style="font-size:9px;font-weight:700;color:#7A869A;display:block;margin-bottom:4px;letter-spacing:.4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${cat}">${cat}</label>
+                  <input id="${key}" data-stage="${stage.id}" data-cat="${cat}" type="number" step="0.05" min="0" max="3" value="${Number(val).toFixed(2)}" style="width:100%;padding:6px 8px;border:1px solid #C5D2EE;border-radius:6px;font-size:13px;font-weight:700;color:#0D1B3E;background:#fff;box-sizing:border-box">
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }).join('');
+      })()}
+
+      <div style="font-size:9px;color:#7A869A;margin-bottom:10px">★ Base values are used for point estimates. Track adjustments are multipliers (1.0 = no change). Changes update the Download report.</div>
       <div style="display:flex;gap:8px">
         <button onclick="fpaSaveROIEdits()" style="padding:7px 18px;border-radius:6px;background:#1A5CB4;color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700">✓ Apply Changes</button>
         <button onclick="fpaToggleROIEdit()" style="padding:7px 14px;border-radius:6px;background:#fff;color:#555;border:1px solid #C5D2EE;cursor:pointer;font-size:11px;font-weight:600">Cancel</button>
@@ -1712,6 +1783,26 @@ function fpaDownloadWord() {
         </table>`;
     }
 
+    // Track Adjustments table
+    if (roi.track_adjustments) {
+      const NSF_WORD_STAGES = [
+        { id:'activities', label:'Activities' },
+        { id:'outputs',    label:'Outputs' },
+        { id:'outcomes',   label:'Outcomes' },
+        { id:'impacts',    label:'Impacts' },
+      ];
+      roiHtml += `<h3 style="font-size:12pt;color:#0A2240;margin:12pt 0 4pt">Track Adjustments by NSF Category (multipliers)</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:10pt">
+          <tr><th style="background:#F4F7FF;border:1pt solid #C9D5E0;padding:5pt 8pt;font-size:9pt;text-align:left">Stage</th><th style="background:#F4F7FF;border:1pt solid #C9D5E0;padding:5pt 8pt;font-size:9pt;text-align:left">Category</th><th style="background:#F4F7FF;border:1pt solid #C9D5E0;padding:5pt 8pt;font-size:9pt;text-align:center">Multiplier</th></tr>
+          ${NSF_WORD_STAGES.flatMap(stage => {
+            const stageAdj = roi.track_adjustments[stage.id] || {};
+            return Object.entries(stageAdj).map(([cat, val]) =>
+              `<tr><td style="border:1pt solid #C9D5E0;padding:4pt 8pt;font-size:9pt;font-weight:bold;color:#596577">${esc(stage.label)}</td><td style="border:1pt solid #C9D5E0;padding:4pt 8pt;font-size:9pt">${esc(cat)}</td><td style="border:1pt solid #C9D5E0;padding:4pt 8pt;font-size:10pt;font-weight:bold;text-align:center;color:${val!==1?'#C47800':'#0A2240'}">${Number(val).toFixed(2)}</td></tr>`
+            );
+          }).join('')}
+        </table>`;
+    }
+
     // Causal Chain (lifecycle stages)
     const lcd = ctx.lifecycleData;
     if (lcd?.stages?.length) {
@@ -1836,6 +1927,20 @@ function fpaSaveROIEdits() {
     const r = numVal(`fpa-pipe-${i}`);
     if (r != null) step.rate = r;
   });
+
+  // Track adjustments — collect all fpa-ta-* inputs
+  const taInputs = document.querySelectorAll('[id^="fpa-ta-"]');
+  if (taInputs.length) {
+    if (!roi.track_adjustments) roi.track_adjustments = {};
+    taInputs.forEach(inp => {
+      const stage = inp.dataset.stage;
+      const cat   = inp.dataset.cat;
+      if (stage && cat) {
+        if (!roi.track_adjustments[stage]) roi.track_adjustments[stage] = {};
+        roi.track_adjustments[stage][cat] = +inp.value || 1.0;
+      }
+    });
+  }
 
   // Re-render ROI panel with updated values
   window._fpaLastRoiJson = JSON.stringify(roi, null, 2);
