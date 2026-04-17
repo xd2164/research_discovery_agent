@@ -520,7 +520,7 @@ async function runArxiv() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt:
-        `You are EDUAgent, a research synthesis assistant for the Bill & Melinda Gates Foundation.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0,5).join(', ')}\narXiv ID: ${axPaper.id}\nPublished: ${axPaper.published}\nCategories: ${axPaper.categories.join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nGenerate a structured evidence brief for a Gates Foundation program officer. Be specific and concise in each section.\n\nUse these exact ## headings (in this order):\n## Paper overview\n## Key findings\n## Evidence quality (six-rung ladder)\n## Relevance to Gates Foundation\n## Gaps and caveats\n## Recommended next steps` })
+        `You are EDUAgent, a research synthesis assistant for the Bill & Melinda Gates Foundation.\n\nPaper: "${axPaper.title}"\nAuthors: ${axPaper.authors.slice(0,5).join(', ')}\narXiv ID: ${axPaper.id}\nPublished: ${axPaper.published}\nCategories: ${axPaper.categories.join(', ')}\n\nAbstract:\n${axPaper.abstract}\n\nGenerate a structured evidence brief for a Gates Foundation program officer. Be specific and concise in each section.\n\nUse these exact ## headings (in this order):\n## Paper overview\n## Key findings\n## Evidence quality (six-rung ladder)\n## Gaps and caveats\n## Recommended next steps` })
     });
     const d = await r.json();
     const text = d.content?.find(b => b.type === 'text')?.text || 'No response.';
