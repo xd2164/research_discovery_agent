@@ -8,73 +8,27 @@
 <title>AI Literacy &amp; Equity — Resource Navigator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#F7F9FC;color:#1a1a2e;font-size:14px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#F7F9FC;color:#1a1a2e;font-size:14px;line-height:1.5}
 a{color:#0B9E80;text-decoration:none}
 a:hover{text-decoration:underline}
 
 /* ── Header ───────────────────────────────────── */
-.site-header{background:linear-gradient(135deg,#0D4F3C 0%,#0B6E52 55%,#0B9E80 100%);padding:18px 32px 14px;color:#fff;flex-shrink:0}
-.site-header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.site-title{font-size:20px;font-weight:900;color:#fff}
-.eq-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.eq-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,0.1);color:#A7F3D0;border:1px solid rgba(255,255,255,0.18)}
-.header-hint{font-size:11px;color:#A7F3D0;font-weight:600;white-space:nowrap}
+.site-header{background:linear-gradient(135deg,#0D4F3C 0%,#0B6E52 55%,#0B9E80 100%);padding:20px 40px 16px;color:#fff}
+.site-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:10px}
+.eq-tags{display:flex;gap:7px;flex-wrap:wrap}
+.eq-tag{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:14px;background:rgba(255,255,255,0.1);color:#A7F3D0;border:1px solid rgba(255,255,255,0.18)}
 
-/* ── Page body — two columns ──────────────────── */
-.page-body{display:flex;flex:1;overflow:hidden;min-height:0}
+/* ── View tabs ────────────────────────────────── */
+.view-tabs{background:#fff;border-bottom:2px solid #E4E9F0;padding:0 40px;display:flex;gap:0}
+.view-tab{font-size:13px;font-weight:700;padding:12px 22px;border:none;background:none;cursor:pointer;color:#7A8A9B;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;display:flex;align-items:center;gap:7px}
+.view-tab:hover{color:#0B9E80}
+.view-tab.active{color:#0B9E80;border-bottom-color:#0B9E80}
+.tab-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
+.tab-live-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:#FFF7ED;color:#92400E;border:1px solid #FED7AA}
 
-/* ── Left: chat panel ─────────────────────────── */
-.chat-panel{width:360px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #E4E9F0;background:#fff;overflow:hidden}
-.chat-panel-hdr{padding:12px 16px 10px;border-bottom:1px solid #E4E9F0;flex-shrink:0}
-.chat-panel-title{font-size:13px;font-weight:800;color:#0D1B2A;display:flex;align-items:center;gap:6px}
-.chat-panel-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
-.chat-panel-sub{font-size:11px;color:#7A8A9B;margin-top:3px;line-height:1.45}
-.chat-messages{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
-.chat-welcome{padding:12px 0}
-.chat-welcome-lede{font-size:12px;color:#7A8A9B;margin-bottom:10px;line-height:1.5}
-.chat-prompts{display:flex;flex-direction:column;gap:6px}
-.chat-prompt-chip{width:100%;text-align:left;background:#F7F9FC;border:1.5px solid #E4E9F0;border-radius:8px;padding:8px 12px;font-size:11.5px;color:#3D4F62;cursor:pointer;transition:all .15s;line-height:1.4}
-.chat-prompt-chip:hover{border-color:#0B9E80;background:#F0FDF9;color:#0B6E52}
-.chat-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#A0ADB8;margin-bottom:4px}
-.chat-msg{display:flex;flex-direction:column;gap:3px}
-.chat-msg-user{align-items:flex-end}
-.chat-msg-user .chat-bubble{background:#0B9E80;color:#fff;border-radius:12px 12px 3px 12px;padding:8px 12px;max-width:88%;font-size:12.5px;line-height:1.5;font-weight:500}
-.chat-msg-ai{align-items:flex-start}
-.chat-msg-ai .chat-bubble{background:#F7F9FC;border:1px solid #E4E9F0;border-radius:3px 12px 12px 12px;padding:10px 13px;max-width:100%;font-size:12.5px;line-height:1.65;color:#0D1B2A}
-.chat-bubble strong{font-weight:700}
-.chat-bubble em{font-style:italic;color:#5A6B7A}
-.chat-bubble p{margin-bottom:6px}
-.chat-bubble p:last-child{margin-bottom:0}
-.chat-meta{font-size:10px;color:#B0BAC8;margin-top:2px}
-.chat-sources{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
-.chat-src-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid;text-decoration:none;transition:opacity .12s}
-.chat-src-chip:hover{opacity:.75}
-.chat-tier-1{background:#F0FDF9;color:#0B6E52;border-color:#A7F3D0}
-.chat-tier-2{background:#FFF7ED;color:#92400E;border-color:#FED7AA}
-.chat-typing{display:inline-block;width:5px;height:12px;background:#0B9E80;border-radius:2px;animation:blink .7s step-end infinite;vertical-align:middle;margin-left:2px}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.chat-err-bubble{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;padding:8px 12px;font-size:12px}
-.chat-input-bar{border-top:1px solid #E4E9F0;padding:10px 12px;flex-shrink:0;background:#fff}
-.chat-input-row{display:flex;gap:6px;align-items:flex-end}
-.chat-textarea{flex:1;border:1.5px solid #E4E9F0;border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:inherit;resize:none;min-height:36px;max-height:100px;line-height:1.5;color:#0D1B2A;transition:border-color .15s;overflow-y:auto}
-.chat-textarea:focus{outline:none;border-color:#0B9E80}
-.chat-send{background:#0B9E80;color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;flex-shrink:0;align-self:flex-end}
-.chat-send:hover{background:#0A8A70}
-.chat-send:disabled{opacity:.45;cursor:not-allowed}
-.chat-hint{font-size:10px;color:#B0BAC8;margin-top:5px;text-align:center}
-
-/* ── Right: resources panel ───────────────────── */
-.resources-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-
-/* ── Top bar ──────────────────────────────────── */
-.top-bar{background:#fff;border-bottom:1px solid #E4E9F0;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex-shrink:0}
-.top-bar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.count-badge{font-size:12px;color:#7A8A9B}
-.cat-filter{display:flex;gap:5px;flex-wrap:wrap}
-.cat-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1.5px solid #E4E9F0;color:#7A8A9B;background:#fff;cursor:pointer;transition:all .15s}
-.cat-pill:hover,.cat-pill.active{background:#0B9E80;color:#fff;border-color:#0B9E80}
-.print-btn{font-size:11px;font-weight:700;padding:5px 13px;border-radius:6px;border:1.5px solid #0B9E80;color:#0B9E80;background:#fff;cursor:pointer;white-space:nowrap}
-.print-btn:hover{background:#0B9E80;color:#fff}
+/* ── Tab views ────────────────────────────────── */
+.tab-view{display:none}
+.tab-view.active{display:block}
 
 /* ── Category colour map ──────────────────────── */
 :root{
@@ -85,47 +39,53 @@ a:hover{text-decoration:underline}
   --c-tools:#B45309;   --cb-tools:#FFFBEB;   --cb-tools-b:#FDE68A;
 }
 
-/* ── Resource grid (scrollable) ───────────────── */
-.resources-scroll{flex:1;overflow-y:auto;padding:20px 24px 40px}
-.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.resource-card{background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:5px;transition:box-shadow .15s,border-color .15s}
-.resource-card:hover{box-shadow:0 2px 12px rgba(11,158,128,.12);border-color:#0B9E80}
-.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
-.rc-source{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#7A8A9B;flex:1;min-width:0}
-.rc-cat{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:9px;white-space:nowrap;flex-shrink:0}
+/* ── Top bar ──────────────────────────────────── */
+.top-bar{background:#fff;border-bottom:1px solid #E4E9F0;padding:11px 40px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.top-bar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.count-badge{font-size:12px;color:#7A8A9B}
+.cat-filter{display:flex;gap:5px;flex-wrap:wrap}
+.cat-pill{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;border:1.5px solid #E4E9F0;color:#7A8A9B;background:#fff;cursor:pointer;transition:all .15s}
+.cat-pill:hover,.cat-pill.active{background:#0B9E80;color:#fff;border-color:#0B9E80}
+.print-btn{font-size:11.5px;font-weight:700;padding:6px 16px;border-radius:7px;border:1.5px solid #0B9E80;color:#0B9E80;background:#fff;cursor:pointer;white-space:nowrap}
+.print-btn:hover{background:#0B9E80;color:#fff}
+.add-btn{font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:7px;border:1.5px solid #0B9E80;color:#fff;background:#0B9E80;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.add-btn:hover{background:#0A8A70}
+
+/* ── Resource grid ────────────────────────────── */
+.main{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.resource-card{background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:15px 17px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-color .15s}
+.resource-card:hover{box-shadow:0 2px 14px rgba(11,158,128,.12);border-color:#0B9E80}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.rc-source{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#7A8A9B;flex:1;min-width:0}
+.rc-cat{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0}
 .rc-cat-policy{background:var(--cb-policy);color:var(--c-policy);border:1px solid var(--cb-policy-b)}
 .rc-cat-literacy{background:var(--cb-literacy);color:var(--c-literacy);border:1px solid var(--cb-literacy-b)}
 .rc-cat-workforce{background:var(--cb-workforce);color:var(--c-workforce);border:1px solid var(--cb-workforce-b)}
 .rc-cat-change{background:var(--cb-change);color:var(--c-change);border:1px solid var(--cb-change-b)}
 .rc-cat-tools{background:var(--cb-tools);color:var(--c-tools);border:1px solid var(--cb-tools-b)}
-.rc-title{font-size:13px;font-weight:700;color:#0D1B2A;line-height:1.35}
-.rc-link{font-size:10.5px;color:#0B9E80;font-weight:700;margin-top:auto;padding-top:5px}
+.rc-title{font-size:13.5px;font-weight:700;color:#0D1B2A;line-height:1.35}
+.rc-link{font-size:11px;color:#0B9E80;font-weight:700;margin-top:auto;padding-top:6px}
 .hidden{display:none!important}
+.rc-user-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:1px 6px;border-radius:6px;background:#FEF9C3;color:#92400E;border:1px solid #FDE68A;flex-shrink:0}
+.rc-delete{margin-left:auto;font-size:10px;color:#CBD5E1;background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;flex-shrink:0}
+.rc-delete:hover{color:#EF4444;background:#FEF2F2}
+.rc-notes{font-size:11.5px;color:#7A8A9B;font-style:italic;line-height:1.4}
 
 /* ── Bibliography ─────────────────────────────── */
-.bib-section{margin-top:28px}
-.bib-toggle{width:100%;text-align:left;background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:700;color:#0D1B2A;display:flex;justify-content:space-between;align-items:center}
+.bib-section{margin-top:32px}
+.bib-toggle{width:100%;text-align:left;background:#fff;border:1px solid #E4E9F0;border-radius:10px;padding:14px 18px;cursor:pointer;font-size:14px;font-weight:700;color:#0D1B2A;display:flex;justify-content:space-between;align-items:center}
 .bib-toggle:hover{background:#F0FDF9;border-color:#0B9E80}
-.bib-list{display:none;background:#fff;border:1px solid #E4E9F0;border-top:none;border-radius:0 0 10px 10px;max-height:420px;overflow-y:auto;padding:4px 0}
+.bib-list{display:none;background:#fff;border:1px solid #E4E9F0;border-top:none;border-radius:0 0 10px 10px;max-height:520px;overflow-y:auto;padding:4px 0}
 .bib-list.open{display:block}
-.bib-item{font-size:11.5px;color:#3D4F62;padding:7px 16px;border-bottom:1px solid #F0F4F8;display:flex;gap:8px;align-items:baseline}
+.bib-item{font-size:12px;color:#3D4F62;padding:8px 18px;border-bottom:1px solid #F0F4F8;display:flex;gap:10px;align-items:baseline}
 .bib-item:last-child{border-bottom:none}
-.bib-num{font-weight:800;color:#0B9E80;min-width:28px;flex-shrink:0}
-.bib-stag{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:7px;flex-shrink:0}
+.bib-num{font-weight:800;color:#0B9E80;min-width:30px;flex-shrink:0}
+.bib-stag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;flex-shrink:0}
 .tag-openalex{background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
 .tag-arxiv{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
 .tag-eric{background:#F0FDF9;color:#0B9E80;border:1px solid #A7F3D0}
 .tag-other{background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE}
-
-/* ── User-added cards ─────────────────────────── */
-.rc-user-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:1px 5px;border-radius:5px;background:#FEF9C3;color:#92400E;border:1px solid #FDE68A;flex-shrink:0}
-.rc-delete{margin-left:auto;font-size:10px;color:#CBD5E1;background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;flex-shrink:0}
-.rc-delete:hover{color:#EF4444;background:#FEF2F2}
-.rc-notes{font-size:11px;color:#7A8A9B;font-style:italic;line-height:1.4}
-
-/* ── Add button ───────────────────────────────── */
-.add-btn{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1.5px solid #0B9E80;color:#fff;background:#0B9E80;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.add-btn:hover{background:#0A8A70}
 
 /* ── Modal ───────────────────────────────────── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;padding:24px}
@@ -146,28 +106,75 @@ a:hover{text-decoration:underline}
 .modal-submit:disabled{opacity:.5;cursor:not-allowed}
 .modal-err{font-size:12px;color:#EF4444;margin-top:8px}
 
-/* ── Toasts ───────────────────────────────────── */
-#save-toast{position:fixed;bottom:20px;right:20px;background:#0B6E52;color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:9px;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:2000;align-items:center;gap:8px;display:none}
+/* ── Toast ───────────────────────────────────── */
+#save-toast{position:fixed;bottom:24px;right:24px;background:#0B6E52;color:#fff;font-size:12.5px;font-weight:700;padding:10px 18px;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:2000;align-items:center;gap:8px;display:none}
 
 /* ── Footer ───────────────────────────────────── */
-.footer{background:#fff;border-top:1px solid #E4E9F0;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex-shrink:0}
-.footer-left{font-size:11px;color:#A0ADB8}
-.footer-back{font-size:11px;color:#0B9E80;font-weight:700}
+.footer{background:#fff;border-top:1px solid #E4E9F0;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.footer-left{font-size:11.5px;color:#A0ADB8}
+.footer-back{font-size:11.5px;color:#0B9E80;font-weight:700}
+
+/* ── Chat tab ─────────────────────────────────── */
+#chat-view{min-height:calc(100vh - 220px);display:flex;flex-direction:column}
+.chat-shell{flex:1;display:flex;flex-direction:column;max-width:880px;margin:0 auto;width:100%;padding:28px 28px 0}
+.chat-welcome{text-align:center;padding:28px 20px 0;max-width:680px;margin:0 auto}
+.chat-welcome-icon{font-size:32px;margin-bottom:10px}
+.chat-welcome-title{font-size:20px;font-weight:800;color:#0D1B2A;margin-bottom:6px}
+.chat-welcome-sub{font-size:13.5px;color:#7A8A9B;line-height:1.6;margin-bottom:6px}
+.chat-welcome-note{font-size:12px;color:#A0ADB8;display:flex;align-items:center;gap:5px;justify-content:center;margin-bottom:24px}
+.chat-live-dot{width:7px;height:7px;border-radius:50%;background:#0B9E80;display:inline-block}
+.chat-prompts{display:flex;flex-direction:column;gap:8px;width:100%;max-width:680px;margin:0 auto}
+.chat-prompt-chip{width:100%;text-align:left;background:#fff;border:1.5px solid #E4E9F0;border-radius:10px;padding:11px 17px;font-size:13px;color:#3D4F62;cursor:pointer;transition:all .15s;line-height:1.4}
+.chat-prompt-chip:hover{border-color:#0B9E80;background:#F0FDF9;color:#0B6E52}
+.chat-section-label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#B0BAC8;margin-bottom:8px;text-align:left;max-width:680px;margin-left:auto;margin-right:auto}
+.chat-messages{flex:1;padding:8px 0 20px;display:flex;flex-direction:column;gap:18px}
+.chat-msg{display:flex;flex-direction:column;gap:4px}
+.chat-msg-user{align-items:flex-end}
+.chat-msg-user .chat-bubble{background:#0B9E80;color:#fff;border-radius:14px 14px 3px 14px;padding:10px 16px;max-width:78%;font-size:13.5px;line-height:1.5;font-weight:500}
+.chat-msg-ai{align-items:flex-start}
+.chat-msg-ai .chat-bubble{background:#fff;border:1px solid #E4E9F0;border-radius:3px 14px 14px 14px;padding:16px 20px;max-width:100%;font-size:13.5px;line-height:1.75;color:#0D1B2A;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.chat-bubble strong{font-weight:700}
+.chat-bubble em{font-style:italic;color:#5A6B7A}
+.chat-bubble p{margin-bottom:8px}
+.chat-bubble p:last-child{margin-bottom:0}
+.chat-bubble ul,.chat-bubble ol{padding-left:18px;margin:6px 0}
+.chat-bubble li{margin-bottom:3px}
+.chat-meta{font-size:11px;color:#B0BAC8;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.chat-sources{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px}
+.chat-src-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:8px;text-decoration:none;cursor:pointer;transition:opacity .12s;display:inline-flex;align-items:center;gap:4px}
+.chat-src-chip:hover{opacity:.72}
+.chat-src-s2{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.chat-src-eric{background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
+.chat-src-oa{background:#F5F3FF;color:#6D28D9;border:1px solid #DDD6FE}
+.chat-src-arxiv{background:#FFF7ED;color:#92400E;border:1px solid #FED7AA}
+.chat-src-default{background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
+.chat-typing{display:inline-block;width:6px;height:14px;background:#0B9E80;border-radius:2px;animation:blink .7s step-end infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.chat-err{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:10px;padding:10px 14px;font-size:12.5px}
+.chat-searching{font-size:12.5px;color:#7A8A9B;display:flex;align-items:center;gap:8px;padding:10px 16px;background:#F7F9FC;border:1px solid #E4E9F0;border-radius:10px;width:fit-content}
+.search-spinner{width:14px;height:14px;border:2px solid #E4E9F0;border-top-color:#0B9E80;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chat-input-bar{background:#fff;border-top:1px solid #E4E9F0;padding:16px 28px 20px;position:sticky;bottom:0}
+.chat-input-row{display:flex;gap:9px;max-width:880px;margin:0 auto;align-items:flex-end}
+.chat-textarea{flex:1;border:1.5px solid #E4E9F0;border-radius:10px;padding:11px 15px;font-size:13.5px;font-family:inherit;resize:none;min-height:44px;max-height:120px;line-height:1.5;color:#0D1B2A;transition:border-color .15s;overflow-y:auto}
+.chat-textarea:focus{outline:none;border-color:#0B9E80}
+.chat-send{background:#0B9E80;color:#fff;border:none;border-radius:9px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;flex-shrink:0;align-self:flex-end}
+.chat-send:hover{background:#0A8A70}
+.chat-send:disabled{opacity:.45;cursor:not-allowed}
+.chat-hint{font-size:11px;color:#B0BAC8;text-align:center;margin-top:7px;max-width:880px;margin-left:auto;margin-right:auto}
+.chat-source-count{font-size:11px;font-weight:700;background:#F0FDF9;color:#0B6E52;padding:2px 8px;border-radius:10px;border:1px solid #A7F3D0}
 
 /* ── Responsive ───────────────────────────────── */
-@media(max-width:900px){
-  body{overflow:auto}
-  .page-body{flex-direction:column;overflow:visible}
-  .chat-panel{width:100%;border-right:none;border-bottom:1px solid #E4E9F0;height:480px}
-  .resources-panel{overflow:visible}
-  .resources-scroll{overflow:visible}
+@media(max-width:640px){
+  .site-header,.main,.top-bar,.footer,.view-tabs,.chat-input-bar{padding-left:16px;padding-right:16px}
+  .resource-grid{grid-template-columns:1fr}
+  .chat-shell{padding:16px 16px 0}
 }
 @media print{
-  .chat-panel,.top-bar,.print-btn,.footer,.bib-toggle{display:none!important}
-  body{height:auto;overflow:auto}
-  .page-body{display:block}
-  .resources-panel{overflow:visible}
-  .resources-scroll{overflow:visible;padding:16px}
+  .view-tabs,.top-bar,.print-btn,.footer,.bib-toggle,.chat-input-bar{display:none!important}
+  body{background:#fff;font-size:12px}
+  .main{padding:16px 24px}
+  .site-header{padding:24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .resource-card{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
   .bib-list{display:block!important;max-height:none}
 }
@@ -177,10 +184,7 @@ a:hover{text-decoration:underline}
 
 <!-- ── Header ────────────────────────────────────── -->
 <header class="site-header">
-  <div class="site-header-row">
-    <h1 class="site-title">AI Literacy &amp; Equity — Resource Navigator</h1>
-    <span class="header-hint">✦ Chat with the corpus → or browse resources →</span>
-  </div>
+  <h1 class="site-title">AI Literacy &amp; Equity — Resource Navigator</h1>
   <div class="eq-tags">
     <span class="eq-tag">Algorithm Bias</span>
     <span class="eq-tag">Digital Divide</span>
@@ -194,254 +198,265 @@ a:hover{text-decoration:underline}
   </div>
 </header>
 
-<!-- ── Page body ──────────────────────────────────── -->
-<div class="page-body">
+<!-- ── View tabs ──────────────────────────────────── -->
+<nav class="view-tabs">
+  <button class="view-tab active" id="tab-resources" onclick="switchView('resources')">
+    📚 Resources
+  </button>
+  <button class="view-tab" id="tab-chat" onclick="switchView('chat')">
+    ✦ Sensemaking Chat
+    <span class="tab-badge">AI · Live Search</span>
+  </button>
+</nav>
 
-  <!-- ── LEFT: Sensemaking Chat ─────────────────── -->
-  <aside class="chat-panel">
-    <div class="chat-panel-hdr">
-      <div class="chat-panel-title">
-        ✦ Sensemaking Chat
-        <span class="chat-panel-badge">AI · RAG · 30 papers</span>
+<!-- ══════════════════════════════════════════════════
+     TAB: RESOURCES
+══════════════════════════════════════════════════ -->
+<div id="resources-view" class="tab-view active">
+
+  <!-- ── Top bar ──────────────────────────── -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="count-badge" id="count-label">Loading resources…</span>
+      <div class="cat-filter">
+        <button class="cat-pill active" onclick="filterCat('all',this)">All</button>
+        <button class="cat-pill" onclick="filterCat('policy',this)">Policy &amp; Frameworks</button>
+        <button class="cat-pill" onclick="filterCat('literacy',this)">AI Literacy &amp; Ethics</button>
+        <button class="cat-pill" onclick="filterCat('workforce',this)">Workforce Signals</button>
+        <button class="cat-pill" onclick="filterCat('change',this)">Org Change</button>
+        <button class="cat-pill" onclick="filterCat('tools',this)">EdTech Tools</button>
       </div>
-      <div class="chat-panel-sub">Ask questions across the research corpus. I'll surface trends, tensions, and evidence-grounded insights — with citations.</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="add-btn" onclick="openModal()">＋ Add resource</button>
+      <span id="db-badge" style="display:none;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:12px;background:#EEF9F5;color:#0B6E52;border:1px solid #A7F3D0;white-space:nowrap">🗄 <span id="db-count">0</span> saved</span>
+      <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+
+  <!-- ── Resource grid ────────────────────── -->
+  <main class="main">
+    <div class="resource-grid" id="resource-grid">
+
+      <!-- ─ Policy & Frameworks ──────────── -->
+      <div class="resource-card" data-cat="policy">
+        <div class="rc-top"><div class="rc-source">OECD</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
+        <div class="rc-title">Opportunities, Guidelines and Guardrails for AI in Education</div>
+        <a class="rc-link" href="https://www.oecd.org/education/artificial-intelligence-in-education/" target="_blank" rel="noopener">oecd.org/education/artificial-intelligence… ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="policy">
+        <div class="rc-top"><div class="rc-source">OECD</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
+        <div class="rc-title">Digital Education Outlook 2023</div>
+        <a class="rc-link" href="https://www.oecd.org/education/digital-education-outlook/" target="_blank" rel="noopener">oecd.org/education/digital-education-outlook ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="policy">
+        <div class="rc-top"><div class="rc-source">U.S. Department of Education</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
+        <div class="rc-title">AI and the Future of Teaching and Learning (2023)</div>
+        <a class="rc-link" href="https://www2.ed.gov/documents/ai-report/ai-report.pdf" target="_blank" rel="noopener">ed.gov — AI Report PDF ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="policy">
+        <div class="rc-top"><div class="rc-source">TeachAI · Code.org · ISTE · Khan Academy · ETS · WEF</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
+        <div class="rc-title">AI Guidance for Schools Toolkit</div>
+        <a class="rc-link" href="https://teachai.org/toolkit/" target="_blank" rel="noopener">teachai.org/toolkit ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="policy">
+        <div class="rc-top"><div class="rc-source">ISTE</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
+        <div class="rc-title">Artificial Intelligence in Education</div>
+        <a class="rc-link" href="https://www.iste.org/areas-of-focus/AI-in-education" target="_blank" rel="noopener">iste.org/areas-of-focus/AI-in-education ↗</a>
+      </div>
+
+      <!-- ─ Workforce Signals ─────────────── -->
+      <div class="resource-card" data-cat="workforce">
+        <div class="rc-top"><div class="rc-source">World Economic Forum</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
+        <div class="rc-title">Jobs of Tomorrow: Large Language Models and Jobs — A Business Toolkit</div>
+        <a class="rc-link" href="https://www.weforum.org/publications/jobs-of-tomorrow-large-language-models-and-jobs/" target="_blank" rel="noopener">weforum.org ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="workforce">
+        <div class="rc-top"><div class="rc-source">Deloitte</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
+        <div class="rc-title">Global Human Capital Trends 2024</div>
+        <a class="rc-link" href="https://www2.deloitte.com/us/en/insights/focus/human-capital-trends.html" target="_blank" rel="noopener">deloitte.com/human-capital-trends ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="workforce">
+        <div class="rc-top"><div class="rc-source">Burning Glass Institute</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
+        <div class="rc-title">Skills &amp; Labor Market Intelligence for the AI Era</div>
+        <a class="rc-link" href="https://burningglassinstitute.org/" target="_blank" rel="noopener">burningglassinstitute.org ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="workforce">
+        <div class="rc-top"><div class="rc-source">McKinsey Global Institute</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
+        <div class="rc-title">The Future of Work — Gig Economy &amp; AI Research</div>
+        <a class="rc-link" href="https://www.mckinsey.com/featured-insights/future-of-work" target="_blank" rel="noopener">mckinsey.com/future-of-work ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="workforce">
+        <div class="rc-top"><div class="rc-source">International Monetary Fund</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
+        <div class="rc-title">AI and the Global Economy — IMF Research Hub</div>
+        <a class="rc-link" href="https://www.imf.org/en/Topics/Artificial-Intelligence" target="_blank" rel="noopener">imf.org/en/Topics/Artificial-Intelligence ↗</a>
+      </div>
+
+      <!-- ─ Org Change ─────────────────────── -->
+      <div class="resource-card" data-cat="change">
+        <div class="rc-top"><div class="rc-source">Harvard Business Review</div><span class="rc-cat rc-cat-change">Org Change</span></div>
+        <div class="rc-title">How to Help Your Team Learn in the Flow of Work</div>
+        <a class="rc-link" href="https://hbr.org/2023/02/how-to-help-your-team-learn-in-the-flow-of-work" target="_blank" rel="noopener">hbr.org ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="change">
+        <div class="rc-top"><div class="rc-source">CoSN</div><span class="rc-cat rc-cat-change">Org Change</span></div>
+        <div class="rc-title">Driving K-12 Innovation 2024</div>
+        <a class="rc-link" href="https://www.cosn.org/edtech-topics/innovation/" target="_blank" rel="noopener">cosn.org/edtech-topics/innovation ↗</a>
+      </div>
+
+      <!-- ─ EdTech Tools ─────────────────── -->
+      <div class="resource-card" data-cat="tools">
+        <div class="rc-top"><div class="rc-source">Khan Academy</div><span class="rc-cat rc-cat-tools">EdTech Tools</span></div>
+        <div class="rc-title">Khanmigo — AI Tutor &amp; Teaching Assistant</div>
+        <a class="rc-link" href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noopener">khanacademy.org/khan-labs ↗</a>
+      </div>
+
+      <div class="resource-card" data-cat="tools">
+        <div class="rc-top"><div class="rc-source">HMH · Amira Learning</div><span class="rc-cat rc-cat-tools">EdTech Tools</span></div>
+        <div class="rc-title">Amira Learning — AI Reading Tutor</div>
+        <a class="rc-link" href="https://www.amiralearning.com" target="_blank" rel="noopener">amiralearning.com ↗</a>
+      </div>
+
+    </div><!-- /resource-grid -->
+
+    <!-- ── Academic Bibliography ──────────────── -->
+    <div class="bib-section">
+      <button class="bib-toggle" onclick="toggleBib(this)">
+        <span>Academic Research Bibliography — 74 peer-reviewed papers</span>
+        <span id="bib-arrow">▼</span>
+      </button>
+      <div class="bib-list" id="bib-list">
+        <div class="bib-item"><span class="bib-num">[1]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Revolutionizing healthcare: the role of artificial intelligence in clinical practice — Alowais, Alghamdi et al., 2023 · 2601 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[2]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Digital Twin: Values, Challenges and Enablers From a Modeling Perspective — Rasheed, San et al., 2020 · 1611 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[3]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The Ethics of AI Ethics: An Evaluation of Guidelines — Hagendorff, 2020 · 1546 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[4]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Interpreting Black-Box Models: A Review on Explainable Artificial Intelligence — Hassija, Chamola et al., 2023 · 1509 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[5]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Data Feminism — D'Ignazio, Klein, 2020 · 1393 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[6]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Consumers and Artificial Intelligence: An Experiential Perspective — Puntoni, Reczek et al., 2020 · 932 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[7]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Ethical principles for artificial intelligence in education — Nguyen, Ngo et al., 2022 · 929 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[8]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>New Era of Artificial Intelligence in Education: Towards a Sustainable Multifaceted Revolution — Kamalov et al., 2023 · 853 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[9]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Unlocking the value of AI in human resource management through AI capability framework — Chowdhury, Dey et al., 2022 · 754 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[10]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>A Review of the Role of Artificial Intelligence in Healthcare — Al Kuwaiti, Nazer et al., 2023 · 752 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[11]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Climate change and COP26: Are digital technologies and information management part of the problem or the solution? — Dwivedi, Hughes et al., 2021 · 697 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[12]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Is Metaverse in education a blessing or a curse: a combined content and bibliometric analysis — Tlili, Huang et al., 2022 · 575 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[13]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Algorithmic fairness in artificial intelligence for medicine and healthcare — Chen, Wang et al., 2023 · 513 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[14]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>2020 EDUCAUSE Horizon Report: Teaching and Learning Edition — Brown, McCormack et al., 2020 · 505 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[15]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The dark side of generative artificial intelligence: A critical analysis of controversies and risks of ChatGPT — Wach, Duong et al., 2023 · 481 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[16]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Towards a standard for identifying and managing bias in artificial intelligence — Schwartz, Vassilev et al., 2022 · 479 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[17]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Six Human-Centered Artificial Intelligence Grand Challenges — Garibay, Winslow et al., 2023 · 406 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[18]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>AI-driven adaptive learning for sustainable educational transformation — Striełkowski et al., 2024 · 307 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[19]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Bias and Unfairness in Machine Learning Models: A Systematic Review — Pagano, Loureiro et al., 2023 · 246 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[20]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The value of standards for health datasets in AI-based applications — Arora, Alderman et al., 2023 · 244 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[21]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Use of Artificial Intelligence in Improving Outcomes in Heart Disease — Armoundas, Narayan et al., 2024 · 216 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[22]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>A Call to Action on Assessing and Mitigating Bias in AI Applications for Mental Health — Timmons, Duong et al., 2022 · 207 cites</span></div>
+        <div class="bib-item"><span class="bib-num">[23]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Creative Problem Solving in Artificially Intelligent Agents: A Survey and Framework — Gizzi, Nair et al., 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[24]</span><span class="bib-stag tag-arxiv">arXiv</span><span>A Review on Explainable Artificial Intelligence for Healthcare: Why, How, and When? — Bharati, Mondal et al., 2023</span></div>
+        <div class="bib-item"><span class="bib-num">[25]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Connecting Three Pivotal Concepts in K-12 Science State Standards to Research in Physics Education — Singh, Schunn, 2016</span></div>
+        <div class="bib-item"><span class="bib-num">[26]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Games for Artificial Intelligence Research: A Review and Perspectives — Hu, Zhao et al., 2023</span></div>
+        <div class="bib-item"><span class="bib-num">[27]</span><span class="bib-stag tag-arxiv">arXiv</span><span>The Artificial Scientist: Logicist, Emergentist, and Universalist Approaches to AGI — Bennett, Maruyama, 2021</span></div>
+        <div class="bib-item"><span class="bib-num">[28]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Experts' View on Challenges and Needs for Fairness in Artificial Intelligence for Education — Fenu, Galici et al., 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[29]</span><span class="bib-stag tag-eric">ERIC</span><span>The Ethics of Using AI in K-12 Education: A Systematic Literature Review — Gouseti, James et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[30]</span><span class="bib-stag tag-eric">ERIC</span><span>Artificial Intelligence in Primary Education: A Systematic Literature Review 2020–2025 — Bagdonaite, Dagiene, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[31]</span><span class="bib-stag tag-eric">ERIC</span><span>Design Language Learning with AI Chatbots Based on Activity Theory from a Systematic Review — Li, Zhou et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[32]</span><span class="bib-stag tag-eric">ERIC</span><span>Systematic Review of the Impact of Artificial Intelligence in Higher Education — Figueroa de la Fuente, Farhadian, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[33]</span><span class="bib-stag tag-eric">ERIC</span><span>Automated Writing Evaluation Systems: A Systematic Review of Grammarly, Pigai, and Criterion — Ding, Zou, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[34]</span><span class="bib-stag tag-eric">ERIC</span><span>The Trajectory of Artificial Intelligence for Competency-Based Personalised Learning — Dastane, Turner et al., 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[35]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Second Order WinoBias Test Set for Latent Gender Bias Detection in Coreference Resolution — Dawkins, 2021</span></div>
+        <div class="bib-item"><span class="bib-num">[36]</span><span class="bib-stag tag-arxiv">arXiv</span><span>The Rise of Artificial Intelligence in Educational Measurement: Opportunities and Ethical Challenges — Bulut, Beiting-Parrish et al., 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[37]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Compression, The Fermi Paradox and Artificial Super-Intelligence — Bennett, 2021</span></div>
+        <div class="bib-item"><span class="bib-num">[38]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Equity in College Physics Student Learning: a Critical Quantitative Intersectionality Investigation — Van Dusen, Nissen, 2018</span></div>
+        <div class="bib-item"><span class="bib-num">[39]</span><span class="bib-stag tag-eric">ERIC</span><span>Algorithmic Bias in Education — Baker, Hawn, 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[40]</span><span class="bib-stag tag-eric">ERIC</span><span>Can AI Be Racist? Color-Evasiveness in the Application of Machine Learning to Science Assessments — Cheuk, Tina, 2021</span></div>
+        <div class="bib-item"><span class="bib-num">[41]</span><span class="bib-stag tag-eric">ERIC</span><span>Interrogating Algorithmic Bias: From Speculative Fiction to Liberatory Design — Gaskins, Nettrice, 2023</span></div>
+        <div class="bib-item"><span class="bib-num">[42]</span><span class="bib-stag tag-eric">ERIC</span><span>Examining the Algorithmic Fairness in Predicting High School Dropouts — Pan, Zhang, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[43]</span><span class="bib-stag tag-eric">ERIC</span><span>A Psychometric Framework for Evaluating Fairness in Algorithmic Decision Making — Suk, Han, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[44]</span><span class="bib-stag tag-eric">ERIC</span><span>Algorithmic Foucault: Digital Feminism, the Panopticon, &amp; the Role of AI in Shaping Musical Identities &amp; Pedagogies — Zhu, Mila, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[45]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Towards Equity and Algorithmic Fairness in Student Grade Prediction — Jiang, Pardos, 2021</span></div>
+        <div class="bib-item"><span class="bib-num">[46]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Integration of AI in STEM Education, Addressing Ethical Challenges in K-12 Settings — Lodhi, Lodhi, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[47]</span><span class="bib-stag tag-arxiv">arXiv</span><span>AI for Accessible Education: Personalized Audio-Based Learning for Blind Students — Yang, Taele, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[48]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Fairness in AI: challenges in bridging the gap between algorithms and law — Giannopoulos, Psalla et al., 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[49]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Reinforcement Learning with Stepwise Fairness Constraints — Deng, Sun et al., 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[50]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Algorithmic Fairness — Pessach, Shmueli, 2020</span></div>
+        <div class="bib-item"><span class="bib-num">[51]</span><span class="bib-stag tag-eric">ERIC</span><span>Generative AI-Driven Personalization of the Community of Inquiry Model — Anderson, Nguyen et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[52]</span><span class="bib-stag tag-eric">ERIC</span><span>Personalized Online Learning, Test Fairness, and Educational Measurement — Katz, Huggins-Manley et al., 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[53]</span><span class="bib-stag tag-eric">ERIC</span><span>AI Differences in Vocational and Undergraduate Applications in Higher Education — Gao, Tan, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[54]</span><span class="bib-stag tag-eric">ERIC</span><span>Evaluating How Personalized AI Agents Influence Decision-Making, Self-Presentation, and Digital Identity Management — Ogunsola, 2026</span></div>
+        <div class="bib-item"><span class="bib-num">[55]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Mapping AI Risk Mitigations: Evidence Scan and Preliminary AI Risk Mitigation Taxonomy — Saeri, Lloyd George et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[56]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Ethical AI for Young Digital Citizens: A Call to Action on Privacy Governance — Shouli, Barthwal et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[57]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Beyond principlism: Practical strategies for ethical AI use in research practices — Lin, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[58]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Competing Visions of Ethical AI: A Case Study of OpenAI — Wilfley, Ai et al., 2026</span></div>
+        <div class="bib-item"><span class="bib-num">[59]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Towards Standardizing AI Bias Exploration — Krasanakis, Papadopoulos, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[60]</span><span class="bib-stag tag-eric">ERIC</span><span>Safeguarding the Digital Economy: Librarians' Perspectives on Data Privacy and Ethical Use of Public AI Chatbots — Olusipe, Adetayo et al., 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[61]</span><span class="bib-stag tag-eric">ERIC</span><span>A Delphi Study on Ethical Challenges and Ensuring Academic Integrity Regarding AI Research in Higher Education — Gunes, Liman Kaban, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[62]</span><span class="bib-stag tag-eric">ERIC</span><span>Integrating Artificial Intelligence (AI) into Adult Education: Opportunities, Challenges, and Future Directions — Storey, Wagner, 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[63]</span><span class="bib-stag tag-eric">ERIC</span><span>Considerations for the Use of Generative Artificial Intelligence in the Counseling Profession — Norton, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[64]</span><span class="bib-stag tag-eric">ERIC</span><span>What Students Really Think: Unpacking AI Ethics in Educational Assessments through a Triadic Framework — Lim, Gottipati et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[65]</span><span class="bib-stag tag-eric">ERIC</span><span>Preparing the Next Generation of Health Education Teachers for the Ethical Use of AI — Haithcox-Dennis, Johnson, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[66]</span><span class="bib-stag tag-other">Journal</span><span>Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification — Buolamwini, Gebru, 2018</span></div>
+        <div class="bib-item"><span class="bib-num">[67]</span><span class="bib-stag tag-other">Journal</span><span>Actionable Auditing Revisited: Investigating the Impact of Publicly Naming Biased Performance Results — Raji, Buolamwini, 2023</span></div>
+        <div class="bib-item"><span class="bib-num">[68]</span><span class="bib-stag tag-other">Journal</span><span>Who Audits the Auditors? Recommendations from a Field Scan of the Algorithmic Auditing Ecosystem — Costanza-Chock, Raji, Buolamwini et al., 2022</span></div>
+        <div class="bib-item"><span class="bib-num">[69]</span><span class="bib-stag tag-other">Book</span><span>Unmasking AI: My Mission to Protect What Is Human in a World of Machines — Buolamwini, 2023</span></div>
+        <div class="bib-item"><span class="bib-num">[70]</span><span class="bib-stag tag-other">Report</span><span>Comply to Fly? A Report on Traveler Experiences with TSA Facial Recognition Technology — Algorithmic Justice League, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[71]</span><span class="bib-stag tag-other">Journal</span><span>Towards responsible artificial intelligence in education: a systematic review on identifying and mitigating ethical risks — Zhu et al., 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[72]</span><span class="bib-stag tag-other">Journal</span><span>Algorithmic bias in educational systems: Examining the impact of AI-driven decision making in modern education — Boateng, Boateng, 2025</span></div>
+        <div class="bib-item"><span class="bib-num">[73]</span><span class="bib-stag tag-other">Journal</span><span>FairAIED: Navigating Fairness, Bias, and Ethics in Educational AI Applications — Chinta et al., 2024</span></div>
+        <div class="bib-item"><span class="bib-num">[74]</span><span class="bib-stag tag-other">Journal</span><span>Investigating algorithmic bias in student progress monitoring — Idowu, 2024</span></div>
+      </div>
     </div>
 
+  </main>
+</div><!-- /resources-view -->
+
+<!-- ══════════════════════════════════════════════════
+     TAB: SENSEMAKING CHAT
+══════════════════════════════════════════════════ -->
+<div id="chat-view" class="tab-view">
+  <div class="chat-shell">
     <div class="chat-messages" id="chat-messages">
+      <!-- Welcome state -->
       <div class="chat-welcome" id="chat-welcome">
+        <div class="chat-welcome-icon">✦</div>
+        <div class="chat-welcome-title">Sensemaking Chat over Research</div>
+        <div class="chat-welcome-sub">Ask questions and I'll search live across Semantic Scholar, ERIC, OpenAlex, and arXiv — then synthesize patterns, tensions, and evidence-grounded insights with inline citations.</div>
+        <div class="chat-welcome-note">
+          <span class="chat-live-dot"></span>
+          Live search across four academic databases · Sources shown with every response
+        </div>
         <div class="chat-section-label">Try asking</div>
-        <div class="chat-prompts">
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does research say about tech and AI bans in K–12, and what are the underlying drivers?</button>
+        <div class="chat-prompts" id="chat-prompts">
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?</button>
           <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What are the key headwinds and tailwinds for AI adoption in education right now?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting in 2024–2026?</button>
           <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What signals should a program officer watch when assessing AI disruption in grantee sites?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does the evidence say about AI tutoring effectiveness for underserved communities?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">Where is the strongest ROI evidence for AI in education, and what are the caveats?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="chat-input-bar">
-      <div class="chat-input-row">
-        <textarea class="chat-textarea" id="chat-input" placeholder="Ask across the corpus…" rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
-        <button class="chat-send" id="chat-send" onclick="sendChat()">Send →</button>
-      </div>
-      <div class="chat-hint">Grounded in 30 peer-reviewed papers · Powered by Claude</div>
+  <div class="chat-input-bar">
+    <div class="chat-input-row">
+      <textarea class="chat-textarea" id="chat-input" placeholder="Ask a question — I'll search the live literature and synthesize…" rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="chat-send" onclick="sendChat()">Send →</button>
     </div>
-  </aside>
+    <div class="chat-hint">Live search across Semantic Scholar · ERIC · OpenAlex · arXiv · Powered by Claude · Citations shown with every response</div>
+  </div>
+</div><!-- /chat-view -->
 
-  <!-- ── RIGHT: Resources ────────────────────────── -->
-  <div class="resources-panel">
-    <!-- Filter bar -->
-    <div class="top-bar" id="resources-topbar">
-      <div class="top-bar-left">
-        <span class="count-badge" id="count-label">Loading resources…</span>
-        <div class="cat-filter">
-          <button class="cat-pill active" onclick="filterCat('all',this)">All</button>
-          <button class="cat-pill" onclick="filterCat('policy',this)">Policy &amp; Frameworks</button>
-          <button class="cat-pill" onclick="filterCat('literacy',this)">AI Literacy &amp; Ethics</button>
-          <button class="cat-pill" onclick="filterCat('workforce',this)">Workforce Signals</button>
-          <button class="cat-pill" onclick="filterCat('change',this)">Org Change</button>
-          <button class="cat-pill" onclick="filterCat('tools',this)">EdTech Tools</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
-        <button class="add-btn" onclick="openModal()">＋ Add resource</button>
-        <span id="db-badge" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#EEF9F5;color:#0B6E52;border:1px solid #A7F3D0;white-space:nowrap">🗄 <span id="db-count">0</span> saved</span>
-        <button class="print-btn" onclick="window.print()">Print / PDF</button>
-      </div>
-    </div>
-
-    <!-- Scrollable resources area -->
-    <div class="resources-scroll">
-      <div class="resource-grid" id="resource-grid">
-
-        <!-- ─ Policy & Frameworks ──────────────── -->
-        <div class="resource-card" data-cat="policy">
-          <div class="rc-top"><div class="rc-source">OECD</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
-          <div class="rc-title">Opportunities, Guidelines and Guardrails for AI in Education</div>
-          <a class="rc-link" href="https://www.oecd.org/education/artificial-intelligence-in-education/" target="_blank" rel="noopener">oecd.org/education/artificial-intelligence… ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="policy">
-          <div class="rc-top"><div class="rc-source">OECD</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
-          <div class="rc-title">Digital Education Outlook 2023</div>
-          <a class="rc-link" href="https://www.oecd.org/education/digital-education-outlook/" target="_blank" rel="noopener">oecd.org/education/digital-education-outlook ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="policy">
-          <div class="rc-top"><div class="rc-source">U.S. Department of Education</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
-          <div class="rc-title">AI and the Future of Teaching and Learning (2023)</div>
-          <a class="rc-link" href="https://www2.ed.gov/documents/ai-report/ai-report.pdf" target="_blank" rel="noopener">ed.gov — AI Report PDF ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="policy">
-          <div class="rc-top"><div class="rc-source">TeachAI · Code.org · ISTE · Khan Academy · ETS · WEF</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
-          <div class="rc-title">AI Guidance for Schools Toolkit</div>
-          <a class="rc-link" href="https://teachai.org/toolkit/" target="_blank" rel="noopener">teachai.org/toolkit ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="policy">
-          <div class="rc-top"><div class="rc-source">ISTE</div><span class="rc-cat rc-cat-policy">Policy &amp; Frameworks</span></div>
-          <div class="rc-title">Artificial Intelligence in Education</div>
-          <a class="rc-link" href="https://www.iste.org/areas-of-focus/AI-in-education" target="_blank" rel="noopener">iste.org/areas-of-focus/AI-in-education ↗</a>
-        </div>
-
-        <!-- ─ AI Literacy & Ethics — loaded from DB ─ -->
-
-        <!-- ─ Workforce & Economic Signals ────────── -->
-        <div class="resource-card" data-cat="workforce">
-          <div class="rc-top"><div class="rc-source">World Economic Forum</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
-          <div class="rc-title">Jobs of Tomorrow: Large Language Models and Jobs — A Business Toolkit</div>
-          <a class="rc-link" href="https://www.weforum.org/publications/jobs-of-tomorrow-large-language-models-and-jobs/" target="_blank" rel="noopener">weforum.org ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="workforce">
-          <div class="rc-top"><div class="rc-source">Deloitte</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
-          <div class="rc-title">Global Human Capital Trends 2024</div>
-          <a class="rc-link" href="https://www2.deloitte.com/us/en/insights/focus/human-capital-trends.html" target="_blank" rel="noopener">deloitte.com/human-capital-trends ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="workforce">
-          <div class="rc-top"><div class="rc-source">Burning Glass Institute</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
-          <div class="rc-title">Skills &amp; Labor Market Intelligence for the AI Era</div>
-          <a class="rc-link" href="https://burningglassinstitute.org/" target="_blank" rel="noopener">burningglassinstitute.org ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="workforce">
-          <div class="rc-top"><div class="rc-source">McKinsey Global Institute</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
-          <div class="rc-title">The Future of Work — Gig Economy &amp; AI Research</div>
-          <a class="rc-link" href="https://www.mckinsey.com/featured-insights/future-of-work" target="_blank" rel="noopener">mckinsey.com/future-of-work ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="workforce">
-          <div class="rc-top"><div class="rc-source">International Monetary Fund</div><span class="rc-cat rc-cat-workforce">Workforce Signals</span></div>
-          <div class="rc-title">AI and the Global Economy — IMF Research Hub</div>
-          <a class="rc-link" href="https://www.imf.org/en/Topics/Artificial-Intelligence" target="_blank" rel="noopener">imf.org/en/Topics/Artificial-Intelligence ↗</a>
-        </div>
-
-        <!-- ─ Org Change ───────────────────────────── -->
-        <div class="resource-card" data-cat="change">
-          <div class="rc-top"><div class="rc-source">Harvard Business Review</div><span class="rc-cat rc-cat-change">Org Change</span></div>
-          <div class="rc-title">How to Help Your Team Learn in the Flow of Work</div>
-          <a class="rc-link" href="https://hbr.org/2023/02/how-to-help-your-team-learn-in-the-flow-of-work" target="_blank" rel="noopener">hbr.org ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="change">
-          <div class="rc-top"><div class="rc-source">CoSN</div><span class="rc-cat rc-cat-change">Org Change</span></div>
-          <div class="rc-title">Driving K-12 Innovation 2024</div>
-          <a class="rc-link" href="https://www.cosn.org/edtech-topics/innovation/" target="_blank" rel="noopener">cosn.org/edtech-topics/innovation ↗</a>
-        </div>
-
-        <!-- ─ EdTech Tools ─────────────────────────── -->
-        <div class="resource-card" data-cat="tools">
-          <div class="rc-top"><div class="rc-source">Khan Academy</div><span class="rc-cat rc-cat-tools">EdTech Tools</span></div>
-          <div class="rc-title">Khanmigo — AI Tutor &amp; Teaching Assistant</div>
-          <a class="rc-link" href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noopener">khanacademy.org/khan-labs ↗</a>
-        </div>
-
-        <div class="resource-card" data-cat="tools">
-          <div class="rc-top"><div class="rc-source">HMH · Amira Learning</div><span class="rc-cat rc-cat-tools">EdTech Tools</span></div>
-          <div class="rc-title">Amira Learning — AI Reading Tutor</div>
-          <a class="rc-link" href="https://www.amiralearning.com" target="_blank" rel="noopener">amiralearning.com ↗</a>
-        </div>
-
-      </div><!-- /resource-grid -->
-
-      <!-- ── Academic Bibliography ─────────────────── -->
-      <div class="bib-section">
-        <button class="bib-toggle" onclick="toggleBib(this)">
-          <span>Academic Research Bibliography — 74 peer-reviewed papers</span>
-          <span id="bib-arrow">▼</span>
-        </button>
-        <div class="bib-list" id="bib-list">
-          <div class="bib-item"><span class="bib-num">[1]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Revolutionizing healthcare: the role of artificial intelligence in clinical practice — Alowais, Alghamdi et al., 2023 · 2601 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[2]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Digital Twin: Values, Challenges and Enablers From a Modeling Perspective — Rasheed, San et al., 2020 · 1611 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[3]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The Ethics of AI Ethics: An Evaluation of Guidelines — Hagendorff, 2020 · 1546 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[4]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Interpreting Black-Box Models: A Review on Explainable Artificial Intelligence — Hassija, Chamola et al., 2023 · 1509 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[5]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Data Feminism — D'Ignazio, Klein, 2020 · 1393 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[6]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Consumers and Artificial Intelligence: An Experiential Perspective — Puntoni, Reczek et al., 2020 · 932 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[7]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Ethical principles for artificial intelligence in education — Nguyen, Ngo et al., 2022 · 929 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[8]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>New Era of Artificial Intelligence in Education: Towards a Sustainable Multifaceted Revolution — Kamalov et al., 2023 · 853 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[9]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Unlocking the value of AI in human resource management through AI capability framework — Chowdhury, Dey et al., 2022 · 754 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[10]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>A Review of the Role of Artificial Intelligence in Healthcare — Al Kuwaiti, Nazer et al., 2023 · 752 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[11]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Climate change and COP26: Are digital technologies and information management part of the problem or the solution? — Dwivedi, Hughes et al., 2021 · 697 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[12]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Is Metaverse in education a blessing or a curse: a combined content and bibliometric analysis — Tlili, Huang et al., 2022 · 575 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[13]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Algorithmic fairness in artificial intelligence for medicine and healthcare — Chen, Wang et al., 2023 · 513 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[14]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>2020 EDUCAUSE Horizon Report: Teaching and Learning Edition — Brown, McCormack et al., 2020 · 505 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[15]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The dark side of generative artificial intelligence: A critical analysis of controversies and risks of ChatGPT — Wach, Duong et al., 2023 · 481 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[16]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Towards a standard for identifying and managing bias in artificial intelligence — Schwartz, Vassilev et al., 2022 · 479 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[17]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Six Human-Centered Artificial Intelligence Grand Challenges — Garibay, Winslow et al., 2023 · 406 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[18]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>AI-driven adaptive learning for sustainable educational transformation — Striełkowski et al., 2024 · 307 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[19]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Bias and Unfairness in Machine Learning Models: A Systematic Review — Pagano, Loureiro et al., 2023 · 246 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[20]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>The value of standards for health datasets in AI-based applications — Arora, Alderman et al., 2023 · 244 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[21]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>Use of Artificial Intelligence in Improving Outcomes in Heart Disease — Armoundas, Narayan et al., 2024 · 216 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[22]</span><span class="bib-stag tag-openalex">OpenAlex</span><span>A Call to Action on Assessing and Mitigating Bias in AI Applications for Mental Health — Timmons, Duong et al., 2022 · 207 cites</span></div>
-          <div class="bib-item"><span class="bib-num">[23]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Creative Problem Solving in Artificially Intelligent Agents: A Survey and Framework — Gizzi, Nair et al., 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[24]</span><span class="bib-stag tag-arxiv">arXiv</span><span>A Review on Explainable Artificial Intelligence for Healthcare: Why, How, and When? — Bharati, Mondal et al., 2023</span></div>
-          <div class="bib-item"><span class="bib-num">[25]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Connecting Three Pivotal Concepts in K-12 Science State Standards to Research in Physics Education — Singh, Schunn, 2016</span></div>
-          <div class="bib-item"><span class="bib-num">[26]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Games for Artificial Intelligence Research: A Review and Perspectives — Hu, Zhao et al., 2023</span></div>
-          <div class="bib-item"><span class="bib-num">[27]</span><span class="bib-stag tag-arxiv">arXiv</span><span>The Artificial Scientist: Logicist, Emergentist, and Universalist Approaches to AGI — Bennett, Maruyama, 2021</span></div>
-          <div class="bib-item"><span class="bib-num">[28]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Experts' View on Challenges and Needs for Fairness in Artificial Intelligence for Education — Fenu, Galici et al., 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[29]</span><span class="bib-stag tag-eric">ERIC</span><span>The Ethics of Using AI in K-12 Education: A Systematic Literature Review — Gouseti, James et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[30]</span><span class="bib-stag tag-eric">ERIC</span><span>Artificial Intelligence in Primary Education: A Systematic Literature Review 2020–2025 — Bagdonaite, Dagiene, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[31]</span><span class="bib-stag tag-eric">ERIC</span><span>Design Language Learning with AI Chatbots Based on Activity Theory from a Systematic Review — Li, Zhou et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[32]</span><span class="bib-stag tag-eric">ERIC</span><span>Systematic Review of the Impact of Artificial Intelligence in Higher Education — Figueroa de la Fuente, Farhadian, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[33]</span><span class="bib-stag tag-eric">ERIC</span><span>Automated Writing Evaluation Systems: A Systematic Review of Grammarly, Pigai, and Criterion — Ding, Zou, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[34]</span><span class="bib-stag tag-eric">ERIC</span><span>The Trajectory of Artificial Intelligence for Competency-Based Personalised Learning — Dastane, Turner et al., 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[35]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Second Order WinoBias Test Set for Latent Gender Bias Detection in Coreference Resolution — Dawkins, 2021</span></div>
-          <div class="bib-item"><span class="bib-num">[36]</span><span class="bib-stag tag-arxiv">arXiv</span><span>The Rise of Artificial Intelligence in Educational Measurement: Opportunities and Ethical Challenges — Bulut, Beiting-Parrish et al., 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[37]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Compression, The Fermi Paradox and Artificial Super-Intelligence — Bennett, 2021</span></div>
-          <div class="bib-item"><span class="bib-num">[38]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Equity in College Physics Student Learning: a Critical Quantitative Intersectionality Investigation — Van Dusen, Nissen, 2018</span></div>
-          <div class="bib-item"><span class="bib-num">[39]</span><span class="bib-stag tag-eric">ERIC</span><span>Algorithmic Bias in Education — Baker, Hawn, 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[40]</span><span class="bib-stag tag-eric">ERIC</span><span>Can AI Be Racist? Color-Evasiveness in the Application of Machine Learning to Science Assessments — Cheuk, Tina, 2021</span></div>
-          <div class="bib-item"><span class="bib-num">[41]</span><span class="bib-stag tag-eric">ERIC</span><span>Interrogating Algorithmic Bias: From Speculative Fiction to Liberatory Design — Gaskins, Nettrice, 2023</span></div>
-          <div class="bib-item"><span class="bib-num">[42]</span><span class="bib-stag tag-eric">ERIC</span><span>Examining the Algorithmic Fairness in Predicting High School Dropouts — Pan, Zhang, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[43]</span><span class="bib-stag tag-eric">ERIC</span><span>A Psychometric Framework for Evaluating Fairness in Algorithmic Decision Making — Suk, Han, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[44]</span><span class="bib-stag tag-eric">ERIC</span><span>Algorithmic Foucault: Digital Feminism, the Panopticon, &amp; the Role of AI in Shaping Musical Identities &amp; Pedagogies — Zhu, Mila, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[45]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Towards Equity and Algorithmic Fairness in Student Grade Prediction — Jiang, Pardos, 2021</span></div>
-          <div class="bib-item"><span class="bib-num">[46]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Integration of AI in STEM Education, Addressing Ethical Challenges in K-12 Settings — Lodhi, Lodhi, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[47]</span><span class="bib-stag tag-arxiv">arXiv</span><span>AI for Accessible Education: Personalized Audio-Based Learning for Blind Students — Yang, Taele, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[48]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Fairness in AI: challenges in bridging the gap between algorithms and law — Giannopoulos, Psalla et al., 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[49]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Reinforcement Learning with Stepwise Fairness Constraints — Deng, Sun et al., 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[50]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Algorithmic Fairness — Pessach, Shmueli, 2020</span></div>
-          <div class="bib-item"><span class="bib-num">[51]</span><span class="bib-stag tag-eric">ERIC</span><span>Generative AI-Driven Personalization of the Community of Inquiry Model — Anderson, Nguyen et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[52]</span><span class="bib-stag tag-eric">ERIC</span><span>Personalized Online Learning, Test Fairness, and Educational Measurement — Katz, Huggins-Manley et al., 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[53]</span><span class="bib-stag tag-eric">ERIC</span><span>AI Differences in Vocational and Undergraduate Applications in Higher Education — Gao, Tan, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[54]</span><span class="bib-stag tag-eric">ERIC</span><span>Evaluating How Personalized AI Agents Influence Decision-Making, Self-Presentation, and Digital Identity Management — Ogunsola, 2026</span></div>
-          <div class="bib-item"><span class="bib-num">[55]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Mapping AI Risk Mitigations: Evidence Scan and Preliminary AI Risk Mitigation Taxonomy — Saeri, Lloyd George et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[56]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Ethical AI for Young Digital Citizens: A Call to Action on Privacy Governance — Shouli, Barthwal et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[57]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Beyond principlism: Practical strategies for ethical AI use in research practices — Lin, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[58]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Competing Visions of Ethical AI: A Case Study of OpenAI — Wilfley, Ai et al., 2026</span></div>
-          <div class="bib-item"><span class="bib-num">[59]</span><span class="bib-stag tag-arxiv">arXiv</span><span>Towards Standardizing AI Bias Exploration — Krasanakis, Papadopoulos, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[60]</span><span class="bib-stag tag-eric">ERIC</span><span>Safeguarding the Digital Economy: Librarians' Perspectives on Data Privacy and Ethical Use of Public AI Chatbots — Olusipe, Adetayo et al., 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[61]</span><span class="bib-stag tag-eric">ERIC</span><span>A Delphi Study on Ethical Challenges and Ensuring Academic Integrity Regarding AI Research in Higher Education — Gunes, Liman Kaban, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[62]</span><span class="bib-stag tag-eric">ERIC</span><span>Integrating Artificial Intelligence (AI) into Adult Education: Opportunities, Challenges, and Future Directions — Storey, Wagner, 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[63]</span><span class="bib-stag tag-eric">ERIC</span><span>Considerations for the Use of Generative Artificial Intelligence in the Counseling Profession — Norton, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[64]</span><span class="bib-stag tag-eric">ERIC</span><span>What Students Really Think: Unpacking AI Ethics in Educational Assessments through a Triadic Framework — Lim, Gottipati et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[65]</span><span class="bib-stag tag-eric">ERIC</span><span>Preparing the Next Generation of Health Education Teachers for the Ethical Use of AI — Haithcox-Dennis, Johnson, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[66]</span><span class="bib-stag tag-other">Journal</span><span>Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification — Buolamwini, Gebru, 2018</span></div>
-          <div class="bib-item"><span class="bib-num">[67]</span><span class="bib-stag tag-other">Journal</span><span>Actionable Auditing Revisited: Investigating the Impact of Publicly Naming Biased Performance Results — Raji, Buolamwini, 2023</span></div>
-          <div class="bib-item"><span class="bib-num">[68]</span><span class="bib-stag tag-other">Journal</span><span>Who Audits the Auditors? Recommendations from a Field Scan of the Algorithmic Auditing Ecosystem — Costanza-Chock, Raji, Buolamwini et al., 2022</span></div>
-          <div class="bib-item"><span class="bib-num">[69]</span><span class="bib-stag tag-other">Book</span><span>Unmasking AI: My Mission to Protect What Is Human in a World of Machines — Buolamwini, 2023</span></div>
-          <div class="bib-item"><span class="bib-num">[70]</span><span class="bib-stag tag-other">Report</span><span>Comply to Fly? A Report on Traveler Experiences with TSA Facial Recognition Technology — Algorithmic Justice League, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[71]</span><span class="bib-stag tag-other">Journal</span><span>Towards responsible artificial intelligence in education: a systematic review on identifying and mitigating ethical risks — Zhu et al., 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[72]</span><span class="bib-stag tag-other">Journal</span><span>Algorithmic bias in educational systems: Examining the impact of AI-driven decision making in modern education — Boateng, Boateng, 2025</span></div>
-          <div class="bib-item"><span class="bib-num">[73]</span><span class="bib-stag tag-other">Journal</span><span>FairAIED: Navigating Fairness, Bias, and Ethics in Educational AI Applications — Chinta et al., 2024</span></div>
-          <div class="bib-item"><span class="bib-num">[74]</span><span class="bib-stag tag-other">Journal</span><span>Investigating algorithmic bias in student progress monitoring — Idowu, 2024</span></div>
-        </div>
-      </div>
-
-    </div><!-- /resources-scroll -->
-
-    <!-- Footer inside resources panel -->
-    <footer class="footer">
-      <span class="footer-left">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub · April 2026</span>
-      <a class="footer-back" href="/">← Back to Hub</a>
-    </footer>
-  </div><!-- /resources-panel -->
-
-</div><!-- /page-body -->
+<!-- ── Footer ─────────────────────────────────────── -->
+<footer class="footer">
+  <span class="footer-left">US Program · Research &amp; Discovery · Data &amp; AI Enablement Hub · April 2026</span>
+  <a class="footer-back" href="/">← Back to Hub</a>
+</footer>
 
 <!-- ── Save toast ──────────────────────────────────── -->
 <div id="save-toast">✓ Saved to database — will persist across updates</div>
@@ -451,18 +466,9 @@ a:hover{text-decoration:underline}
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
     <div class="modal-title" id="modal-heading">Add a Resource</div>
     <div class="modal-sub">Your addition will be saved to the shared database and appear in the list immediately.</div>
-    <div class="modal-field">
-      <label class="modal-label" for="f-title">Title *</label>
-      <input class="modal-input" id="f-title" type="text" placeholder="e.g. UNESCO AI Competency Framework for Teachers" autocomplete="off">
-    </div>
-    <div class="modal-field">
-      <label class="modal-label" for="f-source">Source / Organisation *</label>
-      <input class="modal-input" id="f-source" type="text" placeholder="e.g. UNESCO" autocomplete="off">
-    </div>
-    <div class="modal-field">
-      <label class="modal-label" for="f-url">URL *</label>
-      <input class="modal-input" id="f-url" type="url" placeholder="https://…" autocomplete="off">
-    </div>
+    <div class="modal-field"><label class="modal-label" for="f-title">Title *</label><input class="modal-input" id="f-title" type="text" placeholder="e.g. UNESCO AI Competency Framework for Teachers" autocomplete="off"></div>
+    <div class="modal-field"><label class="modal-label" for="f-source">Source / Organisation *</label><input class="modal-input" id="f-source" type="text" placeholder="e.g. UNESCO" autocomplete="off"></div>
+    <div class="modal-field"><label class="modal-label" for="f-url">URL *</label><input class="modal-input" id="f-url" type="url" placeholder="https://…" autocomplete="off"></div>
     <div class="modal-field">
       <label class="modal-label" for="f-cat">Category *</label>
       <select class="modal-select" id="f-cat">
@@ -474,10 +480,7 @@ a:hover{text-decoration:underline}
         <option value="tools">EdTech Tools</option>
       </select>
     </div>
-    <div class="modal-field">
-      <label class="modal-label" for="f-notes">Notes (optional)</label>
-      <textarea class="modal-textarea" id="f-notes" placeholder="Why is this resource relevant? Any watch-outs?"></textarea>
-    </div>
+    <div class="modal-field"><label class="modal-label" for="f-notes">Notes (optional)</label><textarea class="modal-textarea" id="f-notes" placeholder="Why is this resource relevant? Any watch-outs?"></textarea></div>
     <div class="modal-err" id="modal-err" style="display:none"></div>
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeModal()">Cancel</button>
@@ -487,15 +490,16 @@ a:hover{text-decoration:underline}
 </div>
 
 <script>
-// ── Category labels ────────────────────────────────────────────────────────
-const CAT_LABELS = {
-  policy:   'Policy &amp; Frameworks',
-  literacy: 'AI Literacy &amp; Ethics',
-  workforce:'Workforce Signals',
-  change:   'Org Change',
-  tools:    'EdTech Tools'
-};
+// ── Tab switching ──────────────────────────────────────────────────────────
+function switchView(v){
+  document.querySelectorAll('.tab-view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.view-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById(v+'-view').classList.add('active');
+  document.getElementById('tab-'+v).classList.add('active');
+}
 
+// ── Resource category filter ───────────────────────────────────────────────
+const CAT_LABELS = { policy:'Policy &amp; Frameworks', literacy:'AI Literacy &amp; Ethics', workforce:'Workforce Signals', change:'Org Change', tools:'EdTech Tools' };
 let currentCat = 'all';
 
 function filterCat(cat, btn){
@@ -504,21 +508,13 @@ function filterCat(cat, btn){
   btn.classList.add('active');
   applyFilter();
 }
-
 function applyFilter(){
   const cards = document.querySelectorAll('.resource-card');
   let visible = 0;
-  cards.forEach(c=>{
-    const show = currentCat==='all' || c.dataset.cat===currentCat;
-    c.classList.toggle('hidden', !show);
-    if(show) visible++;
-  });
+  cards.forEach(c=>{ const show = currentCat==='all'||c.dataset.cat===currentCat; c.classList.toggle('hidden',!show); if(show) visible++; });
   const activePill = document.querySelector('.cat-pill.active');
   const label = activePill ? activePill.textContent.replace(/&amp;/g,'&') : 'All';
-  document.getElementById('count-label').textContent =
-    currentCat==='all'
-      ? `Showing all ${visible} resources`
-      : `Showing ${visible} resource${visible!==1?'s':''} · ${label}`;
+  document.getElementById('count-label').textContent = currentCat==='all' ? `Showing all ${visible} resources` : `Showing ${visible} resource${visible!==1?'s':''} · ${label}`;
 }
 
 function buildDbCard(r){
@@ -526,22 +522,10 @@ function buildDbCard(r){
   const catLabel = CAT_LABELS[catKey] || catKey;
   const hostname = (() => { try { return new URL(r.url).hostname.replace(/^www\./,''); } catch{ return r.url; } })();
   const card = document.createElement('div');
-  card.className = 'resource-card';
-  card.dataset.cat = catKey;
-  card.dataset.dbid = r.id;
-  card.innerHTML = `
-    <div class="rc-top">
-      <div class="rc-source">${escHtml(r.source)}</div>
-      <span class="rc-cat rc-cat-${catKey}">${catLabel}</span>
-      <span class="rc-user-badge">Added</span>
-      <button class="rc-delete" title="Remove" onclick="deleteResource(${r.id},this)">✕</button>
-    </div>
-    <div class="rc-title">${escHtml(r.title)}</div>
-    ${r.notes ? `<div class="rc-notes">${escHtml(r.notes)}</div>` : ''}
-    <a class="rc-link" href="${escHtml(r.url)}" target="_blank" rel="noopener">${escHtml(hostname)} ↗</a>`;
+  card.className = 'resource-card'; card.dataset.cat = catKey; card.dataset.dbid = r.id;
+  card.innerHTML = `<div class="rc-top"><div class="rc-source">${escHtml(r.source)}</div><span class="rc-cat rc-cat-${catKey}">${catLabel}</span><span class="rc-user-badge">Added</span><button class="rc-delete" title="Remove" onclick="deleteResource(${r.id},this)">✕</button></div><div class="rc-title">${escHtml(r.title)}</div>${r.notes?`<div class="rc-notes">${escHtml(r.notes)}</div>`:''}<a class="rc-link" href="${escHtml(r.url)}" target="_blank" rel="noopener">${escHtml(hostname)} ↗</a>`;
   return card;
 }
-
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 async function loadDbResources(){
@@ -552,225 +536,177 @@ async function loadDbResources(){
     const grid = document.getElementById('resource-grid');
     resources.forEach(r => grid.appendChild(buildDbCard(r)));
     applyFilter();
-    if(resources.length > 0){
-      const badge = document.getElementById('db-badge');
-      const count = document.getElementById('db-count');
-      if(badge && count){ count.textContent = resources.length; badge.style.display = 'inline-flex'; }
-    }
+    if(resources.length > 0){ const b=document.getElementById('db-badge'),c=document.getElementById('db-count'); if(b&&c){c.textContent=resources.length;b.style.display='inline-flex';} }
   } catch(e){ console.warn('Could not load saved resources:', e); }
 }
-
 async function deleteResource(id, btn){
   if(!confirm('Remove this resource?')) return;
   btn.disabled = true;
   try {
-    const res = await fetch(`/api/resources/${id}`, { method:'DELETE' });
+    const res = await fetch(`/api/resources/${id}`,{method:'DELETE'});
     if(res.ok){ btn.closest('.resource-card').remove(); applyFilter(); }
-    else { btn.disabled = false; alert('Could not delete. Try again.'); }
-  } catch(e){ btn.disabled = false; alert('Network error. Try again.'); }
+    else { btn.disabled=false; alert('Could not delete. Try again.'); }
+  } catch(e){ btn.disabled=false; alert('Network error.'); }
 }
 
-function openModal(){
-  document.getElementById('modal-overlay').classList.add('open');
-  document.getElementById('f-title').focus();
-  document.getElementById('modal-err').style.display='none';
-  if(currentCat !== 'all') document.getElementById('f-cat').value = currentCat;
-}
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('open');
-  ['f-title','f-source','f-url','f-notes'].forEach(id=>{document.getElementById(id).value='';});
-  document.getElementById('f-cat').value='';
-}
+function openModal(){ document.getElementById('modal-overlay').classList.add('open'); document.getElementById('f-title').focus(); document.getElementById('modal-err').style.display='none'; if(currentCat!=='all') document.getElementById('f-cat').value=currentCat; }
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); ['f-title','f-source','f-url','f-notes'].forEach(id=>{document.getElementById(id).value='';}); document.getElementById('f-cat').value=''; }
 function overlayClick(e){ if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
 async function submitResource(){
-  const title    = document.getElementById('f-title').value.trim();
-  const source   = document.getElementById('f-source').value.trim();
-  const url      = document.getElementById('f-url').value.trim();
-  const category = document.getElementById('f-cat').value;
-  const notes    = document.getElementById('f-notes').value.trim();
-  const errEl = document.getElementById('modal-err');
-  errEl.style.display='none';
-  if(!title)    { showErr('Title is required'); return; }
-  if(!source)   { showErr('Source / Organisation is required'); return; }
-  if(!url)      { showErr('URL is required'); return; }
-  if(!category) { showErr('Please choose a category'); return; }
-  if(!/^https?:\/\//i.test(url)) { showErr('URL must start with http:// or https://'); return; }
-  const btn = document.getElementById('modal-submit');
-  btn.disabled = true; btn.textContent = 'Saving…';
+  const title=document.getElementById('f-title').value.trim(),source=document.getElementById('f-source').value.trim(),url=document.getElementById('f-url').value.trim(),category=document.getElementById('f-cat').value,notes=document.getElementById('f-notes').value.trim();
+  const errEl=document.getElementById('modal-err'); errEl.style.display='none';
+  if(!title){showErr('Title is required');return;} if(!source){showErr('Source is required');return;} if(!url){showErr('URL is required');return;} if(!category){showErr('Please choose a category');return;} if(!/^https?:\/\//i.test(url)){showErr('URL must start with http:// or https://');return;}
+  const btn=document.getElementById('modal-submit'); btn.disabled=true; btn.textContent='Saving…';
   try {
-    const res = await fetch('/api/resources', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ title, source, url, category, notes: notes || undefined })
-    });
-    const data = await res.json();
-    if(!res.ok){ showErr(data.error || 'Failed to save. Try again.'); return; }
-    const grid = document.getElementById('resource-grid');
-    grid.appendChild(buildDbCard(data.resource));
-    applyFilter();
-    closeModal();
-    const countEl = document.getElementById('db-count');
-    const badge   = document.getElementById('db-badge');
-    if(countEl && badge){ countEl.textContent = parseInt(countEl.textContent||'0') + 1; badge.style.display = 'inline-flex'; }
-    const toast = document.getElementById('save-toast');
-    if(toast){ toast.style.display='flex'; setTimeout(()=>{ toast.style.display='none'; }, 3500); }
-  } catch(e){ showErr('Network error. Please try again.');
-  } finally { btn.disabled=false; btn.textContent='Save Resource'; }
+    const res=await fetch('/api/resources',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,source,url,category,notes:notes||undefined})});
+    const data=await res.json();
+    if(!res.ok){showErr(data.error||'Failed to save.');return;}
+    document.getElementById('resource-grid').appendChild(buildDbCard(data.resource)); applyFilter(); closeModal();
+    const c=document.getElementById('db-count'),b=document.getElementById('db-badge'); if(c&&b){c.textContent=parseInt(c.textContent||'0')+1;b.style.display='inline-flex';}
+    const toast=document.getElementById('save-toast'); if(toast){toast.style.display='flex';setTimeout(()=>{toast.style.display='none';},3500);}
+  } catch(e){showErr('Network error. Please try again.');} finally{btn.disabled=false;btn.textContent='Save Resource';}
 }
-function showErr(msg){ const el=document.getElementById('modal-err'); el.textContent=msg; el.style.display='block'; }
+function showErr(msg){const el=document.getElementById('modal-err');el.textContent=msg;el.style.display='block';}
 
 function toggleBib(btn){
-  const list = document.getElementById('bib-list');
-  const open = list.classList.toggle('open');
-  btn.querySelector('span').textContent = open
-    ? 'Academic Research Bibliography — 74 peer-reviewed papers (click to hide)'
-    : 'Academic Research Bibliography — 74 peer-reviewed papers';
-  document.getElementById('bib-arrow').textContent = open ? '▲' : '▼';
-}
-
-// ── Bibliography URLs ──────────────────────────────────────────────────────
-const BIB_URLS = {
-  1:'https://doi.org/10.1186/s12909-023-04698-z',2:'https://doi.org/10.1109/access.2020.2970143',3:'https://doi.org/10.1007/s11023-020-09517-8',4:'https://doi.org/10.1007/s12559-023-10179-8',5:'https://doi.org/10.7551/mitpress/11805.001.0001',6:'https://doi.org/10.1177/0022242920953847',7:'https://doi.org/10.1007/s10639-022-11316-w',8:'https://doi.org/10.3390/su151612451',9:'https://doi.org/10.1016/j.hrmr.2022.100899',10:'https://doi.org/10.3390/jpm13060951',11:'https://doi.org/10.1016/j.ijinfomgt.2021.102456',12:'https://doi.org/10.1186/s40561-022-00205-x',13:'https://doi.org/10.1038/s41551-023-01056-8',14:'https://openalex.org/W3009239856',15:'https://doi.org/10.15678/eber.2023.110201',16:'https://doi.org/10.6028/nist.sp.1270',17:'https://doi.org/10.1080/10447318.2022.2153320',18:'https://doi.org/10.1002/sd.3221',19:'https://doi.org/10.3390/bdcc7010015',20:'https://doi.org/10.1016/s2589-7500(23)00048-1',21:'https://doi.org/10.1161/cir.0000000000001201',22:'https://doi.org/10.1177/17456916221134490',23:'https://scholar.google.com/scholar?q=Creative+Problem+Solving+Artificially+Intelligent+Agents+Gizzi+2022',24:'https://arxiv.org/abs/2304.04780',25:'https://arxiv.org/abs/1603.06024',26:'https://doi.org/10.1109/tai.2024.3410935',27:'https://arxiv.org/abs/2110.01831',28:'https://arxiv.org/abs/2207.01490',29:'https://eric.ed.gov/?q=Ethics+Using+AI+K-12+Gouseti',30:'https://eric.ed.gov/?q=AI+Primary+Education+Bagdonaite',31:'https://eric.ed.gov/?q=Language+Learning+AI+Chatbots+Li+Zhou',32:'https://eric.ed.gov/?q=Impact+AI+Higher+Education+Figueroa',33:'https://eric.ed.gov/?q=Automated+Writing+Evaluation+Grammarly+Ding+Zou',34:'https://eric.ed.gov/?q=AI+Competency+Based+Personalised+Learning+Dastane',35:'https://arxiv.org/abs/2104.01466',36:'https://arxiv.org/abs/2403.05658',37:'https://arxiv.org/abs/2108.00743',38:'https://arxiv.org/abs/1811.02689',39:'https://eric.ed.gov/?id=EJ1362012',40:'https://eric.ed.gov/?q=AI+Racist+Science+Assessments+Cheuk',41:'https://eric.ed.gov/?q=Interrogating+Algorithmic+Bias+Gaskins',42:'https://eric.ed.gov/?q=Algorithmic+Fairness+High+School+Dropouts+Pan+Zhang',43:'https://eric.ed.gov/?q=Psychometric+Framework+Algorithmic+Decision+Suk+Han',44:'https://eric.ed.gov/?q=Algorithmic+Foucault+Digital+Feminism+Zhu+Mila',45:'https://arxiv.org/abs/2108.09568',46:'https://arxiv.org/abs/2502.11461',47:'https://arxiv.org/abs/2412.01000',48:'https://arxiv.org/abs/2404.13152',49:'https://arxiv.org/abs/2211.03072',50:'https://doi.org/10.1145/3461702.3462611',51:'https://eric.ed.gov/?q=Generative+AI+Personalization+Community+Inquiry+Anderson',52:'https://eric.ed.gov/?q=Personalized+Online+Learning+Test+Fairness+Katz',53:'https://eric.ed.gov/?q=AI+Differences+Vocational+Undergraduate+Gao+Tan',54:'https://eric.ed.gov/?q=AI+Agents+Decision+Making+Self+Presentation+Ogunsola',55:'https://arxiv.org/abs/2503.02831',56:'https://arxiv.org/abs/2501.07771',57:'https://arxiv.org/abs/2401.09317',58:'https://arxiv.org/abs/2601.12345',59:'https://arxiv.org/abs/2405.16705',60:'https://eric.ed.gov/?q=Data+Privacy+AI+Chatbots+Librarians+Olusipe',61:'https://eric.ed.gov/?q=Delphi+Ethical+Challenges+Academic+Integrity+Gunes',62:'https://eric.ed.gov/?q=AI+Adult+Education+Opportunities+Challenges+Storey',63:'https://eric.ed.gov/?q=Generative+AI+Counseling+Norton',64:'https://eric.ed.gov/?q=AI+Ethics+Educational+Assessments+Lim+Gottipati',65:'https://eric.ed.gov/?q=AI+Health+Education+Teachers+Haithcox-Dennis',66:'https://doi.org/10.1145/3287560.3287596',67:'https://doi.org/10.1145/3593013.3594094',68:'https://doi.org/10.1145/3531146.3534634',69:'https://mitpress.mit.edu/9780262048439/',70:'https://www.ajl.org/comply-to-fly',71:'https://doi.org/10.1007/s10639-024-12543-w',72:'https://doi.org/10.1016/j.caeai.2025.100278',73:'https://doi.org/10.1007/s10639-023-12148-2',74:'https://doi.org/10.1007/s10798-023-09832-6'
-};
-
-function makeBibClickable(){
-  document.querySelectorAll('.bib-item').forEach(item=>{
-    const numEl = item.querySelector('.bib-num');
-    if(!numEl) return;
-    const num = parseInt(numEl.textContent.replace(/\[|\]/g,''));
-    const url = BIB_URLS[num];
-    if(!url) return;
-    const textSpan = [...item.childNodes].find(n=>n.nodeType===3&&n.textContent.trim()) ||
-                     [...item.querySelectorAll('span')].slice(-1)[0];
-    if(!textSpan) return;
-    const a = document.createElement('a');
-    a.href = url; a.target='_blank'; a.rel='noopener';
-    a.style.cssText = 'color:inherit;text-decoration:underline;text-decoration-color:#0B9E80;text-decoration-style:dotted;text-underline-offset:2px';
-    a.textContent = textSpan.textContent;
-    textSpan.replaceWith(a);
-  });
+  const list=document.getElementById('bib-list'); const open=list.classList.toggle('open');
+  btn.querySelector('span').textContent=open?'Academic Research Bibliography — 74 peer-reviewed papers (click to hide)':'Academic Research Bibliography — 74 peer-reviewed papers';
+  document.getElementById('bib-arrow').textContent=open?'▲':'▼';
 }
 
 // ── Chat ───────────────────────────────────────────────────────────────────
-function autoResize(el){
-  el.style.height='auto';
-  el.style.height=Math.min(el.scrollHeight,100)+'px';
-}
-function chatKeydown(e){
-  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChat(); }
-}
-function sendPrompt(text){
-  const inp=document.getElementById('chat-input');
-  inp.value=text.trim(); autoResize(inp); sendChat();
-}
+function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function chatKeydown(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();} }
+function sendPrompt(text){ const inp=document.getElementById('chat-input'); inp.value=text.trim(); autoResize(inp); sendChat(); }
 
-let chatBusy=false;
+let chatBusy = false;
+
+function sourceChipClass(source){
+  if(!source) return 'chat-src-default';
+  const s = source.toLowerCase();
+  if(s.includes('semantic')) return 'chat-src-s2';
+  if(s.includes('eric')) return 'chat-src-eric';
+  if(s.includes('openalex')) return 'chat-src-oa';
+  if(s.includes('arxiv')) return 'chat-src-arxiv';
+  return 'chat-src-default';
+}
 
 function renderMarkdown(text){
   return text
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/\[(\d+)\]/g,'<span style="color:#0B9E80;font-weight:700">[$1]</span>')
+    .replace(/\[(\d+)\]/g,'<span style="color:#0B9E80;font-weight:800;font-size:11.5px">[$1]</span>')
+    .replace(/^#{1,3} (.+)$/gm,'<strong>$1</strong>')
     .replace(/\n\n+/g,'</p><p>')
     .replace(/\n/g,'<br>');
 }
 
 async function sendChat(){
   if(chatBusy) return;
-  const inp=document.getElementById('chat-input');
-  const question=inp.value.trim();
+  const inp = document.getElementById('chat-input');
+  const question = inp.value.trim();
   if(!question) return;
-  chatBusy=true;
-  inp.value=''; inp.style.height='auto';
-  document.getElementById('chat-send').disabled=true;
+  chatBusy = true;
+  inp.value = ''; inp.style.height = 'auto';
+  document.getElementById('chat-send').disabled = true;
 
-  const messages=document.getElementById('chat-messages');
-  const welcome=document.getElementById('chat-welcome');
-  if(welcome) welcome.style.display='none';
+  const messages = document.getElementById('chat-messages');
+  const welcome = document.getElementById('chat-welcome');
+  if(welcome) welcome.style.display = 'none';
 
   // User bubble
-  const userDiv=document.createElement('div');
-  userDiv.className='chat-msg chat-msg-user';
-  userDiv.innerHTML=`<div class="chat-bubble">${escHtml(question)}</div>`;
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg chat-msg-user';
+  userDiv.innerHTML = `<div class="chat-bubble">${escHtml(question)}</div>`;
   messages.appendChild(userDiv);
-  messages.scrollTop=messages.scrollHeight;
+  messages.scrollTop = messages.scrollHeight;
 
-  // AI bubble
-  const aiDiv=document.createElement('div');
-  aiDiv.className='chat-msg chat-msg-ai';
-  const bubble=document.createElement('div');
-  bubble.className='chat-bubble';
-  bubble.innerHTML='<span class="chat-typing"></span>';
-  const metaDiv=document.createElement('div');
-  metaDiv.className='chat-meta';
-  metaDiv.textContent='Searching corpus…';
+  // AI bubble — searching state
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'chat-msg chat-msg-ai';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = '<div class="chat-searching"><div class="search-spinner"></div>Searching Semantic Scholar, ERIC, OpenAlex, arXiv…</div>';
+  const metaDiv = document.createElement('div');
+  metaDiv.className = 'chat-meta';
   aiDiv.appendChild(bubble);
   aiDiv.appendChild(metaDiv);
   messages.appendChild(aiDiv);
-  messages.scrollTop=messages.scrollHeight;
+  messages.scrollTop = messages.scrollHeight;
 
-  let fullText='', sources=[];
+  let fullText = '', sources = [];
   try {
-    const res=await fetch('/api/navigator/chat',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({question})
+    const res = await fetch('/api/navigator/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ question })
     });
-    if(!res.ok||!res.body) throw new Error('API error');
-    const reader=res.body.getReader();
-    const decoder=new TextDecoder();
-    let buffer='';
+    if(!res.ok || !res.body) throw new Error('API error');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
     while(true){
-      const {done,value}=await reader.read();
+      const { done, value } = await reader.read();
       if(done) break;
-      buffer+=decoder.decode(value,{stream:true});
-      const lines=buffer.split('\n'); buffer=lines.pop();
+      buffer += decoder.decode(value, { stream:true });
+      const lines = buffer.split('\n'); buffer = lines.pop();
       for(const line of lines){
         if(!line.startsWith('data:')) continue;
         try {
-          const payload=JSON.parse(line.slice(5).trim());
+          const payload = JSON.parse(line.slice(5).trim());
+          if(payload.status === 'searching'){
+            // already shown
+          }
           if(payload.sources){
-            sources=payload.sources;
-            metaDiv.textContent=`Based on ${sources.length} papers`;
+            sources = payload.sources;
+            bubble.innerHTML = '<span class="chat-typing"></span>';
+            metaDiv.innerHTML = `<span class="chat-source-count">✦ ${sources.length} papers retrieved</span> Synthesizing…`;
           }
           if(payload.content){
-            fullText+=payload.content;
-            bubble.innerHTML='<p>'+renderMarkdown(fullText)+'</p><span class="chat-typing"></span>';
-            messages.scrollTop=messages.scrollHeight;
+            fullText += payload.content;
+            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p><span class="chat-typing"></span>';
+            messages.scrollTop = messages.scrollHeight;
           }
           if(payload.done){
-            bubble.innerHTML='<p>'+renderMarkdown(fullText)+'</p>';
+            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p>';
             if(sources.length){
-              const srcRow=document.createElement('div');
-              srcRow.className='chat-sources';
-              sources.forEach(s=>{
-                const chip=document.createElement('a');
-                chip.className='chat-src-chip '+(s.tier&&s.tier.includes('1')?'chat-tier-1':'chat-tier-2');
-                chip.href=s.url; chip.target='_blank'; chip.rel='noopener';
-                chip.title=`${s.title} (${s.year}) — ${s.tier}`;
-                chip.textContent=`[${s.idx}] ${s.year} · ${(s.authors||'').split(',')[0].split(' ').pop()}`;
+              const srcRow = document.createElement('div');
+              srcRow.className = 'chat-sources';
+              sources.forEach(s => {
+                const chip = document.createElement('a');
+                chip.className = 'chat-src-chip ' + sourceChipClass(s.source);
+                chip.href = s.url; chip.target = '_blank'; chip.rel = 'noopener';
+                const firstAuthor = (s.authors||'').split(',')[0].split(' ').pop();
+                chip.title = `${s.title} (${s.year}) — ${s.source}${s.citationCount>0?' · '+s.citationCount+' cites':''}`;
+                chip.textContent = `[${s.idx}] ${s.year} · ${firstAuthor}`;
                 srcRow.appendChild(chip);
               });
-              aiDiv.insertBefore(srcRow,metaDiv);
+              aiDiv.insertBefore(srcRow, metaDiv);
             }
-            metaDiv.innerHTML=`✦ Claude · ${sources.length} sources · <span style="color:#C8D0DA">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
-            messages.scrollTop=messages.scrollHeight;
+            const srcSummary = sources.length ? `${sources.length} sources` : 'no sources';
+            metaDiv.innerHTML = `✦ Claude · Live search (${srcSummary}) · <span style="color:#C8D0DA">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
+            messages.scrollTop = messages.scrollHeight;
           }
-          if(payload.error) bubble.innerHTML=`<div class="chat-err-bubble">${escHtml(payload.error)}</div>`;
+          if(payload.error){
+            bubble.innerHTML = `<div class="chat-err">${escHtml(payload.error)}</div>`;
+            metaDiv.textContent = '';
+          }
         } catch(e){ /* skip bad lines */ }
       }
     }
   } catch(err){
-    bubble.innerHTML=`<div class="chat-err-bubble">Network error — please try again.</div>`;
-    console.error('[chat]',err);
+    bubble.innerHTML = `<div class="chat-err">Network error — please try again.</div>`;
+    console.error('[chat]', err);
   }
-  chatBusy=false;
-  document.getElementById('chat-send').disabled=false;
+  chatBusy = false;
+  document.getElementById('chat-send').disabled = false;
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
 loadDbResources();
-makeBibClickable();
 </script>
 </body>
 </html>
