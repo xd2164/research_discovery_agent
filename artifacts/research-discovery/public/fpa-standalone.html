@@ -485,8 +485,8 @@ Exactly 2 pairs:
 **Evidence Gaps to Fill:** [1–2 sentences on the single most important research that would reduce investment uncertainty]
 
 ## LIFECYCLE_JSON
-Single JSON on ONE line, no line breaks inside. For each stage give 2–3 concrete examples relevant to the specific research question (short noun phrases, not sentences):
-{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","examples":["e.g. Funder grants","Institutional resources"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","examples":["e.g. Pilot programmes","Teacher PD"]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","examples":["e.g. Student usage data","Assessment scores"]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","examples":["e.g. Learning gains","Course completion"]},{"id":"impact","label":"Impact","evidence":"speculative","note":"one clause","examples":["e.g. Wage premium","Workforce readiness"]}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence: what would need to happen to bridge from stopping_point to the next stage","roi_anchored_stage":"outputs"}
+Single JSON on ONE line, no line breaks inside. For each stage give 2–3 concrete examples grounded in the retrieved literature — include a citation number in brackets like [3] or [7] where the evidence comes from a specific paper. Use the paper index numbers from the retrieved sources above.
+{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","examples":["Funder grants for AI tools [1]","Institutional device access [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","examples":["Pilot AI tutoring programmes [2]","Teacher professional development [5]"]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","examples":["Student usage data [3]","Assessment scores [6]"]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","examples":["Learning gains at 0.15 SD [2]","Course completion rates [8]"]},{"id":"impact","label":"Impact","evidence":"speculative","note":"one clause","examples":["Wage premium [9]","Workforce readiness"]}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence: what would need to happen to bridge from stopping_point to the next stage","roi_anchored_stage":"outputs"}
 evidence values: strong | moderate | weak | speculative
 roi_anchored_stage: the stage id the ROI model is primarily parameterising (usually the stopping_point)`
       }]})
@@ -1218,10 +1218,19 @@ function fpaRenderROI(r) {
 }
 
 // ══ LIFECYCLE CHAIN RENDERER ══
+function fpaRenderCiteRef(text, col) {
+  // Style [1], [2,3], [1–4] citation markers as small clickable chips
+  return (text || '').replace(/\[(\d+(?:[,–\-]\s*\d+)*)\]/g, (_, nums) => {
+    const ns = nums.split(/[,–\-]/).map(n => n.trim()).filter(Boolean);
+    return ns.map(n => `<a href="#fpa-ref-${n}" onclick="event.preventDefault();fpaScrollToRef(${n})" style="font-size:10px;background:#EEF0FF;color:#3A2FAA;border-radius:3px;padding:0 4px;font-weight:700;text-decoration:none;cursor:pointer;vertical-align:middle">[${n}]</a>`).join('');
+  });
+}
+
 function fpaRenderLifecyclePanel(el, data) {
   const evColors  = { strong:'#0B9E80', moderate:'#1A5CB4', weak:'#C47800', speculative:'#9E1515' };
-  const evBgs     = { strong:'#D6F5EC', moderate:'#DDEEFF', weak:'#FFF3CD', speculative:'#FFE8E8' };
-  const evLabels  = { strong:'Strong', moderate:'Moderate', weak:'Weak', speculative:'Speculative' };
+  const evBgs     = { strong:'#E6F9F4', moderate:'#E8F1FF', weak:'#FFF3CD', speculative:'#FFE8E8' };
+  const evLabels  = { strong:'Strong evidence', moderate:'Moderate evidence', weak:'Weak evidence', speculative:'Speculative' };
+  const evDots    = { strong:'🟢', moderate:'🔵', weak:'🟡', speculative:'🔴' };
   const stageIcon = { input:'💰', activities:'⚙️', outputs:'📦', outcomes:'🎯', impact:'🌍' };
   const trajColors = { accelerating:'#0B9E80', stabilizing:'#1A5CB4', 'early signal':'#C47800', declining:'#9E1515' };
   const trajIcons  = { accelerating:'📈', stabilizing:'➡️', 'early signal':'🌱', declining:'📉' };
@@ -1232,67 +1241,75 @@ function fpaRenderLifecyclePanel(el, data) {
   const stopIdx   = stages.findIndex(s => s.id === data.stopping_point);
   const roiIdx    = stages.findIndex(s => s.id === (data.roi_anchored_stage || data.stopping_point));
   el.style.display = 'block';
+
+  const stageCards = stages.map((s, i) => {
+    const ev      = (s.evidence||'speculative').toLowerCase();
+    const col     = evColors[ev]  || '#888';
+    const bg      = evBgs[ev]     || '#F5F5F5';
+    const icon    = stageIcon[s.id] || '▶';
+    const isStop  = s.id === data.stopping_point;
+    const isRoi   = i === roiIdx;
+    const isBeyond = stopIdx >= 0 && i > stopIdx;
+    const examples = Array.isArray(s.examples) ? s.examples : [];
+
+    // Card border: thick left strip in evidence colour; beyond-stopping = lighter
+    const borderL  = isBeyond ? `3px solid ${col}55` : `4px solid ${col}`;
+    const cardBg   = isBeyond ? '#F7F9FC' : '#fff';
+    const opacity  = isBeyond ? 'opacity:.82' : '';
+    const textCol  = isBeyond ? '#6A7A8A' : '#0A2240';
+    const subCol   = isBeyond ? '#8A9BAC' : '#445566';
+
+    // Badges above the card
+    const badges = [];
+    if (isRoi)  badges.push(`<span style="font-size:9px;background:#5E52D4;color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">📐 ROI anchor</span>`);
+    if (isStop) badges.push(`<span style="font-size:9px;background:${col};color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">◀ evidence stops here</span>`);
+
+    const examplesHtml = examples.length ? `
+      <ul style="margin:6px 0 0;padding:0 0 0 14px;list-style:none">
+        ${examples.map(ex => `<li style="position:relative;padding-left:12px;margin-bottom:4px;font-size:12.5px;color:${subCol};line-height:1.55">
+          <span style="position:absolute;left:0;color:${isBeyond?col+'88':col};font-size:9px;top:4px">▸</span>
+          ${fpaRenderCiteRef(ex, col)}
+        </li>`).join('')}
+      </ul>` : '';
+
+    const noteHtml = s.note ? `<div style="margin-top:6px;font-size:11px;color:${isBeyond?'#9AAABB':'#667788'};line-height:1.4;font-style:italic;padding-top:5px;border-top:1px solid ${col}22">${s.note}</div>` : '';
+
+    return `
+      ${badges.length ? `<div style="display:flex;gap:5px;margin-bottom:4px;flex-wrap:wrap">${badges.join('')}</div>` : ''}
+      <div style="${opacity};background:${cardBg};border-left:${borderL};border-radius:0 9px 9px 0;padding:11px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+          <span style="font-size:17px;line-height:1;flex-shrink:0">${icon}</span>
+          <div style="flex:1;min-width:0">
+            <span style="font-size:13.5px;font-weight:800;color:${textCol}">${s.label}</span>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:${isBeyond?col+'99':col};background:${bg};border:1px solid ${col}33;border-radius:20px;padding:2px 9px;white-space:nowrap;flex-shrink:0">${evDots[ev]||''} ${evLabels[ev]||ev}</span>
+        </div>
+        ${examplesHtml}${noteHtml}
+      </div>
+      ${i < stages.length-1 ? `<div style="display:flex;align-items:center;padding-left:20px;margin:2px 0">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 0v14M7 14L2 9M7 14l5-5" stroke="${isBeyond?'#BBBFC7':col}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>` : ''}`;
+  }).join('');
+
   el.innerHTML = `
-    <div style="background:#F4F7FF;padding:14px 20px 4px">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:7px">
-          <span style="font-size:13px">🔗</span>
-          <span style="font-size:11px;font-weight:800;color:#0A2240;letter-spacing:.2px">Causal Chain — Evidence Coverage by Stage</span>
-          <span style="font-size:9px;color:var(--muted);font-weight:500">Anchored to ROI Model Parameters above</span>
+    <div style="background:#F4F7FF;padding:16px 20px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+        <div>
+          <div style="display:flex;align-items:center;gap:7px">
+            <span style="font-size:13px">🔗</span>
+            <span style="font-size:12px;font-weight:800;color:#0A2240;letter-spacing:.2px">Causal Chain — Evidence Coverage by Stage</span>
+          </div>
+          <div style="font-size:11px;color:#7A8A9A;margin-top:2px;padding-left:20px">Anchored to ROI Model Parameters · citation numbers link to references below</div>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;background:${trajColor}15;border:1px solid ${trajColor}40;border-radius:20px;padding:3px 11px">
-          <span style="font-size:11px">${trajIcon}</span>
-          <span style="font-size:10px;font-weight:700;color:${trajColor}">${traj ? traj.charAt(0).toUpperCase()+traj.slice(1) : '—'}</span>
+        <div style="display:flex;align-items:center;gap:5px;background:${trajColor}15;border:1px solid ${trajColor}40;border-radius:20px;padding:4px 13px;flex-shrink:0">
+          <span style="font-size:12px">${trajIcon}</span>
+          <span style="font-size:11px;font-weight:700;color:${trajColor}">${traj ? traj.charAt(0).toUpperCase()+traj.slice(1) : '—'}</span>
         </div>
       </div>
 
-      <div style="display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:14px">
-        ${stages.map((s, i) => {
-          const ev = (s.evidence||'speculative').toLowerCase();
-          const col  = evColors[ev]  || '#888';
-          const bg   = evBgs[ev]     || '#F5F5F5';
-          const icon = stageIcon[s.id] || '▶';
-          const isStop   = s.id === data.stopping_point;
-          const isRoi    = i === roiIdx;
-          const isFaded  = stopIdx >= 0 && i > stopIdx;
-          const examples = Array.isArray(s.examples) ? s.examples : [];
-          const cardBg   = isStop ? col : isFaded ? '#F0F0F0' : '#fff';
-          const cardBorder = `2px solid ${isFaded ? '#D0D0D0' : col}`;
-          const textCol  = isStop ? '#fff' : isFaded ? '#aaa' : '#0A2240';
-          const subCol   = isStop ? 'rgba(255,255,255,.75)' : isFaded ? '#bbb' : '#596577';
+      <div style="display:flex;flex-direction:column;gap:0">${stageCards}</div>
 
-          return `<div style="display:flex;align-items:center;flex:1;min-width:0;${isFaded?'filter:grayscale(50%);opacity:.55':''}">
-            <div style="flex:1;min-width:100px;position:relative">
-              ${(isRoi || isStop) ? `<div style="position:absolute;top:-11px;left:0;right:0;text-align:center;z-index:1;display:flex;gap:3px;justify-content:center;flex-wrap:nowrap">
-                ${isRoi ? `<span style="font-size:8px;background:#5E52D4;color:#fff;border-radius:3px;padding:1px 6px;font-weight:800;letter-spacing:.2px;white-space:nowrap">📐 ROI anchor</span>` : ''}
-                ${isStop && !isRoi ? `<span style="font-size:8px;background:${col};color:#fff;border-radius:3px;padding:1px 6px;font-weight:800;letter-spacing:.2px;white-space:nowrap">◀ evidence stops</span>` : ''}
-                ${isStop && isRoi ? `<span style="font-size:8px;background:${col};color:#fff;border-radius:3px;padding:1px 6px;font-weight:800;letter-spacing:.2px;white-space:nowrap">◀ evidence stops here</span>` : ''}
-              </div>` : ''}
-              <div style="background:${cardBg};border:${cardBorder};border-radius:10px;padding:10px 8px 10px;margin-top:${isStop||isRoi?'12px':'0px'}">
-                <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">
-                  <span style="font-size:14px;line-height:1">${icon}</span>
-                  <div>
-                    <div style="font-size:11px;font-weight:800;color:${textCol};line-height:1.2">${s.label}</div>
-                    <div style="font-size:8px;font-weight:700;color:${isStop?'rgba(255,255,255,.7)':col};text-transform:uppercase;letter-spacing:.4px;margin-top:1px">${evLabels[ev]||ev}</div>
-                  </div>
-                </div>
-                ${examples.length ? `<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid ${isStop?'rgba(255,255,255,.2)':col+'30'};padding-top:6px">
-                  ${examples.map(ex => `<div style="display:flex;align-items:flex-start;gap:4px">
-                    <span style="color:${isStop?'rgba(255,255,255,.6)':col};font-size:8px;margin-top:1px;flex-shrink:0">▸</span>
-                    <span style="font-size:9.5px;color:${subCol};line-height:1.4">${ex}</span>
-                  </div>`).join('')}
-                </div>` : ''}
-                ${s.note ? `<div style="font-size:8px;color:${subCol};margin-top:5px;line-height:1.35;font-style:italic;border-top:1px solid ${isStop?'rgba(255,255,255,.15)':col+'20'};padding-top:4px">${s.note.slice(0,60)}${s.note.length>60?'…':''}</div>` : ''}
-              </div>
-            </div>
-            ${i < stages.length-1 ? `<div style="width:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:${isStop||isRoi?'12px':'0px'}">
-              <svg width="22" height="14" viewBox="0 0 22 14" fill="none"><path d="M0 7h16M16 7L10 1M16 7l-6 6" stroke="${isFaded?'#CCC':col}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>` : ''}
-          </div>`;
-        }).join('')}
-      </div>
-
-      ${data.bridge ? `<div style="margin:0 0 14px;background:#FFF8E1;border:1px solid #FFD54F;border-radius:8px;padding:9px 14px;font-size:12px;color:#5D4037;line-height:1.55">
+      ${data.bridge ? `<div style="margin-top:14px;background:#FFF8E1;border:1px solid #FFD54F;border-left:4px solid #F59E0B;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;color:#5D4037;line-height:1.6">
         <strong style="color:#92400E">⟳ Bridge needed:</strong> ${data.bridge}
       </div>` : ''}
     </div>`;
