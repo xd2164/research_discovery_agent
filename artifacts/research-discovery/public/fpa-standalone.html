@@ -1285,6 +1285,13 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
   const roiIdx    = stages.findIndex(s => s.id === (data.roi_anchored_stage || data.stopping_point));
   el.style.display = 'block';
 
+  // Fixed NSF framework category names by stage — always shown as primary label
+  const NSF_TRACK_NAMES = {
+    activities: ['Basic Research', 'Use-Inspired Research', 'Human Capital Development', 'Research Infrastructure'],
+    outputs:    ['Publications & Patents', 'Applied Tools & Products', 'Degrees & Training', 'Facilities & Platforms'],
+    outcomes:   ['New Methods & Processes', 'New Products & Solutions', 'Workforce Development', 'Research Capacity & Capability'],
+  };
+
   const stageCards = stages.map((s, i) => {
     const ev      = (s.evidence||'speculative').toLowerCase();
     const col     = evColors[ev]  || '#888';
@@ -1293,7 +1300,14 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
     const isRoi   = i === roiIdx;
     const isBeyond = stopIdx >= 0 && i > stopIdx;
     // Support new schema: s.categories (named tracks) or s.items/s.examples (flat list)
-    const categories = Array.isArray(s.categories) ? s.categories : [];
+    const rawCategories = Array.isArray(s.categories) ? s.categories : [];
+    // Apply fixed NSF names by track index; preserve AI-generated name as subtitle
+    const nsfNames = NSF_TRACK_NAMES[s.id] || [];
+    const categories = rawCategories.map((cat, ci) => ({
+      nsfName:   nsfNames[ci] || cat.name,
+      domainName: (nsfNames[ci] && nsfNames[ci] !== cat.name) ? cat.name : null,
+      items:     cat.items,
+    }));
     const flatItems  = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
 
     // Card border: thick left strip in evidence colour; beyond-stopping = lighter
@@ -1321,7 +1335,8 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
     const examplesHtml = categories.length
       ? `<div style="margin-top:8px;display:flex;flex-direction:column;gap:7px;border-top:1px solid ${col}22;padding-top:8px">
           ${categories.map(cat => `<div>
-            <div style="font-size:10px;font-weight:700;color:${trackHdr};text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px">${cat.name}</div>
+            <div style="font-size:10px;font-weight:700;color:${trackHdr};text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px">${cat.nsfName}</div>
+            ${cat.domainName ? `<div style="font-size:9.5px;color:${isBeyond?'#9AAABB':'#8A9BAC'};font-style:italic;margin-bottom:2px">${cat.domainName}</div>` : ''}
             ${Array.isArray(cat.items) && cat.items.length ? renderBullets(cat.items) : ''}
           </div>`).join('')}
         </div>`
@@ -1786,8 +1801,14 @@ function fpaDownloadWord() {
         const flat = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
         const isStop = s.id === lcd.stopping_point;
         const badges = isStop ? `<br><span style="font-size:8pt;background:${col};color:#fff;padding:1pt 4pt">◀ evidence stops here</span>` : '';
+        const wordNsfNames = { activities:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'], outputs:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'], outcomes:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'] };
+        const nsfNames = wordNsfNames[s.id] || [];
         const trackHtml = cats.length
-          ? cats.map(cat => `<strong style="font-size:9pt;color:#596577;display:block;margin-top:5pt">${esc(cat.name)}</strong><ul style="margin:2pt 0 0 14pt;padding:0">${(cat.items||[]).map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`).join('')
+          ? cats.map((cat, ci) => {
+              const nsfName = nsfNames[ci] || cat.name;
+              const domSub  = (nsfNames[ci] && nsfNames[ci] !== cat.name) ? `<em style="font-size:8pt;color:#8A9BAC;display:block;margin-bottom:1pt">${esc(cat.name)}</em>` : '';
+              return `<strong style="font-size:9pt;color:#596577;display:block;margin-top:5pt;text-transform:uppercase;letter-spacing:.3pt">${esc(nsfName)}</strong>${domSub}<ul style="margin:2pt 0 0 14pt;padding:0">${(cat.items||[]).map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`;
+            }).join('')
           : `<ul style="margin:4pt 0 0 14pt;padding:0">${flat.map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`;
         return `<td style="border:1pt solid #C9D5E0;padding:7pt 8pt;vertical-align:top;background:${bg};border-top:3pt solid ${col}">
           <strong style="font-size:11pt;color:#0A2240">${esc(s.label)}</strong>
