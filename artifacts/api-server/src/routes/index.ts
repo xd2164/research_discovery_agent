@@ -7,6 +7,7 @@ import papersRouter from "./papers";
 import historyRouter from "./history";
 import trackRouter from "./track";
 import resourcesRouter from "./resources";
+import navigatorChatRouter from "./navigatorChat";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(papersRouter);
 router.use(historyRouter);
 router.use(trackRouter);
 router.use(resourcesRouter);
+router.use(navigatorChatRouter);
 
 export default router;

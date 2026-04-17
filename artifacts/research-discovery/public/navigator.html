@@ -107,6 +107,50 @@ a:hover{text-decoration:underline}
 .footer-left{font-size:11.5px;color:#A0ADB8}
 .footer-back{font-size:11.5px;color:#0B9E80;font-weight:700}
 
+/* ── View tabs ────────────────────────────────── */
+.view-tabs{background:#fff;border-bottom:2px solid #E4E9F0;padding:0 48px;display:flex;gap:0}
+.view-tab{font-size:12.5px;font-weight:700;padding:11px 20px;border:none;background:none;cursor:pointer;color:#7A8A9B;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;display:flex;align-items:center;gap:6px}
+.view-tab:hover{color:#0B9E80}
+.view-tab.active{color:#0B9E80;border-bottom-color:#0B9E80}
+.view-tab .tab-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
+
+/* ── Chat panel ───────────────────────────────── */
+#chat-view{display:none;flex-direction:column;height:calc(100vh - 180px);min-height:500px}
+#chat-view.active{display:flex}
+.chat-shell{display:flex;flex-direction:column;flex:1;max-width:860px;margin:0 auto;width:100%;padding:24px 24px 0;gap:0}
+.chat-welcome{text-align:center;padding:40px 24px;max-width:600px;margin:0 auto}
+.chat-welcome-icon{font-size:36px;margin-bottom:12px}
+.chat-welcome-title{font-size:20px;font-weight:800;color:#0D1B2A;margin-bottom:8px}
+.chat-welcome-sub{font-size:13.5px;color:#7A8A9B;line-height:1.6;margin-bottom:28px}
+.chat-prompts{display:flex;flex-direction:column;gap:8px;width:100%}
+.chat-prompt-chip{width:100%;text-align:left;background:#fff;border:1.5px solid #E4E9F0;border-radius:10px;padding:10px 16px;font-size:12.5px;color:#3D4F62;cursor:pointer;transition:all .15s;line-height:1.4}
+.chat-prompt-chip:hover{border-color:#0B9E80;background:#F0FDF9;color:#0B6E52}
+.chat-messages{flex:1;overflow-y:auto;padding:8px 0 16px;display:flex;flex-direction:column;gap:16px}
+.chat-msg{display:flex;flex-direction:column;gap:4px}
+.chat-msg-user{align-items:flex-end}
+.chat-msg-user .chat-bubble{background:#0B9E80;color:#fff;border-radius:14px 14px 3px 14px;padding:10px 15px;max-width:80%;font-size:13.5px;line-height:1.5;font-weight:500}
+.chat-msg-ai{align-items:flex-start}
+.chat-msg-ai .chat-bubble{background:#fff;border:1px solid #E4E9F0;border-radius:3px 14px 14px 14px;padding:14px 17px;max-width:100%;font-size:13.5px;line-height:1.7;color:#0D1B2A;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.chat-bubble strong{font-weight:700}
+.chat-bubble em{font-style:italic;color:#5A6B7A}
+.chat-meta{font-size:10.5px;color:#A0ADB8;display:flex;align-items:center;gap:6px}
+.chat-sources{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.chat-src-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:8px;background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0;text-decoration:none;cursor:pointer;transition:background .12s}
+.chat-src-chip:hover{background:#D1FAE5}
+.chat-tier-1{background:#F0FDF9;color:#0B6E52;border-color:#A7F3D0}
+.chat-tier-2{background:#FFF7ED;color:#92400E;border-color:#FED7AA}
+.chat-typing{display:inline-block;width:6px;height:14px;background:#0B9E80;border-radius:2px;animation:blink .7s step-end infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.chat-err{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:10px;padding:10px 14px;font-size:12.5px}
+.chat-input-bar{border-top:1px solid #E4E9F0;background:#fff;padding:14px 24px 18px;position:sticky;bottom:0}
+.chat-input-row{display:flex;gap:8px;max-width:860px;margin:0 auto;align-items:flex-end}
+.chat-textarea{flex:1;border:1.5px solid #E4E9F0;border-radius:10px;padding:10px 14px;font-size:13.5px;font-family:inherit;resize:none;min-height:42px;max-height:120px;line-height:1.5;color:#0D1B2A;transition:border-color .15s;overflow-y:auto}
+.chat-textarea:focus{outline:none;border-color:#0B9E80}
+.chat-send{background:#0B9E80;color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;flex-shrink:0;align-self:flex-end}
+.chat-send:hover{background:#0A8A70}
+.chat-send:disabled{opacity:.45;cursor:not-allowed}
+.chat-hint{font-size:10.5px;color:#A0ADB8;text-align:center;margin-top:6px;max-width:860px;margin-left:auto;margin-right:auto}
+
 /* ── Print ────────────────────────────────────── */
 @media print{
   .top-bar,.print-btn,.footer,.bib-toggle{display:none!important}
@@ -139,8 +183,47 @@ a:hover{text-decoration:underline}
   </div>
 </header>
 
+<!-- ── View tabs ──────────────────────────────────── -->
+<nav class="view-tabs" id="view-tabs">
+  <button class="view-tab active" id="tab-resources" onclick="switchView('resources')">
+    📚 Resources
+  </button>
+  <button class="view-tab" id="tab-chat" onclick="switchView('chat')">
+    ✦ Sensemaking Chat
+    <span class="tab-badge">AI · RAG</span>
+  </button>
+</nav>
+
+<!-- ── Sensemaking Chat Panel ─────────────────────── -->
+<div id="chat-view">
+  <div class="chat-shell">
+    <div class="chat-messages" id="chat-messages">
+      <!-- Welcome state -->
+      <div class="chat-welcome" id="chat-welcome">
+        <div class="chat-welcome-icon">✦</div>
+        <div class="chat-welcome-title">Sensemaking Chat over Research</div>
+        <div class="chat-welcome-sub">Ask questions across the literature corpus — 30 recent papers on AI in education, equity, and workforce. I'll surface patterns, tensions, and evidence-grounded insights.</div>
+        <div class="chat-prompts" id="chat-prompts">
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does the evidence say about AI tutoring effectiveness for underserved students?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What are emerging trends in AI policy and governance across K-12 school districts?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">How is the AI skills gap being framed in workforce research, and what does it mean for education?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">Where is the strongest evidence for AI ROI in education, and what are the caveats?</button>
+          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">How is equity being addressed (or not) in AI education research?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input-bar">
+    <div class="chat-input-row">
+      <textarea class="chat-textarea" id="chat-input" placeholder="Ask a question across the research corpus…" rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="chat-send" onclick="sendChat()">Send →</button>
+    </div>
+    <div class="chat-hint">Grounded in 30 peer-reviewed papers · Powered by Claude · Sources shown with every response</div>
+  </div>
+</div>
+
 <!-- ── Top bar / filters ──────────────────────────── -->
-<div class="top-bar">
+<div class="top-bar" id="resources-topbar">
   <div class="top-bar-left">
     <span class="count-badge" id="count-label">Loading resources…</span>
     <div class="cat-filter">
@@ -728,6 +811,178 @@ function makeBibClickable(){
     a.textContent = textSpan.textContent;
     textSpan.replaceWith(a);
   });
+}
+
+// ── View switching ────────────────────────────────────────────────────────
+function switchView(view){
+  const chatView      = document.getElementById('chat-view');
+  const topbar        = document.getElementById('resources-topbar');
+  const mainEl        = document.querySelector('.main');
+  const footerEl      = document.querySelector('.footer');
+  const tabResources  = document.getElementById('tab-resources');
+  const tabChat       = document.getElementById('tab-chat');
+
+  if(view === 'chat'){
+    chatView.classList.add('active');
+    if(topbar)   topbar.style.display = 'none';
+    if(mainEl)   mainEl.style.display = 'none';
+    if(footerEl) footerEl.style.display = 'none';
+    tabResources.classList.remove('active');
+    tabChat.classList.add('active');
+    document.getElementById('chat-input').focus();
+  } else {
+    chatView.classList.remove('active');
+    if(topbar)   topbar.style.display = '';
+    if(mainEl)   mainEl.style.display = '';
+    if(footerEl) footerEl.style.display = '';
+    tabResources.classList.add('active');
+    tabChat.classList.remove('active');
+  }
+}
+
+// ── Chat helpers ──────────────────────────────────────────────────────────
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function chatKeydown(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); }
+}
+
+function sendPrompt(text){
+  switchView('chat');
+  const inp = document.getElementById('chat-input');
+  inp.value = text.trim();
+  autoResize(inp);
+  sendChat();
+}
+
+let chatBusy = false;
+
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function renderMarkdown(text){
+  return text
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\[(\d+)\]/g,'<span class="cite-ref" data-ref="$1">[$1]</span>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+}
+
+async function sendChat(){
+  if(chatBusy) return;
+  const inp = document.getElementById('chat-input');
+  const question = inp.value.trim();
+  if(!question) return;
+
+  chatBusy = true;
+  inp.value = '';
+  inp.style.height = 'auto';
+  document.getElementById('chat-send').disabled = true;
+
+  const messages = document.getElementById('chat-messages');
+  const welcome  = document.getElementById('chat-welcome');
+  if(welcome) welcome.style.display = 'none';
+
+  // User bubble
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg chat-msg-user';
+  userDiv.innerHTML = `<div class="chat-bubble">${escapeHtml(question)}</div>`;
+  messages.appendChild(userDiv);
+  messages.scrollTop = messages.scrollHeight;
+
+  // AI bubble (placeholder while streaming)
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'chat-msg chat-msg-ai';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = '<span class="chat-typing"></span>';
+  const metaDiv = document.createElement('div');
+  metaDiv.className = 'chat-meta';
+  metaDiv.textContent = 'Searching corpus…';
+  aiDiv.appendChild(bubble);
+  aiDiv.appendChild(metaDiv);
+  messages.appendChild(aiDiv);
+  messages.scrollTop = messages.scrollHeight;
+
+  let fullText = '';
+  let sources  = [];
+
+  try {
+    const res = await fetch('/api/navigator/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+
+    if(!res.ok || !res.body){ throw new Error('API error'); }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while(true){
+      const { done, value } = await reader.read();
+      if(done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for(const line of lines){
+        if(!line.startsWith('data:')) continue;
+        try {
+          const payload = JSON.parse(line.slice(5).trim());
+
+          if(payload.sources){
+            sources = payload.sources;
+            metaDiv.textContent = `Based on ${sources.length} papers from corpus`;
+          }
+          if(payload.content){
+            fullText += payload.content;
+            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p><span class="chat-typing"></span>';
+            messages.scrollTop = messages.scrollHeight;
+          }
+          if(payload.done){
+            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p>';
+            // Source chips
+            if(sources.length){
+              const srcRow = document.createElement('div');
+              srcRow.className = 'chat-sources';
+              sources.forEach(s => {
+                const chip = document.createElement('a');
+                chip.className = 'chat-src-chip ' + (s.tier && s.tier.includes('1') ? 'chat-tier-1' : 'chat-tier-2');
+                chip.href = s.url;
+                chip.target = '_blank';
+                chip.rel = 'noopener';
+                chip.title = `${s.title} (${s.year}) — ${s.tier}`;
+                chip.textContent = `[${s.idx}] ${s.year} · ${s.authors.split(',')[0].split(' ').pop()}`;
+                srcRow.appendChild(chip);
+              });
+              aiDiv.insertBefore(srcRow, metaDiv);
+            }
+            metaDiv.innerHTML = `✦ Claude · ${sources.length} sources · <span style="color:#A0ADB8">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
+            messages.scrollTop = messages.scrollHeight;
+          }
+          if(payload.error){
+            bubble.innerHTML = `<div class="chat-err">${escapeHtml(payload.error)}</div>`;
+          }
+        } catch(parseErr){ /* skip malformed SSE lines */ }
+      }
+    }
+  } catch(err){
+    bubble.innerHTML = `<div class="chat-err">Network error — please try again.</div>`;
+    console.error('[chat]', err);
+  }
+
+  chatBusy = false;
+  document.getElementById('chat-send').disabled = false;
+  document.getElementById('chat-input').focus();
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────
