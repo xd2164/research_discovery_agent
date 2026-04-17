@@ -485,8 +485,8 @@ Exactly 2 pairs:
 **Evidence Gaps to Fill:** [1–2 sentences on the single most important research that would reduce investment uncertainty]
 
 ## LIFECYCLE_JSON
-Single JSON on ONE line, no line breaks inside. For each stage give 2–3 concrete examples grounded in the retrieved literature — include a citation number in brackets like [3] or [7] where the evidence comes from a specific paper. Use the paper index numbers from the retrieved sources above.
-{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","examples":["Funder grants for AI tools [1]","Institutional device access [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","examples":["Pilot AI tutoring programmes [2]","Teacher professional development [5]"]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","examples":["Student usage data [3]","Assessment scores [6]"]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","examples":["Learning gains at 0.15 SD [2]","Course completion rates [8]"]},{"id":"impact","label":"Impact","evidence":"speculative","note":"one clause","examples":["Wage premium [9]","Workforce readiness"]}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence: what would need to happen to bridge from stopping_point to the next stage","roi_anchored_stage":"outputs"}
+Single JSON on ONE line, no line breaks inside. For each stage give 2–3 examples drawn directly from the retrieved literature. Wherever possible surface a concrete numerical value (effect size, %, rate, $, n=) pulled from the paper and cite its index number in brackets. If no number is available use a precise qualitative finding. No generic phrases.
+{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","examples":["NSF/IES grants totalling $42M for AI in K-12 [1]","Device access gap: 18% of low-income students lack devices [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","examples":["Khan Academy Khanmigo pilot, 58 schools [2]","72h avg teacher PD for AI tools [5]"]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","examples":["Engagement +0.31 SD vs control [3]","Formative assessment completion rate 84% [6]"]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","examples":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]","Dropout reduction 6pp, p=.08 [8]"]},{"id":"impact","label":"Impact","evidence":"speculative","note":"one clause","examples":["Projected wage premium $38k over career [9]","Long-run workforce readiness — no RCT evidence yet"]}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence: what would need to happen to bridge from stopping_point to the next stage","roi_anchored_stage":"outputs"}
 evidence values: strong | moderate | weak | speculative
 roi_anchored_stage: the stage id the ROI model is primarily parameterising (usually the stopping_point)`
       }]})
@@ -1230,13 +1230,9 @@ function fpaRenderLifecyclePanel(el, data) {
   const evColors  = { strong:'#0B9E80', moderate:'#1A5CB4', weak:'#C47800', speculative:'#9E1515' };
   const evBgs     = { strong:'#E6F9F4', moderate:'#E8F1FF', weak:'#FFF3CD', speculative:'#FFE8E8' };
   const evLabels  = { strong:'Strong evidence', moderate:'Moderate evidence', weak:'Weak evidence', speculative:'Speculative' };
-  const evDots    = { strong:'🟢', moderate:'🔵', weak:'🟡', speculative:'🔴' };
-  const stageIcon = { input:'💰', activities:'⚙️', outputs:'📦', outcomes:'🎯', impact:'🌍' };
   const trajColors = { accelerating:'#0B9E80', stabilizing:'#1A5CB4', 'early signal':'#C47800', declining:'#9E1515' };
-  const trajIcons  = { accelerating:'📈', stabilizing:'➡️', 'early signal':'🌱', declining:'📉' };
   const traj = (data.trajectory||'').toLowerCase();
   const trajColor = trajColors[traj] || '#5E52D4';
-  const trajIcon  = trajIcons[traj] || '📊';
   const stages    = data.stages || [];
   const stopIdx   = stages.findIndex(s => s.id === data.stopping_point);
   const roiIdx    = stages.findIndex(s => s.id === (data.roi_anchored_stage || data.stopping_point));
@@ -1246,7 +1242,6 @@ function fpaRenderLifecyclePanel(el, data) {
     const ev      = (s.evidence||'speculative').toLowerCase();
     const col     = evColors[ev]  || '#888';
     const bg      = evBgs[ev]     || '#F5F5F5';
-    const icon    = stageIcon[s.id] || '▶';
     const isStop  = s.id === data.stopping_point;
     const isRoi   = i === roiIdx;
     const isBeyond = stopIdx >= 0 && i > stopIdx;
@@ -1278,11 +1273,10 @@ function fpaRenderLifecyclePanel(el, data) {
       ${badges.length ? `<div style="display:flex;gap:5px;margin-bottom:4px;flex-wrap:wrap">${badges.join('')}</div>` : ''}
       <div style="${opacity};background:${cardBg};border-left:${borderL};border-radius:0 9px 9px 0;padding:11px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-          <span style="font-size:17px;line-height:1;flex-shrink:0">${icon}</span>
           <div style="flex:1;min-width:0">
             <span style="font-size:13.5px;font-weight:800;color:${textCol}">${s.label}</span>
           </div>
-          <span style="font-size:10px;font-weight:700;color:${isBeyond?col+'99':col};background:${bg};border:1px solid ${col}33;border-radius:20px;padding:2px 9px;white-space:nowrap;flex-shrink:0">${evDots[ev]||''} ${evLabels[ev]||ev}</span>
+          <span style="font-size:10px;font-weight:700;color:${isBeyond?col+'99':col};background:${bg};border:1px solid ${col}33;border-radius:20px;padding:2px 9px;white-space:nowrap;flex-shrink:0">${evLabels[ev]||ev}</span>
         </div>
         ${examplesHtml}${noteHtml}
       </div>
@@ -1295,14 +1289,10 @@ function fpaRenderLifecyclePanel(el, data) {
     <div style="background:#F4F7FF;padding:16px 20px 16px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
         <div>
-          <div style="display:flex;align-items:center;gap:7px">
-            <span style="font-size:13px">🔗</span>
-            <span style="font-size:12px;font-weight:800;color:#0A2240;letter-spacing:.2px">Causal Chain — Evidence Coverage by Stage</span>
-          </div>
-          <div style="font-size:11px;color:#7A8A9A;margin-top:2px;padding-left:20px">Anchored to ROI Model Parameters · citation numbers link to references below</div>
+          <span style="font-size:12px;font-weight:800;color:#0A2240;letter-spacing:.2px">Causal Chain — Evidence Coverage by Stage</span>
+          <div style="font-size:11px;color:#7A8A9A;margin-top:2px">Anchored to ROI Model Parameters · citation numbers link to references below</div>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;background:${trajColor}15;border:1px solid ${trajColor}40;border-radius:20px;padding:4px 13px;flex-shrink:0">
-          <span style="font-size:12px">${trajIcon}</span>
+        <div style="display:flex;align-items:center;background:${trajColor}15;border:1px solid ${trajColor}40;border-radius:20px;padding:4px 13px;flex-shrink:0">
           <span style="font-size:11px;font-weight:700;color:${trajColor}">${traj ? traj.charAt(0).toUpperCase()+traj.slice(1) : '—'}</span>
         </div>
       </div>
