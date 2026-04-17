@@ -114,56 +114,62 @@ a:hover{text-decoration:underline}
 .footer-left{font-size:11.5px;color:#A0ADB8}
 .footer-back{font-size:11.5px;color:#0B9E80;font-weight:700}
 
-/* ── Chat tab ─────────────────────────────────── */
-#chat-view{min-height:calc(100vh - 220px);flex-direction:column}
-#chat-view.active{display:flex}
-.chat-shell{flex:1;display:flex;flex-direction:column;max-width:880px;margin:0 auto;width:100%;padding:28px 28px 0}
-.chat-welcome{text-align:center;padding:28px 20px 0;max-width:680px;margin:0 auto}
-.chat-welcome-icon{font-size:32px;margin-bottom:10px}
-.chat-welcome-title{font-size:20px;font-weight:800;color:#0D1B2A;margin-bottom:6px}
-.chat-welcome-sub{font-size:13.5px;color:#7A8A9B;line-height:1.6;margin-bottom:6px}
-.chat-welcome-note{font-size:12px;color:#A0ADB8;display:flex;align-items:center;gap:5px;justify-content:center;margin-bottom:24px}
-.chat-live-dot{width:7px;height:7px;border-radius:50%;background:#0B9E80;display:inline-block}
-.chat-prompts{display:flex;flex-direction:column;gap:8px;width:100%;max-width:680px;margin:0 auto}
-.chat-prompt-chip{width:100%;text-align:left;background:#fff;border:1.5px solid #E4E9F0;border-radius:10px;padding:11px 17px;font-size:13px;color:#3D4F62;cursor:pointer;transition:all .15s;line-height:1.4}
-.chat-prompt-chip:hover{border-color:#0B9E80;background:#F0FDF9;color:#0B6E52}
-.chat-section-label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#B0BAC8;margin-bottom:8px;text-align:left;max-width:680px;margin-left:auto;margin-right:auto}
-.chat-messages{flex:1;padding:8px 0 20px;display:flex;flex-direction:column;gap:18px}
-.chat-msg{display:flex;flex-direction:column;gap:4px}
-.chat-msg-user{align-items:flex-end}
-.chat-msg-user .chat-bubble{background:#0B9E80;color:#fff;border-radius:14px 14px 3px 14px;padding:10px 16px;max-width:78%;font-size:13.5px;line-height:1.5;font-weight:500}
-.chat-msg-ai{align-items:flex-start}
-.chat-msg-ai .chat-bubble{background:#fff;border:1px solid #E4E9F0;border-radius:3px 14px 14px 14px;padding:16px 20px;max-width:100%;font-size:13.5px;line-height:1.75;color:#0D1B2A;box-shadow:0 1px 6px rgba(0,0,0,.06)}
-.chat-bubble strong{font-weight:700}
-.chat-bubble em{font-style:italic;color:#5A6B7A}
-.chat-bubble p{margin-bottom:8px}
-.chat-bubble p:last-child{margin-bottom:0}
-.chat-bubble ul,.chat-bubble ol{padding-left:18px;margin:6px 0}
-.chat-bubble li{margin-bottom:3px}
-.chat-meta{font-size:11px;color:#B0BAC8;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.chat-sources{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px}
-.chat-src-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:8px;text-decoration:none;cursor:pointer;transition:opacity .12s;display:inline-flex;align-items:center;gap:4px}
-.chat-src-chip:hover{opacity:.72}
-.chat-src-s2{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
-.chat-src-eric{background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
-.chat-src-oa{background:#F5F3FF;color:#6D28D9;border:1px solid #DDD6FE}
-.chat-src-arxiv{background:#FFF7ED;color:#92400E;border:1px solid #FED7AA}
-.chat-src-default{background:#F0FDF9;color:#0B6E52;border:1px solid #A7F3D0}
-.chat-typing{display:inline-block;width:6px;height:14px;background:#0B9E80;border-radius:2px;animation:blink .7s step-end infinite;vertical-align:middle;margin-left:2px}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.chat-err{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:10px;padding:10px 14px;font-size:12.5px}
-.chat-searching{font-size:12.5px;color:#7A8A9B;display:flex;align-items:center;gap:8px;padding:10px 16px;background:#F7F9FC;border:1px solid #E4E9F0;border-radius:10px;width:fit-content}
-.search-spinner{width:14px;height:14px;border:2px solid #E4E9F0;border-top-color:#0B9E80;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+/* ── Sensemaking Chat (Evidence Scout style) ──── */
+#chat-view{min-height:calc(100vh - 220px)}
+#chat-view.active{display:block}
+.sc-wrap{max-width:1060px;margin:0 auto;padding:20px 24px 60px}
+.sc-banner{background:#0A1F3A;border-radius:10px;padding:12px 16px;margin-bottom:16px;border-left:4px solid #5E52D4;display:flex;align-items:center;gap:12px}
+.sc-banner-icon{font-size:20px;flex-shrink:0}
+.sc-banner-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5}
+.sc-section{background:#fff;border:1px solid #D8E3F0;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.sc-section-hdr{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #D8E3F0;background:#F2F7FD}
+.sc-section-body{padding:14px 16px}
+.sc-output{border-top:3px solid #D8E3F0}
+.sc-output .sc-section-hdr{background:#FAFBFF}
+.sc-output .sc-section-body{background:#FAFBFF;min-height:80px}
+.step-badge{width:22px;height:22px;border-radius:50%;color:#fff;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-prompt-chips{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.sc-prompt-chip{width:100%;text-align:left;background:#F7F9FF;border:1.5px solid #D8E3F0;border-radius:9px;padding:9px 14px;font-size:12.5px;color:#3D4F62;cursor:pointer;transition:all .15s;line-height:1.4}
+.sc-prompt-chip:hover{border-color:#5E52D4;background:#EEECFF;color:#3A2FAA}
+.sc-search-row{display:flex;gap:9px;margin-bottom:10px}
+.sc-textarea{flex:1;border:1.5px solid #D8E3F0;border-radius:9px;padding:10px 14px;font-size:13.5px;font-family:inherit;resize:none;min-height:52px;max-height:120px;color:#0D1B2A;transition:border-color .15s;line-height:1.5}
+.sc-textarea:focus{outline:none;border-color:#5E52D4}
+.sc-search-btn{background:#5E52D4;color:#fff;border:none;border-radius:9px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;align-self:flex-end}
+.sc-search-btn:hover{opacity:.88}
+.sc-search-btn:disabled{opacity:.45;cursor:not-allowed}
+.sc-paper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.sc-paper-card{background:#fff;border:1px solid #D8E3F0;border-radius:8px;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;text-decoration:none;transition:border-color .15s,box-shadow .15s}
+.sc-paper-card:hover{border-color:#5E52D4;box-shadow:0 2px 10px rgba(94,82,212,.1)}
+.sc-paper-num{font-size:11px;font-weight:800;color:#5E52D4;flex-shrink:0;margin-top:1px}
+.sc-paper-title{font-size:11.5px;font-weight:700;color:#0A2240;line-height:1.35;margin-bottom:3px}
+.sc-paper-meta{font-size:10.5px;color:#7A8A9B;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.sc-src-pill{font-size:9px;font-weight:800;padding:1px 6px;border-radius:6px;border:1px solid}
+.sc-action-row{display:none;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #E8EEFA}
+.sc-action-btn{font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#fff;transition:opacity .15s}
+.sc-action-btn:hover:not(:disabled){opacity:.86}
+.sc-action-btn:disabled{opacity:.4;cursor:not-allowed}
+.sum-card{border-radius:9px;overflow:hidden;margin-bottom:10px;border:1px solid #D8E3F0}
+.sum-card-hdr{padding:8px 14px;display:flex;align-items:center;gap:8px}
+.sum-card-icon{font-size:14px;flex-shrink:0}
+.sum-card-label{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.sum-card-body{padding:10px 14px 12px;background:#fff;font-size:12.5px;line-height:1.7;color:#0D1B2A}
+.sum-card-body p{margin-bottom:5px}
+.sum-card-body p:last-child{margin-bottom:0}
+.sum-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.sum-ul li{display:flex;gap:8px;align-items:flex-start;line-height:1.55}
+.sum-ul li::before{content:'·';color:#5E52D4;font-weight:900;flex-shrink:0}
+.graph-output-panel{background:#F2F7FD;border:1px solid #D8E3F0;border-radius:10px;overflow:hidden;position:relative}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.related-card{background:#fff;border:1px solid #D8E3F0;border-radius:9px;padding:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;text-decoration:none;display:block}
+.related-card:hover{border-color:#5E52D4;box-shadow:0 2px 10px rgba(94,82,212,.12)}
+.qa-answer-panel{margin-top:12px;border-radius:10px;overflow:hidden;border:1.5px solid #C8D8F4}
+.qa-answer-hdr{padding:8px 14px;background:#DFF0FF;display:flex;align-items:center;gap:8px}
+.qa-answer-body{padding:12px 14px;background:#fff;font-size:12.5px;line-height:1.7;color:#0D1B2A}
+.sc-err{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;padding:9px 13px;font-size:12.5px}
+.sc-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:80px;color:#7A8A9B;font-size:12px;font-style:italic;text-align:center}
+.spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.12);border-top-color:#5E52D4;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.chat-input-bar{background:#fff;border-top:1px solid #E4E9F0;padding:16px 28px 20px;position:sticky;bottom:0}
-.chat-input-row{display:flex;gap:9px;max-width:880px;margin:0 auto;align-items:flex-end}
-.chat-textarea{flex:1;border:1.5px solid #E4E9F0;border-radius:10px;padding:11px 15px;font-size:13.5px;font-family:inherit;resize:none;min-height:44px;max-height:120px;line-height:1.5;color:#0D1B2A;transition:border-color .15s;overflow-y:auto}
-.chat-textarea:focus{outline:none;border-color:#0B9E80}
-.chat-send{background:#0B9E80;color:#fff;border:none;border-radius:9px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;flex-shrink:0;align-self:flex-end}
-.chat-send:hover{background:#0A8A70}
-.chat-send:disabled{opacity:.45;cursor:not-allowed}
-.chat-hint{font-size:11px;color:#B0BAC8;text-align:center;margin-top:7px;max-width:880px;margin-left:auto;margin-right:auto}
-.chat-source-count{font-size:11px;font-weight:700;background:#F0FDF9;color:#0B6E52;padding:2px 8px;border-radius:10px;border:1px solid #A7F3D0}
+.sc-nudge{font-size:11px;color:#3A2FAA;background:#EEECFF;border:1px solid #C4BCF5;border-radius:7px;padding:5px 10px;margin-top:8px;display:none}
 
 /* ── Responsive ───────────────────────────────── */
 @media(max-width:640px){
@@ -420,37 +426,131 @@ a:hover{text-decoration:underline}
      TAB: SENSEMAKING CHAT
 ══════════════════════════════════════════════════ -->
 <div id="chat-view" class="tab-view">
-  <div class="chat-shell">
-    <div class="chat-messages" id="chat-messages">
-      <!-- Welcome state -->
-      <div class="chat-welcome" id="chat-welcome">
-        <div class="chat-welcome-icon">✦</div>
-        <div class="chat-welcome-title">Sensemaking Chat over Research</div>
-        <div class="chat-welcome-sub">Ask questions and I'll search live across Semantic Scholar, ERIC, OpenAlex, and arXiv — then synthesize patterns, tensions, and evidence-grounded insights with inline citations.</div>
-        <div class="chat-welcome-note">
-          <span class="chat-live-dot"></span>
-          Live search across four academic databases · Sources shown with every response
+<div class="sc-wrap">
+
+  <!-- Banner -->
+  <div class="sc-banner">
+    <div class="sc-banner-icon">✦</div>
+    <div class="sc-banner-text"><strong style="color:#A29BFE">Sensemaking Chat</strong> — Type a research question and I'll search live across Semantic Scholar, ERIC, OpenAlex, and arXiv, then synthesize a structured evidence brief with a concept knowledge graph, follow-up Q&amp;A, and related papers.</div>
+  </div>
+
+  <!-- Step 1: Research Question -->
+  <div class="sc-section">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#5E52D4">1</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Your research question</span>
+      <span style="font-size:11px;color:#7A8A9B">Type a question or choose a prompt below</span>
+    </div>
+    <div class="sc-section-body">
+      <div class="sc-search-row">
+        <textarea class="sc-textarea" id="sc-input" placeholder="e.g. What does evidence say about AI tutoring for underserved students?" rows="2"></textarea>
+        <button class="sc-search-btn" id="sc-search-btn" onclick="startSearch()">Search &amp; Synthesize →</button>
+      </div>
+      <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#B0BAC8;margin-bottom:7px">Suggested questions</div>
+      <div class="sc-prompt-chips">
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?</button>
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What are the key headwinds and tailwinds for AI adoption in education right now?</button>
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting in 2024–2026?</button>
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What signals should a program officer watch when assessing AI disruption in grantee sites?</button>
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?</button>
+        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Retrieved Papers -->
+  <div class="sc-section sc-output" id="sc-papers-section" style="display:none">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#1A6BC4">2</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Retrieved papers</span>
+      <span style="font-size:11px;color:#7A8A9B" id="sc-papers-count"></span>
+    </div>
+    <div class="sc-section-body" id="sc-papers-body">
+      <div class="sc-idle"><div class="spin"></div>Searching databases…</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Synthesis Brief -->
+  <div class="sc-section sc-output" id="sc-synthesis-section" style="display:none">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#0B9E80">3</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Synthesis brief</span>
+      <span style="font-size:11px;color:#7A8A9B">Key Themes · Evidence Patterns · Equity Signals · Gaps · Strategic Implications</span>
+    </div>
+    <div class="sc-section-body" id="sc-synthesis-body">
+      <div class="sc-idle"><div class="spin"></div>Claude is synthesizing…</div>
+    </div>
+    <div class="sc-action-row" id="sc-action-row" style="display:none;padding:0 16px 16px">
+      <button class="sc-action-btn" id="sc-graph-btn" style="background:#5E52D4" onclick="buildConceptGraph()">🕸 Build Knowledge Graph</button>
+      <button class="sc-action-btn" style="background:#1A6BC4" onclick="document.getElementById('sc-qa-section').scrollIntoView({behavior:'smooth'})">💬 Ask Follow-up</button>
+      <button class="sc-action-btn" id="sc-related-btn" style="background:#0B9E80" onclick="findRelatedPapers()">📚 Find Related Papers</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Knowledge Graph -->
+  <div class="sc-section sc-output" id="sc-graph-section" style="display:none">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#5E52D4">4</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Concept knowledge graph</span>
+      <span style="font-size:11px;color:#7A8A9B">Click a node to highlight connections · Drag to rearrange · Click node to load into Q&amp;A</span>
+    </div>
+    <div class="sc-section-body" style="padding:12px 16px">
+      <div id="sc-graph-status" style="font-size:12px;color:#7A8A9B;margin-bottom:8px;display:flex;align-items:center;gap:7px"></div>
+      <div class="graph-output-panel" style="position:relative">
+        <canvas id="sc-graph-canvas" style="width:100%;cursor:grab;display:block"></canvas>
+        <div id="sc-graph-tooltip" style="display:none;position:absolute;background:#fff;border:1px solid #D8E3F0;border-radius:8px;padding:9px 12px;font-size:11px;max-width:220px;box-shadow:0 3px 14px rgba(0,0,0,.12);pointer-events:none;z-index:10"></div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:10.5px">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#5E52D4;display:inline-block"></span>Core</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#1A6BC4;display:inline-block"></span>Method</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#0B9E80;display:inline-block"></span>Finding</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#D4921A;display:inline-block"></span>Gap</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#E0522A;display:inline-block"></span>Application</span>
         </div>
-        <div class="chat-section-label">Try asking</div>
-        <div class="chat-prompts" id="chat-prompts">
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What are the key headwinds and tailwinds for AI adoption in education right now?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting in 2024–2026?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What signals should a program officer watch when assessing AI disruption in grantee sites?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?</button>
-          <button class="chat-prompt-chip" onclick="sendPrompt(this.textContent)">Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?</button>
+        <button onclick="resetScGraphLayout()" style="margin-left:auto;font-size:10px;padding:3px 10px;border-radius:6px;background:#EEECFF;color:#3A2FAA;border:1px solid #C4BCF5;cursor:pointer;font-weight:700">↺ Reset layout</button>
+      </div>
+      <div class="sc-nudge" id="sc-graph-nudge"></div>
+    </div>
+  </div>
+
+  <!-- Step 5: Ask Follow-up -->
+  <div class="sc-section sc-output" id="sc-qa-section" style="display:none">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#1A6BC4">5</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Ask a follow-up</span>
+      <span style="font-size:11px;color:#7A8A9B">Grounded in the synthesis above</span>
+    </div>
+    <div class="sc-section-body">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="text" id="sc-qa-input" placeholder="e.g. Which finding is most contested? What should a PO watch for?" style="flex:1;border:1.5px solid #D8E3F0;border-radius:8px;padding:9px 13px;font-size:13px;font-family:inherit;color:#0D1B2A;outline:none" onfocus="this.style.borderColor='#1A6BC4'" onblur="this.style.borderColor='#D8E3F0'" onkeydown="if(event.key==='Enter') askFollowUp()">
+        <button onclick="askFollowUp()" style="background:#1A6BC4;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Ask Claude →</button>
+      </div>
+      <div id="sc-qa-out" style="display:none">
+        <div class="qa-answer-panel">
+          <div class="qa-answer-hdr">
+            <span style="font-size:13px">✦</span>
+            <span style="font-size:11px;font-weight:700;color:#0A3C6E">Claude's answer — grounded in the synthesis</span>
+          </div>
+          <div class="qa-answer-body" id="sc-qa-text"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="chat-input-bar">
-    <div class="chat-input-row">
-      <textarea class="chat-textarea" id="chat-input" placeholder="Ask a question — I'll search the live literature and synthesize…" rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
-      <button class="chat-send" id="chat-send" onclick="sendChat()">Send →</button>
+  <!-- Step 6: Related Literature -->
+  <div class="sc-section sc-output" id="sc-related-section" style="display:none">
+    <div class="sc-section-hdr">
+      <span class="step-badge" style="background:#0B9E80">6</span>
+      <span style="font-size:12px;font-weight:700;color:#0A2240">Related literature</span>
+      <span style="font-size:11px;color:#7A8A9B">Additional papers to explore · Click to open</span>
     </div>
-    <div class="chat-hint">Live search across Semantic Scholar · ERIC · OpenAlex · arXiv · Powered by Claude · Citations shown with every response</div>
+    <div class="sc-section-body" id="sc-related-body">
+      <div class="sc-idle">Click <strong>Find Related Papers</strong> in Step 3 to load this panel.</div>
+    </div>
   </div>
+
+</div>
 </div><!-- /chat-view -->
 
 <!-- ── Footer ─────────────────────────────────────── -->
@@ -577,133 +677,426 @@ function toggleBib(btn){
   document.getElementById('bib-arrow').textContent=open?'▲':'▼';
 }
 
-// ── Chat ───────────────────────────────────────────────────────────────────
-function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
-function chatKeydown(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();} }
-function sendPrompt(text){ const inp=document.getElementById('chat-input'); inp.value=text.trim(); autoResize(inp); sendChat(); }
+// ── Sensemaking Chat ───────────────────────────────────────────────────────
+let scBusy = false, scSynthesisText = '', scQuestion = '', scSources = [];
+let scGraphData = null, scGraphAnim = null;
 
-let chatBusy = false;
+const SC_SECTION_STYLES = {
+  'Key Themes':             { color:'#0B9E80', bg:'#D6F5EC', icon:'🔑' },
+  'Evidence Patterns':      { color:'#1A6BC4', bg:'#DFF0FF', icon:'📊' },
+  'Equity Signals':         { color:'#D4921A', bg:'#FFF3DC', icon:'⚖️' },
+  'Headwinds & Tailwinds':  { color:'#E0522A', bg:'#FFE8DC', icon:'💨' },
+  'Gaps & Tensions':        { color:'#5E52D4', bg:'#EEECFF', icon:'🔍' },
+  'Strategic Implications': { color:'#0A2240', bg:'#EEF2FA', icon:'💡' },
+};
 
-function sourceChipClass(source){
-  if(!source) return 'chat-src-default';
-  const s = source.toLowerCase();
-  if(s.includes('semantic')) return 'chat-src-s2';
-  if(s.includes('eric')) return 'chat-src-eric';
-  if(s.includes('openalex')) return 'chat-src-oa';
-  if(s.includes('arxiv')) return 'chat-src-arxiv';
-  return 'chat-src-default';
-}
+function scPrompt(text) { document.getElementById('sc-input').value = text.trim(); startSearch(); }
 
-function renderMarkdown(text){
-  return text
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/\[(\d+)\]/g,'<span style="color:#0B9E80;font-weight:800;font-size:11.5px">[$1]</span>')
-    .replace(/^#{1,3} (.+)$/gm,'<strong>$1</strong>')
-    .replace(/\n\n+/g,'</p><p>')
-    .replace(/\n/g,'<br>');
-}
+async function startSearch() {
+  if (scBusy) return;
+  const q = document.getElementById('sc-input').value.trim();
+  if (!q) return;
+  scBusy = true; scQuestion = q; scSynthesisText = ''; scSources = [];
+  const btn = document.getElementById('sc-search-btn');
+  btn.disabled = true; btn.textContent = 'Searching…';
 
-async function sendChat(){
-  if(chatBusy) return;
-  const inp = document.getElementById('chat-input');
-  const question = inp.value.trim();
-  if(!question) return;
-  chatBusy = true;
-  inp.value = ''; inp.style.height = 'auto';
-  document.getElementById('chat-send').disabled = true;
+  ['sc-papers-section','sc-synthesis-section','sc-graph-section','sc-qa-section','sc-related-section'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('sc-action-row').style.display = 'none';
+  document.getElementById('sc-qa-out').style.display = 'none';
+  document.getElementById('sc-related-body').innerHTML = '<div class="sc-idle">Click <strong>Find Related Papers</strong> in Step 3 to load this panel.</div>';
 
-  const messages = document.getElementById('chat-messages');
-  const welcome = document.getElementById('chat-welcome');
-  if(welcome) welcome.style.display = 'none';
+  const papersSection = document.getElementById('sc-papers-section');
+  const papersBody = document.getElementById('sc-papers-body');
+  papersSection.style.display = 'block';
+  papersBody.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#7A8A9B;font-size:12px"><div class="spin"></div>Searching Semantic Scholar, ERIC, OpenAlex, arXiv…</div>';
 
-  // User bubble
-  const userDiv = document.createElement('div');
-  userDiv.className = 'chat-msg chat-msg-user';
-  userDiv.innerHTML = `<div class="chat-bubble">${escHtml(question)}</div>`;
-  messages.appendChild(userDiv);
-  messages.scrollTop = messages.scrollHeight;
+  const synthSection = document.getElementById('sc-synthesis-section');
+  const synthBody = document.getElementById('sc-synthesis-body');
 
-  // AI bubble — searching state
-  const aiDiv = document.createElement('div');
-  aiDiv.className = 'chat-msg chat-msg-ai';
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble';
-  bubble.innerHTML = '<div class="chat-searching"><div class="search-spinner"></div>Searching Semantic Scholar, ERIC, OpenAlex, arXiv…</div>';
-  const metaDiv = document.createElement('div');
-  metaDiv.className = 'chat-meta';
-  aiDiv.appendChild(bubble);
-  aiDiv.appendChild(metaDiv);
-  messages.appendChild(aiDiv);
-  messages.scrollTop = messages.scrollHeight;
-
-  let fullText = '', sources = [];
   try {
     const res = await fetch('/api/navigator/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ question })
+      body: JSON.stringify({ question: q })
     });
-    if(!res.ok || !res.body) throw new Error('API error');
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
+    if (!res.ok || !res.body) throw new Error('API error');
+    const reader = res.body.getReader(), decoder = new TextDecoder();
     let buffer = '';
-
-    while(true){
+    while (true) {
       const { done, value } = await reader.read();
-      if(done) break;
+      if (done) break;
       buffer += decoder.decode(value, { stream:true });
       const lines = buffer.split('\n'); buffer = lines.pop();
-      for(const line of lines){
-        if(!line.startsWith('data:')) continue;
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
         try {
-          const payload = JSON.parse(line.slice(5).trim());
-          if(payload.status === 'searching'){
-            // already shown
+          const p = JSON.parse(line.slice(5).trim());
+          if (p.sources) {
+            scSources = p.sources;
+            document.getElementById('sc-papers-count').textContent = `${p.sources.length} papers retrieved`;
+            renderSourcePapers(p.sources);
+            synthSection.style.display = 'block';
+            synthBody.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#7A8A9B;font-size:12px"><div class="spin"></div>Claude is synthesizing across ' + p.sources.length + ' papers…</div>';
           }
-          if(payload.sources){
-            sources = payload.sources;
-            bubble.innerHTML = '<span class="chat-typing"></span>';
-            metaDiv.innerHTML = `<span class="chat-source-count">✦ ${sources.length} papers retrieved</span> Synthesizing…`;
-          }
-          if(payload.content){
-            fullText += payload.content;
-            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p><span class="chat-typing"></span>';
-            messages.scrollTop = messages.scrollHeight;
-          }
-          if(payload.done){
-            bubble.innerHTML = '<p>' + renderMarkdown(fullText) + '</p>';
-            if(sources.length){
-              const srcRow = document.createElement('div');
-              srcRow.className = 'chat-sources';
-              sources.forEach(s => {
-                const chip = document.createElement('a');
-                chip.className = 'chat-src-chip ' + sourceChipClass(s.source);
-                chip.href = s.url; chip.target = '_blank'; chip.rel = 'noopener';
-                const firstAuthor = (s.authors||'').split(',')[0].split(' ').pop();
-                chip.title = `${s.title} (${s.year}) — ${s.source}${s.citationCount>0?' · '+s.citationCount+' cites':''}`;
-                chip.textContent = `[${s.idx}] ${s.year} · ${firstAuthor}`;
-                srcRow.appendChild(chip);
-              });
-              aiDiv.insertBefore(srcRow, metaDiv);
-            }
-            const srcSummary = sources.length ? `${sources.length} sources` : 'no sources';
-            metaDiv.innerHTML = `✦ Claude · Live search (${srcSummary}) · <span style="color:#C8D0DA">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
-            messages.scrollTop = messages.scrollHeight;
-          }
-          if(payload.error){
-            bubble.innerHTML = `<div class="chat-err">${escHtml(payload.error)}</div>`;
-            metaDiv.textContent = '';
-          }
-        } catch(e){ /* skip bad lines */ }
+          if (p.content) { scSynthesisText += p.content; }
+          if (p.done) { renderSynthesisCards(scSynthesisText); }
+          if (p.error) { synthBody.innerHTML = '<div class="sc-err">Search error: ' + escHtml(p.error) + '</div>'; }
+        } catch(e) { /* skip */ }
       }
     }
-  } catch(err){
-    bubble.innerHTML = `<div class="chat-err">Network error — please try again.</div>`;
-    console.error('[chat]', err);
+  } catch(err) {
+    papersBody.innerHTML = '<div class="sc-err">Network error — please try again.</div>';
+    console.error('[sc]', err);
   }
-  chatBusy = false;
-  document.getElementById('chat-send').disabled = false;
+  scBusy = false;
+  btn.disabled = false; btn.textContent = 'Search & Synthesize →';
+}
+
+function renderSourcePapers(sources) {
+  const body = document.getElementById('sc-papers-body');
+  if (!sources.length) { body.innerHTML = '<p style="color:#7A8A9B;font-size:12px">No papers retrieved.</p>'; return; }
+  const SRC = {
+    semantic: { bg:'#EFF6FF', color:'#1D4ED8', border:'#BFDBFE', label:'S2' },
+    eric:     { bg:'#F0FDF9', color:'#0B6E52', border:'#A7F3D0', label:'ERIC' },
+    openalex: { bg:'#F5F3FF', color:'#6D28D9', border:'#DDD6FE', label:'OA' },
+    arxiv:    { bg:'#FFF7ED', color:'#92400E', border:'#FED7AA', label:'arXiv' },
+  };
+  function srcStyle(s) {
+    const v = (s||'').toLowerCase();
+    if (v.includes('semantic')) return SRC.semantic;
+    if (v.includes('eric')) return SRC.eric;
+    if (v.includes('openalex')) return SRC.openalex;
+    if (v.includes('arxiv')) return SRC.arxiv;
+    return SRC.eric;
+  }
+  body.innerHTML = '<div class="sc-paper-grid">' + sources.map(s => {
+    const st = srcStyle(s.source);
+    const firstAuthor = (s.authors||'').split(',')[0].trim().split(' ').pop();
+    const cites = s.citationCount > 0 ? ` · ${s.citationCount.toLocaleString()} cites` : '';
+    return `<a class="sc-paper-card" href="${escHtml(s.url)}" target="_blank" rel="noopener">
+      <div class="sc-paper-num">[${s.idx}]</div>
+      <div class="sc-paper-info">
+        <div class="sc-paper-title">${escHtml(s.title.slice(0,95))}${s.title.length>95?'…':''}</div>
+        <div class="sc-paper-meta">${escHtml(firstAuthor)} · ${escHtml(String(s.year||'n.d.'))}${escHtml(cites)} <span class="sc-src-pill" style="background:${st.bg};color:${st.color};border-color:${st.border}">${st.label}</span></div>
+      </div></a>`;
+  }).join('') + '</div>';
+}
+
+function parseSections(text) {
+  const sections = [], parts = text.split(/^## /m);
+  for (let i = 1; i < parts.length; i++) {
+    const nl = parts[i].indexOf('\n');
+    if (nl < 0) continue;
+    const title = parts[i].slice(0, nl).trim();
+    const content = parts[i].slice(nl + 1).trim();
+    if (title && content) sections.push({ title, content });
+  }
+  return sections;
+}
+
+function renderMarkdownBody(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\[(\d+)\]/g, '<span style="color:#5E52D4;font-weight:800;font-size:11px">[$1]</span>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/\n\n+/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+function renderSynthesisCards(text) {
+  const synthBody = document.getElementById('sc-synthesis-body');
+  const sections = parseSections(text);
+  if (!sections.length) {
+    synthBody.innerHTML = '<div style="font-size:13px;line-height:1.7;color:#0D1B2A"><p>' + renderMarkdownBody(text) + '</p></div>';
+  } else {
+    synthBody.innerHTML = sections.map(sec => {
+      const st = SC_SECTION_STYLES[sec.title] || { color:'#5E52D4', bg:'#EEECFF', icon:'✦' };
+      return `<div class="sum-card">
+        <div class="sum-card-hdr" style="background:${st.bg};border-bottom:1px solid ${st.color}33">
+          <span class="sum-card-icon">${st.icon}</span>
+          <span class="sum-card-label" style="color:${st.color}">${sec.title}</span>
+        </div>
+        <div class="sum-card-body"><p>${renderMarkdownBody(sec.content)}</p></div>
+      </div>`;
+    }).join('');
+  }
+  const actionRow = document.getElementById('sc-action-row');
+  actionRow.style.display = 'flex';
+  document.getElementById('sc-qa-section').style.display = 'block';
+  document.getElementById('sc-related-section').style.display = 'block';
+}
+
+// ── Knowledge Graph ─────────────────────────────────────────────────────────
+const NODE_COLORS = { core:'#5E52D4', method:'#1A6BC4', finding:'#0B9E80', gap:'#D4921A', application:'#E0522A' };
+let _gNodes=[], _gEdges=[], _gIdMap={}, _gCanvas=null, _gCtx=null;
+let _gDragNode=null, _gDragOffX=0, _gDragOffY=0;
+let _gSelectedNode=null, _gHoverNode=null, _gEnergy=1.0;
+
+async function buildConceptGraph() {
+  const btn = document.getElementById('sc-graph-btn');
+  btn.disabled = true; btn.textContent = '⟳ Building…';
+  const section = document.getElementById('sc-graph-section');
+  const status = document.getElementById('sc-graph-status');
+  const canvas = document.getElementById('sc-graph-canvas');
+  section.style.display = 'block';
+  section.scrollIntoView({ behavior:'smooth' });
+  status.innerHTML = '<div class="spin" style="border-top-color:#5E52D4"></div> Asking Claude to extract concepts…';
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (scGraphAnim) { cancelAnimationFrame(scGraphAnim); scGraphAnim = null; }
+  const summaryCtx = scSynthesisText.slice(0, 1500);
+  const paperTitles = scSources.slice(0, 8).map((s, i) => `[${i+1}] ${s.title}`).join('\n');
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt: `Extract a concept knowledge graph from this research synthesis about: "${scQuestion}"\n\nKey papers:\n${paperTitles}\n\nSynthesis excerpt:\n${summaryCtx}\n\nReturn ONLY valid JSON:\n{"nodes":[{"id":"n1","label":"Short concept","type":"core|method|finding|gap|application","learningRelevance":"One sentence explaining relevance."}],"edges":[{"from":"n1","to":"n2","label":"short relation"}]}\n\nRules: 8–14 nodes, 10–18 edges, node labels max 3 words, edge labels max 3 words, IDs like n1/n2/n3. Output only the JSON.` })
+    });
+    const d = await r.json();
+    const raw = (d.text || d.content?.find(b => b.type==='text')?.text || '').trim();
+    const m = raw.match(/\{[\s\S]*\}/); if (!m) throw new Error('No JSON');
+    scGraphData = JSON.parse(m[0]);
+  } catch(e) {
+    status.textContent = 'Could not generate graph. Try again.';
+    btn.disabled=false; btn.textContent='🕸 Build Knowledge Graph'; return;
+  }
+  status.textContent = '';
+  btn.disabled=false; btn.textContent='↻ Rebuild Graph';
+  startForceGraph(canvas, canvas.getContext('2d'), scGraphData);
+}
+
+function _placeNodesInCircle(W, H) {
+  const n=_gNodes.length, r=Math.min(W,H)*0.28;
+  _gNodes.forEach((node,i)=>{
+    const angle=(i/n)*Math.PI*2 - Math.PI/2;
+    node.x=W/2+Math.cos(angle)*r*(0.85+Math.random()*0.3);
+    node.y=H/2+Math.sin(angle)*r*(0.85+Math.random()*0.3);
+    node.vx=0; node.vy=0;
+  });
+}
+function resetScGraphLayout() {
+  if(!scGraphData||!_gCanvas) return;
+  _placeNodesInCircle(_gCanvas.width, _gCanvas.height);
+  _gSelectedNode=null; _gEnergy=1.0; _gResumeAnim();
+}
+function startForceGraph(canvas, ctx, data) {
+  _gCanvas=canvas; _gCtx=ctx;
+  const W=canvas.width, H=canvas.height;
+  _gNodes=data.nodes.map(n=>({...n,x:W/2,y:H/2,vx:0,vy:0}));
+  _gIdMap=Object.fromEntries(_gNodes.map(n=>[n.id,n]));
+  _gEdges=data.edges.filter(e=>_gIdMap[e.from]&&_gIdMap[e.to]);
+  _gDragNode=null; _gSelectedNode=null; _gHoverNode=null; _gEnergy=1.0;
+  const liveCanvas=document.getElementById('sc-graph-canvas')||canvas;
+  const newCanvas=liveCanvas.cloneNode(true);
+  if(liveCanvas.parentNode) liveCanvas.parentNode.replaceChild(newCanvas,liveCanvas);
+  _gCanvas=newCanvas;
+  const _cw=newCanvas.offsetWidth||900, _ch=480;
+  newCanvas.width=_cw; newCanvas.height=_ch; newCanvas.style.height=_ch+'px';
+  _gCtx=newCanvas.getContext('2d');
+  _placeNodesInCircle(_cw, _ch);
+  newCanvas.addEventListener('mousedown',_gOnMouseDown);
+  newCanvas.addEventListener('mousemove',_gOnMouseMove);
+  newCanvas.addEventListener('mouseup',_gOnMouseUp);
+  newCanvas.addEventListener('mouseleave',_gOnMouseLeave);
+  newCanvas.addEventListener('click',_gOnClick);
+  newCanvas.addEventListener('touchstart',_gOnTouchStart,{passive:true});
+  newCanvas.addEventListener('touchmove',_gOnTouchMove,{passive:false});
+  newCanvas.addEventListener('touchend',_gOnTouchEnd);
+  if(scGraphAnim){ cancelAnimationFrame(scGraphAnim); scGraphAnim=null; }
+  function loop(){ const settled=_gTick(); _gDraw(); if(!settled) scGraphAnim=requestAnimationFrame(loop); else scGraphAnim=null; }
+  scGraphAnim=requestAnimationFrame(loop);
+}
+function _gResumeAnim() {
+  if(scGraphAnim) return;
+  function loop(){ const settled=_gTick(); _gDraw(); if(!settled) scGraphAnim=requestAnimationFrame(loop); else scGraphAnim=null; }
+  scGraphAnim=requestAnimationFrame(loop);
+}
+function _gTick() {
+  const W=_gCanvas.width, H=_gCanvas.height;
+  const K=110, REPEL=4800, CORE_GRAVITY=0.035, GRAVITY=0.015, DAMP=0.92, MAX_SPEED=5;
+  _gEnergy=Math.max(0,_gEnergy-0.022);
+  _gNodes.forEach(n=>{ n.fx=0; n.fy=0; });
+  for(let a=0;a<_gNodes.length;a++) for(let b=a+1;b<_gNodes.length;b++){
+    const dx=_gNodes[a].x-_gNodes[b].x, dy=_gNodes[a].y-_gNodes[b].y;
+    const d2=dx*dx+dy*dy+1, f=REPEL/d2;
+    _gNodes[a].fx+=f*dx; _gNodes[a].fy+=f*dy;
+    _gNodes[b].fx-=f*dx; _gNodes[b].fy-=f*dy;
+  }
+  _gEdges.forEach(e=>{
+    const s=_gIdMap[e.from], t=_gIdMap[e.to];
+    const dx=t.x-s.x, dy=t.y-s.y, d=Math.sqrt(dx*dx+dy*dy)||1, f=(d-K)/d*0.28;
+    s.fx+=f*dx; s.fy+=f*dy; t.fx-=f*dx; t.fy-=f*dy;
+  });
+  _gNodes.forEach(n=>{
+    const g=n.type==='core'?CORE_GRAVITY:GRAVITY;
+    n.fx+=(W/2-n.x)*g; n.fy+=(H/2-n.y)*g;
+  });
+  let maxSpeed=0;
+  _gNodes.forEach(n=>{
+    if(n===_gDragNode) return;
+    n.vx=(n.vx+n.fx)*DAMP; n.vy=(n.vy+n.fy)*DAMP;
+    const speed=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+    if(speed>MAX_SPEED){ n.vx=n.vx/speed*MAX_SPEED; n.vy=n.vy/speed*MAX_SPEED; }
+    if(speed>maxSpeed) maxSpeed=speed;
+    const pad=n.type==='core'?60:68;
+    n.x=Math.max(pad,Math.min(W-pad,n.x+n.vx));
+    n.y=Math.max(pad,Math.min(H-pad,n.y+n.vy));
+  });
+  return maxSpeed<0.25&&_gEnergy<=0&&!_gDragNode;
+}
+function _gDraw() {
+  const ctx=_gCtx, W=_gCanvas.width, H=_gCanvas.height;
+  ctx.fillStyle='#F6F7FB'; ctx.fillRect(0,0,W,H);
+  const selId=_gSelectedNode?_gSelectedNode.id:null;
+  const neighborIds=new Set();
+  if(selId){ neighborIds.add(selId); _gEdges.forEach(e=>{ if(e.from===selId) neighborIds.add(e.to); if(e.to===selId) neighborIds.add(e.from); }); }
+  _gEdges.forEach(e=>{
+    const s=_gIdMap[e.from], t=_gIdMap[e.to];
+    const isActive=!selId||(e.from===selId||e.to===selId);
+    const dx=t.x-s.x, dy=t.y-s.y, len=Math.sqrt(dx*dx+dy*dy)||1;
+    const mx=(s.x+t.x)/2, my=(s.y+t.y)/2;
+    ctx.globalAlpha=isActive?1:0.18;
+    ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(t.x,t.y);
+    ctx.strokeStyle=isActive?'rgba(94,82,212,0.38)':'rgba(94,82,212,0.12)';
+    ctx.lineWidth=isActive?1.5:1; ctx.stroke();
+    const ax2=t.x-dx/len*13, ay2=t.y-dy/len*13;
+    const px=-dy/len*4, py=dx/len*4;
+    ctx.beginPath(); ctx.moveTo(ax2+px,ay2+py); ctx.lineTo(t.x-dx/len*6,t.y-dy/len*6); ctx.lineTo(ax2-px,ay2-py);
+    ctx.fillStyle=isActive?'rgba(94,82,212,0.5)':'rgba(94,82,212,0.07)'; ctx.fill();
+    if(e.label&&isActive&&selId){
+      ctx.globalAlpha=0.92; ctx.font='10px system-ui,sans-serif';
+      const tw=ctx.measureText(e.label).width;
+      const ex=mx-tw/2-5, ey=my-9, ew=tw+10, eh=14;
+      ctx.fillStyle='rgba(238,236,255,0.95)'; ctx.beginPath(); ctx.roundRect(ex,ey,ew,eh,4); ctx.fill();
+      ctx.fillStyle='#3A2FAA'; ctx.fillText(e.label,mx-tw/2,my+1);
+    }
+    ctx.globalAlpha=1;
+  });
+  _gNodes.forEach(n=>{
+    const isCore=n.type==='core', r=isCore?24:14;
+    const col=NODE_COLORS[n.type]||'#888';
+    const isActive=!selId||neighborIds.has(n.id);
+    ctx.globalAlpha=isActive?1:0.18;
+    if(isCore){ ctx.beginPath(); ctx.arc(n.x,n.y,r+9,0,Math.PI*2); ctx.strokeStyle='rgba(94,82,212,0.18)'; ctx.lineWidth=8; ctx.stroke(); }
+    ctx.shadowColor=isCore?'rgba(94,82,212,0.3)':'rgba(0,0,0,0.12)'; ctx.shadowBlur=isCore?14:6;
+    ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fillStyle=col; ctx.fill(); ctx.shadowBlur=0;
+    if(n===_gHoverNode||n===_gSelectedNode){
+      ctx.beginPath(); ctx.arc(n.x,n.y,r+5,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.85)'; ctx.lineWidth=3; ctx.stroke();
+      ctx.beginPath(); ctx.arc(n.x,n.y,r+5,0,Math.PI*2); ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.globalAlpha=isActive?1:0.22;
+    ctx.font=isCore?'bold 12px system-ui,sans-serif':'bold 11px system-ui,sans-serif';
+    const lw=ctx.measureText(n.label).width+12, lx=n.x-lw/2, ly=n.y+r+5, lh=17;
+    ctx.fillStyle='rgba(255,255,255,0.96)'; ctx.beginPath(); ctx.roundRect(lx,ly,lw,lh,5); ctx.fill();
+    ctx.fillStyle=col; ctx.fillText(n.label,n.x-lw/2+6,ly+lh-4);
+    ctx.globalAlpha=1;
+  });
+}
+function _gHitNode(cx,cy) {
+  for(let i=_gNodes.length-1;i>=0;i--){
+    const n=_gNodes[i], r=n.type==='core'?28:18;
+    const dx=cx-n.x, dy=cy-n.y;
+    if(dx*dx+dy*dy<=r*r) return n;
+  }
+  return null;
+}
+function _gCanvasPos(canvas,e){ const rect=canvas.getBoundingClientRect(); return{x:(e.clientX-rect.left)*(canvas.width/rect.width),y:(e.clientY-rect.top)*(canvas.height/rect.height)}; }
+function _gOnMouseDown(e){ const p=_gCanvasPos(_gCanvas,e),n=_gHitNode(p.x,p.y); if(n){ _gDragNode=n; _gDragOffX=p.x-n.x; _gDragOffY=p.y-n.y; _gCanvas.style.cursor='grabbing'; _gResumeAnim(); } }
+function _gOnMouseMove(e){
+  const p=_gCanvasPos(_gCanvas,e);
+  if(_gDragNode){ _gDragNode.x=p.x-_gDragOffX; _gDragNode.y=p.y-_gDragOffY; _gDragNode.vx=0; _gDragNode.vy=0; _gCanvas.style.cursor='grabbing'; }
+  else {
+    const prev=_gHoverNode, n=_gHitNode(p.x,p.y);
+    _gHoverNode=n; _gCanvas.style.cursor=n?'pointer':'grab';
+    if(n!==prev) _gDraw();
+    const tt=document.getElementById('sc-graph-tooltip');
+    if(n&&tt){
+      const canvasRect=_gCanvas.getBoundingClientRect();
+      const px=(n.x/_gCanvas.width)*canvasRect.width, py=(n.y/_gCanvas.height)*canvasRect.height;
+      const typeLabel={core:'Core idea',method:'Method',finding:'Finding',gap:'Gap',application:'Application'};
+      tt.textContent='';
+      const ttName=document.createElement('div'); ttName.style.cssText='font-weight:700;font-size:12px;margin-bottom:3px;color:'+(NODE_COLORS[n.type]||'#aaa'); ttName.textContent=n.label;
+      const ttType=document.createElement('div'); ttType.style.cssText='font-size:10px;opacity:0.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px'; ttType.textContent=typeLabel[n.type]||n.type;
+      tt.appendChild(ttName); tt.appendChild(ttType);
+      if(n.learningRelevance){ const ttRel=document.createElement('div'); ttRel.style.cssText='font-size:11px;line-height:1.5'; ttRel.textContent=n.learningRelevance; tt.appendChild(ttRel); }
+      tt.style.display='block';
+      tt.style.left=Math.min(px+18,canvasRect.width-240)+'px';
+      tt.style.top=Math.max(4,py-40)+'px';
+    } else if(tt) tt.style.display='none';
+  }
+}
+function _gOnMouseUp(){ if(_gDragNode){ _gDragNode.vx=0; _gDragNode.vy=0; _gDragNode=null; _gCanvas.style.cursor='grab'; } }
+function _gOnMouseLeave(){ _gDragNode=null; _gHoverNode=null; const tt=document.getElementById('sc-graph-tooltip'); if(tt) tt.style.display='none'; _gDraw(); _gCanvas.style.cursor='grab'; }
+function _gOnClick(e){
+  const p=_gCanvasPos(_gCanvas,e), n=_gHitNode(p.x,p.y);
+  if(!n) return;
+  if(_gSelectedNode===n){ _gSelectedNode=null; const nudge=document.getElementById('sc-graph-nudge'); if(nudge) nudge.style.display='none'; }
+  else {
+    _gSelectedNode=n;
+    const qa=document.getElementById('sc-qa-input');
+    if(qa){ qa.value=`Tell me more about "${n.label}" in the context of this synthesis. ${n.learningRelevance||''}`; }
+    const nudge=document.getElementById('sc-graph-nudge');
+    if(nudge){ nudge.textContent=`"${n.label}" loaded into Follow-up — scroll down and click Ask Claude`; nudge.style.display='block'; }
+  }
+  _gDraw();
+}
+let _gTouchId=null;
+function _gOnTouchStart(e){ if(e.touches.length!==1) return; const t=e.touches[0]; _gTouchId=t.identifier; const p=_gCanvasPos(_gCanvas,t), n=_gHitNode(p.x,p.y); if(n){ _gDragNode=n; _gDragOffX=p.x-n.x; _gDragOffY=p.y-n.y; _gResumeAnim(); } }
+function _gOnTouchMove(e){ if(_gDragNode&&e.cancelable) e.preventDefault(); const t=[...e.changedTouches].find(t=>t.identifier===_gTouchId); if(!t||!_gDragNode) return; const p=_gCanvasPos(_gCanvas,t); _gDragNode.x=p.x-_gDragOffX; _gDragNode.y=p.y-_gDragOffY; _gDragNode.vx=0; _gDragNode.vy=0; }
+function _gOnTouchEnd(e){ const t=[...e.changedTouches].find(t=>t.identifier===_gTouchId); if(t&&_gDragNode){ _gDragNode.vx=0; _gDragNode.vy=0; _gDragNode=null; } _gTouchId=null; }
+
+// ── Follow-up Q&A ───────────────────────────────────────────────────────────
+async function askFollowUp() {
+  const q = document.getElementById('sc-qa-input').value.trim();
+  if (!q || !scSynthesisText) return;
+  const outPanel = document.getElementById('sc-qa-out');
+  const textEl = document.getElementById('sc-qa-text');
+  outPanel.style.display = 'block';
+  textEl.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#7A8A9B;font-size:12px"><div class="spin" style="border-top-color:#1A6BC4"></div>Claude is thinking…</div>';
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt: `You are a research synthesis assistant. Answer this question about the following research synthesis.\n\nOriginal question: "${scQuestion}"\n\nSynthesis:\n${scSynthesisText.slice(0,3000)}\n\nFollow-up question: ${q}\n\nAnswer concisely and ground your response in the synthesis. Cite papers by [number] where possible. Flag clearly if the question goes beyond what the synthesis covers.` })
+    });
+    const d = await r.json();
+    const text = (d.text || d.content?.find(b => b.type==='text')?.text || 'No response.').trim();
+    textEl.innerHTML = '<p>' + renderMarkdownBody(text) + '</p>';
+  } catch(e) {
+    textEl.innerHTML = '<div class="sc-err">Could not get answer. Try again.</div>';
+  }
+}
+
+// ── Related Papers ──────────────────────────────────────────────────────────
+async function findRelatedPapers() {
+  const btn = document.getElementById('sc-related-btn');
+  btn.disabled = true; btn.textContent = '⟳ Loading…';
+  const body = document.getElementById('sc-related-body');
+  const section = document.getElementById('sc-related-section');
+  section.scrollIntoView({ behavior:'smooth' });
+  body.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#7A8A9B;font-size:12px"><div class="spin"></div>Searching for related papers…</div>';
+  try {
+    const r = await fetch('/api/papers/search?q=' + encodeURIComponent(scQuestion) + '&max=8');
+    const d = await r.json();
+    const papers = (d.papers || []).filter(p => !scSources.find(s => s.title === p.title));
+    if (!papers.length) { body.innerHTML = '<p style="color:#7A8A9B;font-size:12px">No additional related papers found.</p>'; return; }
+    body.innerHTML = '<div class="related-grid">' + papers.slice(0,6).map(p => {
+      const authors = (p.authors||[]).slice(0,2).join(', ') + ((p.authors||[]).length > 2 ? ' et al.' : '');
+      const year = (p.published||'').slice(0,4) || 'n.d.';
+      const abstract = (p.abstract||'').slice(0,130);
+      const url = p.url || '#';
+      return `<a class="related-card" href="${escHtml(url)}" target="_blank" rel="noopener">
+        <div style="font-size:11.5px;font-weight:700;color:#0A2240;line-height:1.35;margin-bottom:5px">${escHtml((p.title||'').slice(0,90))}${(p.title||'').length>90?'…':''}</div>
+        <div style="font-size:10px;color:#7A8A9B;margin-bottom:5px">${escHtml(authors)} · ${escHtml(year)}${p.citationCount>0?' · '+p.citationCount.toLocaleString()+' cites':''}</div>
+        ${abstract?`<div style="font-size:10px;color:#3D4F62;line-height:1.5;margin-bottom:6px">${escHtml(abstract)}…</div>`:''}
+        <span style="font-size:10px;color:#5E52D4;font-weight:700">Open ↗</span>
+      </a>`;
+    }).join('') + '</div>';
+  } catch(e) {
+    body.innerHTML = '<div class="sc-err">Could not load related papers.</div>';
+  }
+  btn.disabled=false; btn.textContent='📚 Find Related Papers';
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
