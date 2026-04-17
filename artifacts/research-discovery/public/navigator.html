@@ -435,15 +435,19 @@ a:hover{text-decoration:underline}
         <textarea class="sc-textarea" id="sc-input" placeholder="e.g. What does evidence say about AI tutoring for underserved students?" rows="2"></textarea>
         <button class="sc-search-btn" id="sc-search-btn" onclick="startSearch()">Search &amp; Synthesize →</button>
       </div>
-      <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#B0BAC8;margin-bottom:7px">Suggested questions</div>
-      <div class="sc-prompt-chips">
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?</button>
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What are the key headwinds and tailwinds for AI adoption in education right now?</button>
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting in 2024–2026?</button>
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?</button>
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select id="sc-suggestions-select" onchange="scLoadFromSelect(this)" style="flex:1;min-width:180px;border:1.5px solid #D8E3F0;border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:inherit;color:#0A2240;background:#fff;cursor:pointer;outline:none">
+          <option value="">💡 Suggested questions…</option>
+          <option value="What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?">Tech and AI bans in K–12 schools</option>
+          <option value="What are the key headwinds and tailwinds for AI adoption in education right now?">Headwinds &amp; tailwinds for AI adoption</option>
+          <option value="How is equity being reframed in AI education research — what's shifting in 2024–2026?">Equity reframing in AI education research</option>
+          <option value="What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?">AI tutoring effectiveness for underserved communities</option>
+          <option value="Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?">ROI evidence for AI tools in education</option>
+        </select>
+        <select id="sc-history-select" onchange="scLoadFromSelect(this)" style="flex:1;min-width:180px;border:1.5px solid #D8E3F0;border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:inherit;color:#0A2240;background:#fff;cursor:pointer;outline:none;display:none">
+          <option value="">🕐 Recent searches…</option>
+        </select>
       </div>
-      <div id="sc-history-section" style="display:none;margin-top:14px"></div>
     </div>
   </div>
 
@@ -689,7 +693,21 @@ if (document.readyState === 'loading') {
   setTimeout(renderSearchHistory, 0);
 }
 
-function scPrompt(text) { document.getElementById('sc-input').value = text.trim(); startSearch(); }
+// Load text into the textarea without auto-running (user sees and can edit before submitting)
+function scPrompt(text) {
+  const ta = document.getElementById('sc-input');
+  ta.value = text.trim();
+  ta.focus();
+  ta.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+// Called by both dropdown selects — load selected option value into textarea and reset the select
+function scLoadFromSelect(sel) {
+  const val = sel.value;
+  if (!val) return;
+  if (val === '__clear__') { scClearHistory(); sel.value = ''; return; }
+  scPrompt(val);
+  sel.value = ''; // reset so the placeholder shows again
+}
 
 async function startSearch() {
   if (scBusy) return;
@@ -1096,21 +1114,20 @@ function scSaveToHistory(q) {
   } catch(e) {}
 }
 function renderSearchHistory() {
-  const el = document.getElementById('sc-history-section');
-  if (!el) return;
+  const sel = document.getElementById('sc-history-select');
+  if (!sel) return;
   try {
     const hist = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
-    if (!hist.length) { el.style.display = 'none'; return; }
-    el.style.display = 'block';
-    el.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
-        <span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#B0BAC8">Recent searches</span>
-        <button onclick="scClearHistory()" style="font-size:10px;color:#B0BAC8;background:none;border:none;cursor:pointer;padding:0">Clear</button>
-      </div>
-      <div class="sc-prompt-chips">
-        ${hist.map(h => `<button class="sc-prompt-chip" style="background:#F4F7FF;border-color:#C8D3E8;color:#3A4B60" onclick="scPrompt(${JSON.stringify(h.q)})">${escHtml(h.q.length > 70 ? h.q.slice(0,70)+'…' : h.q)}</button>`).join('')}
-      </div>`;
-  } catch(e) { el.style.display = 'none'; }
+    if (!hist.length) { sel.style.display = 'none'; return; }
+    sel.style.display = '';
+    // Rebuild options — first option is the placeholder, then history items, then a clear separator
+    sel.innerHTML = '<option value="">🕐 Recent searches…</option>' +
+      hist.map(h => {
+        const label = h.q.length > 72 ? h.q.slice(0, 72) + '…' : h.q;
+        return `<option value="${h.q.replace(/"/g, '&quot;')}">${label}</option>`;
+      }).join('') +
+      '<option value="__clear__" style="color:#C0392B">✕ Clear history</option>';
+  } catch(e) { sel.style.display = 'none'; }
 }
 function scClearHistory() {
   localStorage.removeItem(SC_HISTORY_KEY);
