@@ -489,12 +489,12 @@ Single JSON on ONE line, no line breaks inside. Use the NSF logic-model framewor
 
 Stage-specific category naming rules:
 - "input": flat "items" array (2–4 bullets)
-- "activities": category names = the 4 NSF research track types, adapted to the domain. Default: "Basic Research" | "Use-Inspired Research" | "Human Capital Development" | "Research Infrastructure"
-- "outputs": category names = what each track PRODUCES. Default: "Publications & Patents" | "Applied Tools & Products" | "Degrees & Training" | "Facilities & Platforms" — adapt to domain
-- "outcomes": category names = downstream results of each output. Default: "New Methods & Processes" | "New Products & Solutions" | "Workforce Development" | "Research Capacity & Capability" — adapt to domain
-- "impact": flat "items" array (3–5 bullets). Default impact bullets: Revenue · New firms · New industries · Productivity growth · Employment — adapt to domain
+- "activities": use "categories" array. Names = the 4 NSF research track types, adapted to domain. Default: "Basic Research" | "Use-Inspired Research" | "Human Capital Development" | "Research Infrastructure"
+- "outputs": use "categories" array. Names = what each track PRODUCES. Default: "Publications & Patents" | "Applied Tools & Products" | "Degrees & Training" | "Facilities & Platforms" — adapt to domain
+- "outcomes": use "categories" array. Names = downstream results of each output. Default: "New Methods & Processes" | "New Products & Solutions" | "Workforce Development" | "Research Capacity & Capability" — adapt to domain
+- "impact": use "categories" array with exactly 5 entries. Fixed names (do NOT adapt): "Revenue" | "New firms" | "New industries" | "Productivity growth" | "Employment". Each has 1 bullet in its "items" array.
 
-{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","items":["IES/NSF grants $42M for K-12 AI [1]","District device budgets, 18% access gap in low-income schools [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","categories":[{"name":"Basic Research","items":["58-study meta-analysis on AI tutoring effects [2]"]},{"name":"Use-Inspired Research","items":["Khanmigo RCT, n=1,200 students across 32 schools [3]"]},{"name":"Human Capital Development","items":["Teacher AI literacy PD, 72h avg per cohort [5]"]},{"name":"Research Infrastructure","items":["LMS + AI backend deployed in 58 schools [6]"]}]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","categories":[{"name":"Publications & Patents","items":["12 peer-reviewed studies, effect size 0.15 SD [2]"]},{"name":"Applied Tools & Products","items":["Adaptive tutor tool: engagement +0.31 SD vs control [3]"]},{"name":"Degrees & Training","items":["684 teachers certified, 3 cohorts [5]"]},{"name":"Facilities & Platforms","items":["Platform uptime 99.2%, 42k student sessions [6]"]}]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","categories":[{"name":"New Methods & Processes","items":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]"]},{"name":"New Products & Solutions","items":["Course completion +6pp, p=.08 [3]"]},{"name":"Workforce Development","items":["STEM pipeline growth 12%, n=420 tracked [5]"]},{"name":"Research Capacity","items":["Research infrastructure capacity — no outcome RCT yet"]}]},{"id":"impact","label":"Impacts","evidence":"speculative","note":"one clause","items":["Revenue: projected wage premium $38k over career [9]","New EdTech firms: 3 spin-outs documented [7]","New industries: AI-native EdTech sector emerging","Productivity growth — economic modelling only","Employment: STEM workforce readiness — speculative"]}],"stopping_point":"outcomes","trajectory":"accelerating","bridge":"one sentence on what is needed to bridge from stopping_point to impact","roi_anchored_stage":"outcomes"}
+{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","items":["IES/NSF grants $42M for K-12 AI [1]","District device budgets, 18% access gap in low-income schools [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","categories":[{"name":"Basic Research","items":["58-study meta-analysis on AI tutoring effects [2]"]},{"name":"Use-Inspired Research","items":["Khanmigo RCT, n=1,200 students across 32 schools [3]"]},{"name":"Human Capital Development","items":["Teacher AI literacy PD, 72h avg per cohort [5]"]},{"name":"Research Infrastructure","items":["LMS + AI backend deployed in 58 schools [6]"]}]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","categories":[{"name":"Publications & Patents","items":["12 peer-reviewed studies, effect size 0.15 SD [2]"]},{"name":"Applied Tools & Products","items":["Adaptive tutor tool: engagement +0.31 SD vs control [3]"]},{"name":"Degrees & Training","items":["684 teachers certified, 3 cohorts [5]"]},{"name":"Facilities & Platforms","items":["Platform uptime 99.2%, 42k student sessions [6]"]}]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","categories":[{"name":"New Methods & Processes","items":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]"]},{"name":"New Products & Solutions","items":["Course completion +6pp, p=.08 [3]"]},{"name":"Workforce Development","items":["STEM pipeline growth 12%, n=420 tracked [5]"]},{"name":"Research Capacity","items":["Research infrastructure capacity — no outcome RCT yet"]}]},{"id":"impact","label":"Impacts","evidence":"speculative","note":"one clause","categories":[{"name":"Revenue","items":["Projected wage premium $38k over career [9]"]},{"name":"New firms","items":["3 EdTech spin-outs documented [7]"]},{"name":"New industries","items":["AI-native EdTech sector emerging — no direct measure"]},{"name":"Productivity growth","items":["Economic modelling only — no empirical RCT"]},{"name":"Employment","items":["STEM workforce readiness — speculative"]}]}],"stopping_point":"outcomes","trajectory":"accelerating","bridge":"one sentence on what is needed to bridge from stopping_point to impact","roi_anchored_stage":"outcomes"}
 evidence values: strong | moderate | weak | speculative
 roi_anchored_stage: the stage id the ROI model is primarily parameterising (usually the stopping_point)`
       }]})
@@ -1290,6 +1290,7 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
     activities: ['Basic Research', 'Use-Inspired Research', 'Human Capital Development', 'Research Infrastructure'],
     outputs:    ['Publications & Patents', 'Applied Tools & Products', 'Degrees & Training', 'Facilities & Platforms'],
     outcomes:   ['New Methods & Processes', 'New Products & Solutions', 'Workforce Development', 'Research Capacity & Capability'],
+    impact:     ['Revenue', 'New firms', 'New industries', 'Productivity growth', 'Employment'],
   };
 
   const stageCards = stages.map((s, i) => {
@@ -1299,16 +1300,23 @@ function fpaRenderLifecyclePanel(el, data, pipelineSteps) {
     const isStop  = s.id === data.stopping_point;
     const isRoi   = i === roiIdx;
     const isBeyond = stopIdx >= 0 && i > stopIdx;
-    // Support new schema: s.categories (named tracks) or s.items/s.examples (flat list)
     const rawCategories = Array.isArray(s.categories) ? s.categories : [];
+    const flatItems  = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
     // Apply fixed NSF names by track index; preserve AI-generated name as subtitle
     const nsfNames = NSF_TRACK_NAMES[s.id] || [];
-    const categories = rawCategories.map((cat, ci) => ({
+    let categories = rawCategories.map((cat, ci) => ({
       nsfName:   nsfNames[ci] || cat.name,
       domainName: (nsfNames[ci] && nsfNames[ci] !== cat.name) ? cat.name : null,
       items:     cat.items,
     }));
-    const flatItems  = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
+    // If this stage has NSF names but only flat items (e.g. impact), synthesise category structure
+    if (categories.length === 0 && flatItems.length > 0 && nsfNames.length > 0) {
+      categories = nsfNames.map((name, ni) => ({
+        nsfName: name,
+        domainName: null,
+        items: flatItems[ni] != null ? [flatItems[ni]] : [],
+      }));
+    }
 
     // Card border: thick left strip in evidence colour; beyond-stopping = lighter
     const borderL  = isBeyond ? `3px solid ${col}55` : `4px solid ${col}`;
@@ -1801,10 +1809,12 @@ function fpaDownloadWord() {
         const flat = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
         const isStop = s.id === lcd.stopping_point;
         const badges = isStop ? `<br><span style="font-size:8pt;background:${col};color:#fff;padding:1pt 4pt">◀ evidence stops here</span>` : '';
-        const wordNsfNames = { activities:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'], outputs:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'], outcomes:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'] };
+        const wordNsfNames = { activities:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'], outputs:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'], outcomes:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'], impact:['Revenue','New firms','New industries','Productivity growth','Employment'] };
         const nsfNames = wordNsfNames[s.id] || [];
-        const trackHtml = cats.length
-          ? cats.map((cat, ci) => {
+        // Synthesise category structure for flat-item stages (e.g. impact)
+        let effectiveCats = cats.length ? cats : (flat.length && nsfNames.length ? nsfNames.map((n,ni) => ({ name:n, items: flat[ni]!=null ? [flat[ni]] : [] })) : []);
+        const trackHtml = effectiveCats.length
+          ? effectiveCats.map((cat, ci) => {
               const nsfName = nsfNames[ci] || cat.name;
               const domSub  = (nsfNames[ci] && nsfNames[ci] !== cat.name) ? `<em style="font-size:8pt;color:#8A9BAC;display:block;margin-bottom:1pt">${esc(cat.name)}</em>` : '';
               return `<strong style="font-size:9pt;color:#596577;display:block;margin-top:5pt;text-transform:uppercase;letter-spacing:.3pt">${esc(nsfName)}</strong>${domSub}<ul style="margin:2pt 0 0 14pt;padding:0">${(cat.items||[]).map(it=>`<li style="font-size:9pt;line-height:1.4">${esc(it.replace(/\[\d+\]/g,'').trim())} <em style="color:#888">${(it.match(/\[\d+\]/g)||[]).join(' ')}</em></li>`).join('')}</ul>`;
