@@ -1205,39 +1205,6 @@ function fpaRenderROI(r) {
     </div>
     ${pipeSteps.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Causal Pipeline Conversion Rates</div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px">${pipeSteps.map((s,i) => `<div style="display:flex;align-items:center;gap:4px"><div style="background:#F4F7FF;border:1px solid #D0D5E0;border-radius:7px;padding:6px 10px;min-width:110px"><div style="font-size:9px;color:#7A869A;margin-bottom:2px">${s.step||'—'}</div><div style="font-size:13px;font-weight:800;color:#0D1B3E">${s.rate!=null?(s.rate<1?(s.rate*100).toFixed(0)+'%':s.rate):'—'}</div><div style="font-size:9px;font-weight:600;color:${confColor(s.confidence)}">${s.confidence||''}</div></div>${i<pipeSteps.length-1?'<span style="color:#7A869A;font-size:16px">→</span>':''}</div>`).join('')}</div></div>` : ''}
 
-    ${(() => {
-      // Track adjustments display card — NSF framework categories with current multipliers
-      const NSF_STAGES = [
-        { id:'activities', label:'Activities', cats:['Basic Research','Use-Inspired Research','Human Capital Development','Research Infrastructure'] },
-        { id:'outputs',    label:'Outputs',    cats:['Publications & Patents','Applied Tools & Products','Degrees & Training','Facilities & Platforms'] },
-        { id:'outcomes',   label:'Outcomes',   cats:['New Methods & Processes','New Products & Solutions','Workforce Development','Research Capacity & Capability'] },
-        { id:'impacts',    label:'Impacts',    cats:['Revenue','New firms','New industries','Productivity growth','Employment'] },
-      ];
-      const ta = r.track_adjustments || {};
-      // Get live categories from lifecycle data if available
-      const lcd = (window._fpaResearchCtx || {}).lifecycleData;
-      if (lcd?.stages) {
-        const catMap = { activities: lcd.stages.find(s=>s.id==='activities')?.categories, outputs: lcd.stages.find(s=>s.id==='outputs')?.categories, outcomes: lcd.stages.find(s=>s.id==='outcomes')?.categories };
-        ['activities','outputs','outcomes'].forEach(id => { const cats = catMap[id]; if (Array.isArray(cats) && cats.length) NSF_STAGES.find(s=>s.id===id).cats = cats.map(c=>c.name); });
-      }
-      return `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Track Adjustments (multiplier)</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          ${NSF_STAGES.map(stage => {
-            const stageAdj = ta[stage.id] || {};
-            return `<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
-              <span style="font-size:9px;font-weight:800;color:#596577;text-transform:uppercase;letter-spacing:.5px;min-width:68px;flex-shrink:0">${stage.label}</span>
-              <span style="font-size:11px;color:#445566">${stage.cats.map(cat => {
-                const val = stageAdj[cat] != null ? stageAdj[cat] : 1.0;
-                const isModified = val !== 1.0;
-                return `<span style="margin-right:10px;white-space:nowrap">${cat} <strong style="color:${isModified?'#C47800':'#7A869A'}">(${Number(val).toFixed(2)})</strong></span>`;
-              }).join('')}</span>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-    })()}
-
     ${subgroups.length ? `<div style="background:#fff;border:1px solid #D0D5E0;border-radius:10px;padding:13px;margin-top:12px"><div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A869A;margin-bottom:10px">Equity Subgroup Effect Modifiers</div><div style="display:flex;flex-wrap:wrap;gap:8px">${subgroups.map(sg=>{const dir=(sg.direction||'').toLowerCase(),mc=dir==='larger'?'#0B7A4E':dir==='smaller'?'#C47800':'#555',arrow=dir==='larger'?'↑':dir==='smaller'?'↓':'~';return `<div style="border:1px solid #D0D5E0;border-radius:7px;padding:7px 12px;min-width:160px"><div style="font-size:10px;font-weight:700;color:#0D1B3E">${sg.subgroup||'—'}</div><div style="font-size:16px;font-weight:800;color:${mc}">${arrow} ${sg.multiplier!=null?sg.multiplier+'×':'—'}</div><div style="font-size:9px;color:#7A869A">${sg.direction||''}</div>${sg.source ? srcCard(sg.source) : ''}</div>`}).join('')}</div></div>` : ''}
 
     <div id="fpa-roi-edit-form" style="display:none;margin-top:14px;padding:16px 20px;background:#EDF2FF;border:1px solid #C5D2EE;border-radius:10px">
