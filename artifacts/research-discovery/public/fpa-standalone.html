@@ -485,8 +485,11 @@ Exactly 2 pairs:
 **Evidence Gaps to Fill:** [1–2 sentences on the single most important research that would reduce investment uncertainty]
 
 ## LIFECYCLE_JSON
-Single JSON on ONE line, no line breaks inside. For each stage give 2–3 examples drawn directly from the retrieved literature. Wherever possible surface a concrete numerical value (effect size, %, rate, $, n=) pulled from the paper and cite its index number in brackets. If no number is available use a precise qualitative finding. No generic phrases.
-{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","examples":["NSF/IES grants totalling $42M for AI in K-12 [1]","Device access gap: 18% of low-income students lack devices [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","examples":["Khan Academy Khanmigo pilot, 58 schools [2]","72h avg teacher PD for AI tools [5]"]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","examples":["Engagement +0.31 SD vs control [3]","Formative assessment completion rate 84% [6]"]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","examples":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]","Dropout reduction 6pp, p=.08 [8]"]},{"id":"impact","label":"Impact","evidence":"speculative","note":"one clause","examples":["Projected wage premium $38k over career [9]","Long-run workforce readiness — no RCT evidence yet"]}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence: what would need to happen to bridge from stopping_point to the next stage","roi_anchored_stage":"outputs"}
+Single JSON on ONE line, no line breaks inside. Use the NSF logic-model framework: parallel named tracks flow through Activities → Outputs → Outcomes, then consolidate into Impacts. For each track bullet, surface a concrete numerical value (effect size, %, $, n=, CI) from a retrieved paper and cite its index in brackets. Use a precise qualitative finding only when no number exists. No generic phrases.
+Structure:
+- "input" and "impact" stages: use flat "items" array (2–4 bullets with citations)
+- "activities", "outputs", "outcomes" stages: use "categories" array of named parallel tracks, each with "name" and "items" array (1–2 bullets per track). Use 3–4 parallel tracks that match your research question (adapt the NSF track names: Basic Research, Use-Inspired Research, Human Capital Development, Research Infrastructure — or rename to fit the domain).
+{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"one clause","items":["IES/NSF grants $42M for K-12 AI [1]","District device budgets, 18% gap in low-income schools [4]"]},{"id":"activities","label":"Activities","evidence":"moderate","note":"one clause","categories":[{"name":"Basic Research","items":["58-study meta-analysis on AI tutoring [2]"]},{"name":"Use-Inspired Research","items":["Khanmigo RCT, n=1,200 students [3]"]},{"name":"Human Capital","items":["Teacher PD programme, 72h avg [5]"]},{"name":"Infrastructure","items":["LMS platform deployed 58 schools [6]"]}]},{"id":"outputs","label":"Outputs","evidence":"strong","note":"one clause","categories":[{"name":"Basic Research","items":["Effect size estimate 0.15 SD [2]"]},{"name":"Use-Inspired Research","items":["Engagement +0.31 SD vs control [3]"]},{"name":"Human Capital","items":["684 teachers certified [5]"]},{"name":"Infrastructure","items":["Platform uptime 99.2%, 42k sessions [6]"]}]},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"one clause","categories":[{"name":"Basic Research","items":["Learning gains 0.15 SD (95% CI 0.04–0.26) [2]"]},{"name":"Use-Inspired Research","items":["Course completion +6pp, p=.08 [3]"]},{"name":"Human Capital","items":["STEM pipeline growth 12% [5]"]},{"name":"Infrastructure","items":["Research capacity — no outcome RCT yet"]}]},{"id":"impact","label":"Impacts","evidence":"speculative","note":"one clause","items":["Wage premium projected $38k over career [9]","New EdTech firms: 3 spin-outs documented [7]","Productivity growth — modelled, not measured","Equity gap reduction — speculative"]}],"stopping_point":"outcomes","trajectory":"accelerating","bridge":"one sentence on what is needed to bridge from stopping_point to impact","roi_anchored_stage":"outcomes"}
 evidence values: strong | moderate | weak | speculative
 roi_anchored_stage: the stage id the ROI model is primarily parameterising (usually the stopping_point)`
       }]})
@@ -1245,7 +1248,9 @@ function fpaRenderLifecyclePanel(el, data) {
     const isStop  = s.id === data.stopping_point;
     const isRoi   = i === roiIdx;
     const isBeyond = stopIdx >= 0 && i > stopIdx;
-    const examples = Array.isArray(s.examples) ? s.examples : [];
+    // Support new schema: s.categories (named tracks) or s.items/s.examples (flat list)
+    const categories = Array.isArray(s.categories) ? s.categories : [];
+    const flatItems  = Array.isArray(s.items) ? s.items : (Array.isArray(s.examples) ? s.examples : []);
 
     // Card border: thick left strip in evidence colour; beyond-stopping = lighter
     const borderL  = isBeyond ? `3px solid ${col}55` : `4px solid ${col}`;
@@ -1253,19 +1258,30 @@ function fpaRenderLifecyclePanel(el, data) {
     const opacity  = isBeyond ? 'opacity:.82' : '';
     const textCol  = isBeyond ? '#6A7A8A' : '#0A2240';
     const subCol   = isBeyond ? '#8A9BAC' : '#445566';
+    const trackHdr = isBeyond ? '#9AAABB' : '#7A8A9B';
 
     // Badges above the card
     const badges = [];
-    if (isRoi)  badges.push(`<span style="font-size:9px;background:#5E52D4;color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">📐 ROI anchor</span>`);
-    if (isStop) badges.push(`<span style="font-size:9px;background:${col};color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">◀ evidence stops here</span>`);
+    if (isRoi)  badges.push(`<span style="font-size:9px;background:#5E52D4;color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">ROI anchor</span>`);
+    if (isStop) badges.push(`<span style="font-size:9px;background:${col};color:#fff;border-radius:4px;padding:1px 8px;font-weight:800;letter-spacing:.2px;white-space:nowrap">evidence stops here</span>`);
 
-    const examplesHtml = examples.length ? `
-      <ul style="margin:6px 0 0;padding:0 0 0 14px;list-style:none">
-        ${examples.map(ex => `<li style="position:relative;padding-left:12px;margin-bottom:4px;font-size:12.5px;color:${subCol};line-height:1.55">
+    function renderBullets(items) {
+      return `<ul style="margin:4px 0 0;padding:0;list-style:none">
+        ${items.map(ex => `<li style="position:relative;padding-left:13px;margin-bottom:4px;font-size:12.5px;color:${subCol};line-height:1.55">
           <span style="position:absolute;left:0;color:${isBeyond?col+'88':col};font-size:9px;top:4px">▸</span>
           ${fpaRenderCiteRef(ex, col)}
         </li>`).join('')}
-      </ul>` : '';
+      </ul>`;
+    }
+
+    const examplesHtml = categories.length
+      ? `<div style="margin-top:8px;display:flex;flex-direction:column;gap:7px;border-top:1px solid ${col}22;padding-top:8px">
+          ${categories.map(cat => `<div>
+            <div style="font-size:10px;font-weight:700;color:${trackHdr};text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px">${cat.name}</div>
+            ${Array.isArray(cat.items) && cat.items.length ? renderBullets(cat.items) : ''}
+          </div>`).join('')}
+        </div>`
+      : flatItems.length ? `<div style="margin-top:4px">${renderBullets(flatItems)}</div>` : '';
 
     const noteHtml = s.note ? `<div style="margin-top:6px;font-size:11px;color:${isBeyond?'#9AAABB':'#667788'};line-height:1.4;font-style:italic;padding-top:5px;border-top:1px solid ${col}22">${s.note}</div>` : '';
 
