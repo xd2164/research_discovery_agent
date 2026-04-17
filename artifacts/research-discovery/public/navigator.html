@@ -1205,7 +1205,8 @@ async function loadSearchHistory() {
   try {
     const r = await fetch(API_BASE_NAV + '/navigator/searches?limit=20');
     const d = await r.json();
-    const searches = (d.searches || []).map(s => ({ q: s.question }));
+    // Keep full records (synthesis_text, sources, etc.) — needed for cache restore
+    const searches = (d.searches || []).map(s => ({ ...s, q: s.question }));
     // Merge with any localStorage entries not yet synced
     const local = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
     const dbQs = new Set(searches.map(s => s.q));
