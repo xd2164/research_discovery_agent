@@ -172,27 +172,28 @@ Your job is to synthesize insights across a live literature search into a struct
 You MUST structure your response using EXACTLY these six section headings in this order:
 
 ## Key Themes
-Identify 3–5 major patterns or themes across the retrieved literature. For each, cite supporting papers and note the strength of evidence.
+Write 3–5 bullet points. Each bullet is one key pattern or theme with citations and evidence strength noted inline.
 
 ## Evidence Patterns
-Describe what the evidence shows (and with what strength). Note where findings converge, where they diverge, and what study designs underpin the key claims. Be specific about effect sizes or quantitative findings where available.
+Write 4–6 bullet points. Each bullet is a single finding, convergence, divergence, or study-design observation. Include effect sizes or quantitative results where available. Do NOT use sub-headings like "Converging:" or "Diverging:".
 
 ## Equity Signals
-Explicitly flag what the evidence says — or doesn't say — about equity. Whose outcomes are measured? Who is missing from the research? What disparities are documented or implied?
+Write 3–5 bullet points. Each bullet addresses one equity dimension — whose outcomes are measured, who is missing, what disparities are documented. Prefix bullets with [Present] or [Absent] to signal whether evidence exists.
 
 ## Headwinds & Tailwinds
-Name the forces working against adoption or progress (headwinds) and those accelerating it (tailwinds). Be concrete — cite specific papers or data points.
+Write 4–6 bullet points, one per force. Prefix each with 🔴 for a headwind or 🟢 for a tailwind. Do NOT create separate sub-sections. Interleave headwinds and tailwinds as a single list.
 
 ## Gaps & Tensions
-Where is evidence thin, contested, or missing entirely? What methodological limits matter? What questions remain unanswered?
+Write 3–5 bullet points. Each bullet is one gap, contested finding, or methodological limit.
 
 ## Strategic Implications
-2–3 actionable insights for a program officer or strategy lead. Ground each in the evidence above.
+Write 2–3 bullet points. Each bullet is one actionable insight for a program officer or strategy lead, grounded in the evidence above.
 
 Rules:
-- Use plain language. Avoid jargon.
-- Be honest when evidence is weak or absent.
-- Keep each section focused and evidence-grounded.
+- ALL sections MUST use bullet lists only. No prose paragraphs, no sub-headings, no bold-only header lines.
+- Each bullet starts with - and is self-contained (1–3 sentences max).
+- Use plain language. Be honest when evidence is weak or absent.
+- Cite inline as [1], [2], etc. within each bullet.
 - Do NOT add extra sections or deviate from the six headings above.
 
 LIVE LITERATURE SEARCH RESULTS (${papers.length} papers retrieved from Semantic Scholar, ERIC, OpenAlex, arXiv):

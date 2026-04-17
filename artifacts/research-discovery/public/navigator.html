@@ -802,15 +802,24 @@ function renderMarkdownBody(text) {
   const inline = s => s
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[(\d+)\]/g, '<cite style="color:#5E52D4;font-weight:800;font-size:10.5px;font-style:normal">[$1]</cite>');
+    .replace(/\[(\d+)\]/g, '<cite style="color:#5E52D4;font-weight:800;font-size:10.5px;font-style:normal">[$1]</cite>')
+    .replace(/\[Present\]/g, '<span style="display:inline-flex;align-items:center;background:#D6F5EC;color:#0B6E52;border-radius:3px;padding:0 5px;font-size:9.5px;font-weight:800;letter-spacing:.3px;margin-right:4px;vertical-align:middle">✓ Present</span>')
+    .replace(/\[Absent\]/g, '<span style="display:inline-flex;align-items:center;background:#FFE8DC;color:#9E3A14;border-radius:3px;padding:0 5px;font-size:9.5px;font-weight:800;letter-spacing:.3px;margin-right:4px;vertical-align:middle">✗ Absent</span>');
   for (const line of lines) {
     const t = line.trim();
     if (/^[-•*]\s+/.test(t)) {
       if (!inList) { out.push('<ul class="sum-ul">'); inList = true; }
-      out.push('<li>' + inline(t.replace(/^[-•*]\s+/, '')) + '</li>');
+      let content = t.replace(/^[-•*]\s+/, '');
+      // Style 🔴 headwind and 🟢 tailwind bullets with a tinted dot override
+      let dotColor = '';
+      if (content.startsWith('🔴')) { dotColor = '#C0392B'; content = content.replace(/^🔴\s*/, '<span style="color:#C0392B;font-weight:900;margin-right:2px">🔴</span>'); }
+      else if (content.startsWith('🟢')) { dotColor = '#0B9E80'; content = content.replace(/^🟢\s*/, '<span style="color:#0B9E80;font-weight:900;margin-right:2px">🟢</span>'); }
+      out.push(`<li style="${dotColor ? 'list-style:none' : ''}">${inline(content)}</li>`);
     } else {
       if (inList) { out.push('</ul>'); inList = false; }
-      if (t) out.push('<p>' + inline(t) + '</p>');
+      // Skip lines that are ONLY a bold heading (e.g. "**Headwinds:**") — they're section sub-labels that shouldn't be prose
+      if (t && /^\*\*[^*]+\*\*:?\s*$/.test(t)) continue;
+      if (t && !/^#{1,3}\s/.test(t)) out.push('<p>' + inline(t) + '</p>');
     }
   }
   if (inList) out.push('</ul>');
