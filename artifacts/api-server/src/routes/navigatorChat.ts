@@ -191,7 +191,10 @@ Write 2–3 bullet points. Each bullet is one actionable insight for a program o
 
 Rules:
 - ALL sections MUST use bullet lists only. No prose paragraphs, no sub-headings, no bold-only header lines.
-- Each bullet starts with - and is self-contained (1–3 sentences max).
+- ABSOLUTELY NO markdown tables. No pipes (|), no table headers, no column separators. Ever.
+- Each bullet starts with - and flows as a single continuous sentence or two. Do NOT split a bullet into bold label + colon + description. Write it as ONE natural sentence where the key point is woven into the sentence.
+- WRONG: "- **AI tools amplify inequities** : Algorithmic bias risks reinforcing... [9]. Evidence is moderate."
+- RIGHT: "- AI tools can amplify existing K-12 inequities rather than neutralize them — algorithmic bias in tutoring systems risks reinforcing stratification [9], with evidence moderate but largely theoretical."
 - Use plain language. Be honest when evidence is weak or absent.
 - Cite inline as [1], [2], etc. within each bullet.
 - Do NOT add extra sections or deviate from the six headings above.
