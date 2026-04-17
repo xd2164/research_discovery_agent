@@ -451,10 +451,10 @@ a:hover{text-decoration:underline}
         <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does research say about tech and AI bans in K–12 schools, and what are the underlying drivers?</button>
         <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What are the key headwinds and tailwinds for AI adoption in education right now?</button>
         <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">How is equity being reframed in AI education research — what's shifting in 2024–2026?</button>
-        <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What signals should a program officer watch when assessing AI disruption in grantee sites?</button>
         <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">What does evidence say about AI tutoring effectiveness for underserved and marginalized communities?</button>
         <button class="sc-prompt-chip" onclick="scPrompt(this.textContent)">Where is the strongest ROI evidence for AI tools in education, and what are the key caveats?</button>
       </div>
+      <div id="sc-history-section" style="display:none;margin-top:14px"></div>
     </div>
   </div>
 
@@ -522,9 +522,12 @@ a:hover{text-decoration:underline}
       <span style="font-size:11px;color:#7A8A9B">Grounded in the synthesis above</span>
     </div>
     <div class="sc-section-body">
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <input type="text" id="sc-qa-input" placeholder="e.g. Which finding is most contested? What should a PO watch for?" style="flex:1;border:1.5px solid #D8E3F0;border-radius:8px;padding:9px 13px;font-size:13px;font-family:inherit;color:#0D1B2A;outline:none" onfocus="this.style.borderColor='#1A6BC4'" onblur="this.style.borderColor='#D8E3F0'" onkeydown="if(event.key==='Enter') askFollowUp()">
-        <button onclick="askFollowUp()" style="background:#1A6BC4;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Ask Claude →</button>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
+        <textarea id="sc-qa-input" placeholder="e.g. Which finding is most contested? What should a PO watch for? What are the equity implications?" rows="3" style="width:100%;box-sizing:border-box;border:1.5px solid #D8E3F0;border-radius:8px;padding:10px 13px;font-size:13px;font-family:inherit;color:#0D1B2A;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='#1A6BC4'" onblur="this.style.borderColor='#D8E3F0'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askFollowUp()}"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;color:#B0BAC8">Press Enter to submit · Shift+Enter for new line</span>
+          <button onclick="askFollowUp()" style="background:#1A6BC4;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Ask Claude →</button>
+        </div>
       </div>
       <div id="sc-qa-out" style="display:none">
         <div class="qa-answer-panel">
@@ -690,6 +693,13 @@ const SC_SECTION_STYLES = {
   'Strategic Implications': { color:'#0A2240', bg:'#EEF2FA', icon:'💡' },
 };
 
+// Load history on init — works whether DOM ready or not
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderSearchHistory);
+} else {
+  setTimeout(renderSearchHistory, 0);
+}
+
 function scPrompt(text) { document.getElementById('sc-input').value = text.trim(); startSearch(); }
 
 async function startSearch() {
@@ -852,6 +862,8 @@ function renderSynthesisCards(text) {
       </div>`;
     }).join('');
   }
+  // Save this question to search history
+  if (scQuestion) scSaveToHistory(scQuestion);
   document.getElementById('sc-action-row').style.display = 'flex';
   document.getElementById('sc-qa-section').style.display = 'block';
   document.getElementById('sc-related-section').style.display = 'block';
@@ -1078,6 +1090,44 @@ function _gOnTouchMove(e){ if(_gDragNode&&e.cancelable) e.preventDefault(); cons
 function _gOnTouchEnd(e){ const t=[...e.changedTouches].find(t=>t.identifier===_gTouchId); if(t&&_gDragNode){ _gDragNode.vx=0; _gDragNode.vy=0; _gDragNode=null; } _gTouchId=null; }
 
 // ── Follow-up Q&A ───────────────────────────────────────────────────────────
+// Render markdown body without bold (<strong>) — used for follow-up answers
+function renderQABody(text) {
+  return renderMarkdownBody(text).replace(/<\/?strong>/g, '');
+}
+
+// ── Search History (localStorage) ──────────────────────────────────────────
+const SC_HISTORY_KEY = 'sc_search_history_v1';
+function scSaveToHistory(q) {
+  try {
+    const hist = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
+    const filtered = hist.filter(h => h.q !== q);
+    filtered.unshift({ q, ts: Date.now() });
+    localStorage.setItem(SC_HISTORY_KEY, JSON.stringify(filtered.slice(0, 12)));
+    renderSearchHistory();
+  } catch(e) {}
+}
+function renderSearchHistory() {
+  const el = document.getElementById('sc-history-section');
+  if (!el) return;
+  try {
+    const hist = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
+    if (!hist.length) { el.style.display = 'none'; return; }
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+        <span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#B0BAC8">Recent searches</span>
+        <button onclick="scClearHistory()" style="font-size:10px;color:#B0BAC8;background:none;border:none;cursor:pointer;padding:0">Clear</button>
+      </div>
+      <div class="sc-prompt-chips">
+        ${hist.map(h => `<button class="sc-prompt-chip" style="background:#F4F7FF;border-color:#C8D3E8;color:#3A4B60" onclick="scPrompt(${JSON.stringify(h.q)})">${escHtml(h.q.length > 70 ? h.q.slice(0,70)+'…' : h.q)}</button>`).join('')}
+      </div>`;
+  } catch(e) { el.style.display = 'none'; }
+}
+function scClearHistory() {
+  localStorage.removeItem(SC_HISTORY_KEY);
+  renderSearchHistory();
+}
+
 async function askFollowUp() {
   const q = document.getElementById('sc-qa-input').value.trim();
   if (!q || !scSynthesisText) return;
@@ -1088,11 +1138,11 @@ async function askFollowUp() {
   try {
     const r = await fetch('/api/claude', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt: `You are a research synthesis assistant. Answer this question about the following research synthesis.\n\nOriginal question: "${scQuestion}"\n\nSynthesis:\n${scSynthesisText.slice(0,3000)}\n\nFollow-up question: ${q}\n\nAnswer concisely and ground your response in the synthesis. Cite papers by [number] where possible. Flag clearly if the question goes beyond what the synthesis covers.` })
+      body: JSON.stringify({ prompt: `You are a research synthesis assistant. Answer this question about the following research synthesis.\n\nOriginal question: "${scQuestion}"\n\nSynthesis:\n${scSynthesisText.slice(0,3000)}\n\nFollow-up question: ${q}\n\nAnswer concisely and ground your response in the synthesis. Cite papers by [number] where possible. Flag clearly if the question goes beyond what the synthesis covers. Use plain sentences — no bold formatting, no headers, just clear prose with bullet points where helpful.` })
     });
     const d = await r.json();
     const text = (d.text || d.content?.find(b => b.type==='text')?.text || 'No response.').trim();
-    textEl.innerHTML = '<p>' + renderMarkdownBody(text) + '</p>';
+    textEl.innerHTML = renderQABody(text);
   } catch(e) {
     textEl.innerHTML = '<div class="sc-err">Could not get answer. Try again.</div>';
   }
