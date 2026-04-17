@@ -1,0 +1,46 @@
+Make the lifecycle “active,” not just descriptive
+Don’t treat Input → Impact as static tags. The system should reason across them. For example, when a user asks a question, the agent should automatically traverse the lifecycle and say: “Most evidence stops at outputs; here’s what would need to happen to reach outcomes and impact.” This turns the taxonomy into a thinking framework, not just metadata.
+Introduce lightweight causal linking (even if imperfect)
+You don’t need a full causal model, but you do want directional connections. Let the system say: “This type of research (activity) has historically led to these types of outcomes under these conditions.” Even heuristic links (based on patterns across sources) dramatically increase usefulness for strategy conversations.
+Differentiate evidence strength across layers
+Not all layers are equally evidenced. Outputs are often well-documented; impacts are not. Add simple signals like strong / emerging / weak / speculative per layer. This helps users quickly see where decisions are grounded vs. where they are bets—very aligned with NSF’s attribution challenge.
+Surface time dynamics (early vs. mature signals)
+Especially for things like AI bans, timing matters. Add a notion of trajectory:
+early signal (emerging conversation)
+accelerating (gaining traction across sources)
+stabilizing (clear pattern)
+declining
+This allows the system to answer not just what is happening, but how fast and in what direction.
+Embed “strategy translation” as a default output
+Every synthesis should end with: “What this means for us.”
+Not generic recommendations, but structured reflection:
+implications for current investments
+risks (headwinds)
+opportunities (tailwinds)
+where more evidence is needed
+This is the key shift from research tool → decision support system.
+Enable cross-portfolio pattern recognition
+Instead of looking at one topic at a time, allow the agent to say:
+“Across multiple initiatives, we see similar breakdowns between outputs and outcomes.”
+This is where the system becomes powerful for leadership—identifying systemic patterns, not isolated insights.
+Add “counterfactual thinking” prompts
+A simple but powerful upgrade:
+“What would need to be true for this to fail?”
+or
+“What assumptions link this output to impact?”
+This aligns strongly with NSF’s concern around attribution and helps stress-test conclusions.
+Track translation gaps explicitly
+What Michelle surfaced is critical: people are operating on outdated mental models.
+The system should flag:
+“Common misconception: X; Current reality: Y”
+This makes the tool not just informative, but corrective and educational.
+Create reusable “impact archetypes”
+Over time, you’ll see repeatable patterns (e.g., research → pilot → limited adoption due to policy constraints).
+Capture these as templates the agent can reuse when interpreting new evidence. This accelerates reasoning without needing perfect data.
+Design for memos, not just answers
+Since Michelle is already writing memos, optimize outputs for that format:
+headline insight
+lifecycle breakdown
+key signals
+implications
+This makes the tool immediately usable in real workflows.

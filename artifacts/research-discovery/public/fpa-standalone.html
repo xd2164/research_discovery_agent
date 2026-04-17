@@ -245,6 +245,7 @@ select:focus,textarea:focus,input:focus{border-color:var(--blue);background:var(
     </div>
     <div id="fpa-synthesis-body">
     <div id="fpa-decision-readiness" style="display:none;padding:14px 20px;background:#F8F9FF;border-bottom:1px solid var(--border)"></div>
+    <div id="fpa-lifecycle-panel" style="display:none;padding:14px 20px 16px;background:#FAFBFE;border-bottom:1px solid var(--border)"></div>
     <div id="fpa-roi-panel" style="display:none;border-bottom:1px solid var(--border)"></div>
     <div id="fpa-confidence-map" style="display:none;padding:12px 20px;border-bottom:1px solid var(--border)"></div>
     <div id="fpa-graph-panel" style="display:none;border-bottom:1px solid var(--border)">
@@ -459,8 +460,34 @@ Identify 2–3 key assumptions embedded in the question. For each:
 ## Evidence Gaps
 4 bullets identifying missing evidence — underserved populations, weak Goal × Outcome cells, methodological limits.
 
-## Programme Officer Recommendations
-3 concrete, actionable recommendations grounded in the evidence.`
+## Evidence Trajectory
+Two lines ONLY:
+TRAJECTORY: [early signal|accelerating|stabilizing|declining] — [one sentence explaining the trend]
+EVIDENCE_STOPPING_POINT: [inputs|activities|outputs|outcomes|impact] — [one sentence on what would need to happen to move evidence to the next stage]
+
+## Translation Gaps
+Exactly 2 pairs:
+**Misconception:** "[outdated or overly optimistic belief widely held about this topic]"
+**Reality:** [what current evidence actually shows — be specific, cite where possible]
+
+## Counterfactual
+**What would need to be true for this to fail at scale?**
+- [bullet 1]
+- [bullet 2]
+**What assumptions link this output to impact?**
+- [assumption 1]
+- [assumption 2]
+
+## Strategy Translation
+**Current Implications:** [1–2 sentences on what this means for existing investments in this space]
+**Headwinds:** [1–2 sentences on key risks or barriers that could prevent outcomes from reaching impact]
+**Tailwinds:** [1–2 sentences on enabling factors or opportunities that increase likelihood of impact]
+**Evidence Gaps to Fill:** [1–2 sentences on the single most important research that would reduce investment uncertainty]
+
+## LIFECYCLE_JSON
+Single JSON on ONE line, no line breaks inside:
+{"stages":[{"id":"input","label":"Inputs","evidence":"strong","note":"brief note"},{"id":"activities","label":"Activities","evidence":"moderate","note":"brief note"},{"id":"outputs","label":"Outputs","evidence":"strong","note":"brief note"},{"id":"outcomes","label":"Outcomes","evidence":"weak","note":"brief note"},{"id":"impact","label":"Impact","evidence":"speculative","note":"brief note"}],"stopping_point":"outputs","trajectory":"accelerating","bridge":"one sentence on what needs to happen to move evidence from stopping_point to the next stage"}
+evidence values must be one of: strong | moderate | weak | speculative`
       }]})
     });
     const sd = await sr.json();
@@ -514,6 +541,20 @@ Identify 2–3 key assumptions embedded in the question. For each:
     if (m) cmLines[m[1]] = m[2].trim();
   });
 
+  let lifecycleData = null;
+  try {
+    const lcRaw = extractJsonByKey(synthesis, 'stopping_point') || extractJsonByKey(synthesis, 'stages');
+    if (lcRaw && Array.isArray(lcRaw.stages)) lifecycleData = lcRaw;
+  } catch(e) {}
+
+  let trajectoryLine = '', stoppingLine = '';
+  synthesis.split('\n').forEach(ln => {
+    const t = ln.match(/^TRAJECTORY:\s*(.+)/);
+    const s = ln.match(/^EVIDENCE_STOPPING_POINT:\s*(.+)/);
+    if (t) trajectoryLine = t[1].trim();
+    if (s) stoppingLine = s[1].trim();
+  });
+
   // Always use dedicated extraction call — inline parse is too fragile for nested JSON
   let roiData = null;
   try {
@@ -545,15 +586,15 @@ Identify 2–3 key assumptions embedded in the question. For each:
   } catch(e) { console.warn('ROI extraction call failed', e); }
 
   const cleanSynthesis = (() => {
-    // Slice from "## Executive Summary" — everything before is machine data
     const execIdx = synthesis.search(/##\s*Executive Summary/i);
-    // If the marker is missing, show nothing rather than dumping raw machine data
     if (execIdx < 0) return '';
     let clean = synthesis.slice(execIdx);
+    // Strip the entire LIFECYCLE_JSON section (heading + content)
+    clean = clean.replace(/##\s*LIFECYCLE_JSON[\s\S]*?(?=##|$)/gi, '');
     // Strip any stray JSON objects (60+ chars inside braces)
     clean = clean.replace(/\{[^{}]{60,}\}/g, '');
-    // Strip STRONG / WEAK / UNKNOWN confidence lines
-    clean = clean.replace(/^(STRONG|WEAK|UNKNOWN):\s*.+$/gm, '');
+    // Strip machine-data lines
+    clean = clean.replace(/^(STRONG|WEAK|UNKNOWN|TRAJECTORY|EVIDENCE_STOPPING_POINT):\s*.+$/gm, '');
     // Strip --- horizontal rule lines
     clean = clean.replace(/^---+$/gm, '');
     // Collapse excess blank lines
@@ -606,6 +647,10 @@ Identify 2–3 key assumptions embedded in the question. For each:
         <strong>Recommendation:</strong> ${drData.investment_readiness||'—'}
       </div>`;
   }
+
+  // Render Lifecycle Chain
+  const lcEl = document.getElementById('fpa-lifecycle-panel');
+  if (lcEl && lifecycleData?.stages) fpaRenderLifecyclePanel(lcEl, lifecycleData);
 
   // Render ROI Parameters
   const roiEl = document.getElementById('fpa-roi-panel');
@@ -682,7 +727,7 @@ Identify 2–3 key assumptions embedded in the question. For each:
 
   // These always run regardless of any render error:
   fpaSetStep(6);
-  window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+  window._fpaResearchCtx = { decision, drData, cmLines, lifecycleData, trajectoryLine, synthesis: cleanSynthesis };
   window._fpaAllPapers = allPapers;
   setTimeout(() => buildKnowledgeGraph(allPapers, drData, cmLines, plan, cleanSynthesis, roiData), 80);
 
@@ -693,7 +738,7 @@ Identify 2–3 key assumptions embedded in the question. For each:
     cleanSynthesis.slice(0, 300).replace(/#+\s*/g, '').trim() || null,
     allPapers.length,
     [...new Set(allPapers.map(p => p.source).filter(Boolean))],
-    { plan, allPapers, drData, cmLines, cleanSynthesis, roiData }
+    { plan, allPapers, drData, cmLines, cleanSynthesis, roiData, lifecycleData, trajectoryLine }
   );
   fpaTrack('research_run', { query: decision, paper_count: allPapers.length, sources: [...new Set(allPapers.map(p => p.source).filter(Boolean))] });
 
@@ -1171,12 +1216,60 @@ function fpaRenderROI(r) {
   </div>`;
 }
 
+// ══ LIFECYCLE CHAIN RENDERER ══
+function fpaRenderLifecyclePanel(el, data) {
+  const evColors = { strong:'#0B9E80', moderate:'#1A6BC4', weak:'#D4921A', speculative:'#9E1515' };
+  const evLabels = { strong:'Strong', moderate:'Moderate', weak:'Weak', speculative:'Speculative' };
+  const trajColors = { accelerating:'#0B9E80', stabilizing:'#1A6BC4', 'early signal':'#D4921A', declining:'#9E1515' };
+  const trajIcons  = { accelerating:'📈', stabilizing:'➡', 'early signal':'🌱', declining:'📉' };
+  const traj = (data.trajectory||'').toLowerCase();
+  const trajColor = trajColors[traj] || '#5E52D4';
+  const trajIcon  = trajIcons[traj]  || '📊';
+  const stopIdx = (data.stages||[]).findIndex(s => s.id === data.stopping_point);
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px">
+        <span>🔗</span><span>Causal Chain — Evidence by Stage</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;background:${trajColor}15;border:1px solid ${trajColor}40;border-radius:20px;padding:3px 11px">
+        <span style="font-size:11px">${trajIcon}</span>
+        <span style="font-size:10px;font-weight:700;color:${trajColor}">${traj ? traj.charAt(0).toUpperCase()+traj.slice(1) : '—'}</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:6px">
+      ${(data.stages||[]).map((s, i) => {
+        const ev = (s.evidence||'speculative').toLowerCase();
+        const col = evColors[ev] || '#888';
+        const isStop = s.id === data.stopping_point;
+        const isAfterStop = stopIdx >= 0 && i > stopIdx;
+        const dim = isAfterStop ? 'opacity:0.35;filter:grayscale(60%)' : '';
+        return `<div style="display:flex;align-items:center;flex:1;min-width:0;${dim}">
+          <div style="flex:1;min-width:68px;text-align:center">
+            <div style="background:${isStop?col+'22':'#fff'};border:2px solid ${col};border-radius:8px;padding:8px 4px;position:relative;transition:all .2s">
+              ${isStop ? `<div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:8px;background:${col};color:#fff;border-radius:3px;padding:1px 5px;white-space:nowrap;font-weight:800;letter-spacing:.2px">evidence stops</div>` : ''}
+              <div style="font-size:10.5px;font-weight:800;color:${col}">${s.label}</div>
+              <div style="font-size:8px;font-weight:700;color:${col};text-transform:uppercase;letter-spacing:.3px;margin-top:2px">${evLabels[ev]||ev}</div>
+              ${s.note ? `<div style="font-size:8px;color:#7A8A9B;margin-top:3px;line-height:1.3;padding:0 2px">${s.note.slice(0,52)}${s.note.length>52?'…':''}</div>` : ''}
+            </div>
+          </div>
+          ${i < ((data.stages||[]).length-1) ? `<div style="width:18px;flex-shrink:0;height:2px;background:${isAfterStop?'#E0E0E0':col+'80'};margin:0 1px;margin-top:-8px"></div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+    ${data.bridge ? `<div style="margin-top:10px;background:#FFF8E1;border:1px solid #FFD54F;border-radius:7px;padding:8px 12px;font-size:12px;color:#5D4037;line-height:1.5"><strong>Bridge needed:</strong> ${data.bridge}</div>` : ''}`;
+}
+
 // ══ MARKDOWN RENDERER ══
 function fpaRenderMD(text) {
   const sectionColors = {
-    'ASSUMPTION ANALYSIS': { bg:'#FFF8F0', border:'#F4A742', icon:'🧩' },
-    'DISCOVERY INSIGHTS':  { bg:'#F0F8FF', border:'#5E9CD3', icon:'🔭' },
-    'EVIDENCE GAPS':       { bg:'#FFF5F5', border:'#E57373', icon:'⚠️' },
+    'ASSUMPTION ANALYSIS':  { bg:'#FFF8F0', border:'#F4A742', icon:'🧩' },
+    'DISCOVERY INSIGHTS':   { bg:'#F0F8FF', border:'#5E9CD3', icon:'🔭' },
+    'EVIDENCE GAPS':        { bg:'#FFF5F5', border:'#E57373', icon:'⚠️' },
+    'STRATEGY TRANSLATION': { bg:'#F0FFF6', border:'#10B981', icon:'🎯' },
+    'TRANSLATION GAPS':     { bg:'#FFF7ED', border:'#F59E0B', icon:'⚡' },
+    'COUNTERFACTUAL':       { bg:'#F5F3FF', border:'#8B5CF6', icon:'🔀' },
+    'EVIDENCE TRAJECTORY':  { bg:'#EFF6FF', border:'#3B82F6', icon:'📈' },
     'PROGRAMME OFFICER RECOMMENDATIONS': { bg:'#F0FFF4', border:'#66BB6A', icon:'✅' },
   };
   let html = '', inSection = null, sectionBuf = '';
@@ -1188,8 +1281,9 @@ function fpaRenderMD(text) {
   }
   function renderLine(l) {
     if (!l) return '';
-    if (l.match(/^\*\*Assumption:/i) || l.match(/^\*\*Cluster:/i) || l.match(/^\*\*Gap:/i) || l.match(/^\*\*Signal:/i)) {
-      return `<div style="font-size:12px;font-weight:700;color:var(--navy);margin:8px 0 4px">${l.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}</div>`;
+    if (l.match(/^\*\*(Assumption|Cluster|Gap|Signal|Current Implications|Headwinds|Tailwinds|Evidence Gaps to Fill|Misconception|Reality|What would need|What assumptions):/i)) {
+      const colored = l.match(/^\*\*(Misconception):/i) ? 'color:#92400E' : l.match(/^\*\*(Reality):/i) ? 'color:#065C3A' : 'color:var(--navy)';
+      return `<div style="font-size:12px;font-weight:700;${colored};margin:8px 0 4px">${l.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}</div>`;
     } else if (l.match(/^[-•*]\s/)) {
       return `<div style="font-size:13px;line-height:1.65;padding-left:16px;margin-bottom:4px;position:relative"><span style="position:absolute;left:2px;color:var(--muted)">•</span>${l.replace(/^[-•*]\s/,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\[(\d+(?:,\s*\d+)*)\]/g,(_,nums)=>nums.split(/,\s*/).map(n=>`<a href="#fpa-ref-${n.trim()}" onclick="event.preventDefault();fpaScrollToRef(${n.trim()})" style="font-size:10px;background:#EEF0FF;color:#3A2FAA;border-radius:3px;padding:0 4px;font-weight:700;text-decoration:none;cursor:pointer">[${n.trim()}]</a>`).join(''))}</div>`;
     } else {
@@ -1368,7 +1462,7 @@ function fpaRestoreQuery(rowId) {
   // If full results were stored, render them instantly without re-running
   const fr = row.full_results;
   if (fr && fr.cleanSynthesis) {
-    const { plan = {}, allPapers = [], drData = null, cmLines = {}, cleanSynthesis = '', roiData = null } = fr;
+    const { plan = {}, allPapers = [], drData = null, cmLines = {}, cleanSynthesis = '', roiData = null, lifecycleData = null, trajectoryLine = '' } = fr;
     const decision = row.query;
 
     // Show/hide panels
@@ -1407,6 +1501,12 @@ function fpaRestoreQuery(rowId) {
     const roiEl = document.getElementById('fpa-roi-panel');
     if (roiEl && roiData) { try { roiEl.style.display='block'; roiEl.innerHTML=fpaRenderROI(roiData); } catch(e) {} }
 
+    // Lifecycle chain (from stored data)
+    const lcEl2 = document.getElementById('fpa-lifecycle-panel');
+    if (lcEl2 && lifecycleData?.stages) {
+      fpaRenderLifecyclePanel(lcEl2, lifecycleData);
+    }
+
     // Confidence map
     const cmEl = document.getElementById('fpa-confidence-map');
     if (cmEl && Object.keys(cmLines).length) {
@@ -1431,7 +1531,7 @@ function fpaRestoreQuery(rowId) {
     if (countEl) countEl.textContent = `${allPapers.length} papers · ${Object.keys(srcTally2).length} databases`;
 
     // Knowledge graph + step state
-    window._fpaResearchCtx = { decision, drData, cmLines, synthesis: cleanSynthesis };
+    window._fpaResearchCtx = { decision, drData, cmLines, lifecycleData, trajectoryLine, synthesis: cleanSynthesis };
     window._fpaAllPapers = allPapers;
     window._fpaLastRoiJson = roiData ? JSON.stringify(roiData) : null;
     fpaSetStep(8);
