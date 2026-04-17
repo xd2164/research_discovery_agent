@@ -483,7 +483,7 @@ a:hover{text-decoration:underline}
     <div class="sc-action-row" id="sc-action-row" style="display:none;padding:0 16px 16px">
       <button class="sc-action-btn" id="sc-graph-btn" style="background:#5E52D4" onclick="buildConceptGraph()">🕸 Build Knowledge Graph</button>
       <button class="sc-action-btn" style="background:#1A6BC4" onclick="document.getElementById('sc-qa-section').scrollIntoView({behavior:'smooth'})">💬 Ask Follow-up</button>
-      <button class="sc-action-btn" id="sc-related-btn" style="background:#0B9E80" onclick="findRelatedPapers()">📚 Find Related Papers</button>
+      <button class="sc-action-btn" id="sc-related-btn" style="background:#0B9E80" onclick="findRelatedPapers()">↻ Reload Related</button>
     </div>
   </div>
 
@@ -546,7 +546,7 @@ a:hover{text-decoration:underline}
       <span style="font-size:11px;color:#7A8A9B">Additional papers to explore · Click to open</span>
     </div>
     <div class="sc-section-body" id="sc-related-body">
-      <div class="sc-idle">Click <strong>Find Related Papers</strong> in Step 3 to load this panel.</div>
+      <div class="sc-idle"><div class="spin"></div>Related papers load automatically after synthesis completes.</div>
     </div>
   </div>
 
@@ -796,36 +796,48 @@ function parseSections(text) {
 }
 
 function renderMarkdownBody(text) {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/\[(\d+)\]/g, '<span style="color:#5E52D4;font-weight:800;font-size:11px">[$1]</span>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/\n\n+/g, '</p><p>')
-    .replace(/\n/g, '<br>');
+  const lines = text.split('\n');
+  const out = [];
+  let inList = false;
+  const inline = s => s
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\[(\d+)\]/g, '<cite style="color:#5E52D4;font-weight:800;font-size:10.5px;font-style:normal">[$1]</cite>');
+  for (const line of lines) {
+    const t = line.trim();
+    if (/^[-•*]\s+/.test(t)) {
+      if (!inList) { out.push('<ul class="sum-ul">'); inList = true; }
+      out.push('<li>' + inline(t.replace(/^[-•*]\s+/, '')) + '</li>');
+    } else {
+      if (inList) { out.push('</ul>'); inList = false; }
+      if (t) out.push('<p>' + inline(t) + '</p>');
+    }
+  }
+  if (inList) out.push('</ul>');
+  return out.join('');
 }
 
 function renderSynthesisCards(text) {
   const synthBody = document.getElementById('sc-synthesis-body');
   const sections = parseSections(text);
   if (!sections.length) {
-    synthBody.innerHTML = '<div style="font-size:13px;line-height:1.7;color:#0D1B2A"><p>' + renderMarkdownBody(text) + '</p></div>';
+    synthBody.innerHTML = '<div style="font-size:13px;line-height:1.7;color:#0D1B2A">' + renderMarkdownBody(text) + '</div>';
   } else {
     synthBody.innerHTML = sections.map(sec => {
       const st = SC_SECTION_STYLES[sec.title] || { color:'#5E52D4', bg:'#EEECFF', icon:'✦' };
       return `<div class="sum-card">
-        <div class="sum-card-hdr" style="background:${st.bg};border-bottom:1px solid ${st.color}33">
+        <div class="sum-card-hdr" style="background:${st.bg};border-bottom:2px solid ${st.color}44">
           <span class="sum-card-icon">${st.icon}</span>
           <span class="sum-card-label" style="color:${st.color}">${sec.title}</span>
         </div>
-        <div class="sum-card-body"><p>${renderMarkdownBody(sec.content)}</p></div>
+        <div class="sum-card-body">${renderMarkdownBody(sec.content)}</div>
       </div>`;
     }).join('');
   }
-  const actionRow = document.getElementById('sc-action-row');
-  actionRow.style.display = 'flex';
+  document.getElementById('sc-action-row').style.display = 'flex';
   document.getElementById('sc-qa-section').style.display = 'block';
   document.getElementById('sc-related-section').style.display = 'block';
+  findRelatedPapers();
 }
 
 // ── Knowledge Graph ─────────────────────────────────────────────────────────
