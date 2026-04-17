@@ -1102,35 +1102,62 @@ function renderQABody(text) {
   return renderMarkdownBody(text).replace(/<\/?strong>/g, '');
 }
 
-// ── Search History (localStorage) ──────────────────────────────────────────
+// ── Search History (database-backed, localStorage fallback) ─────────────────
 const SC_HISTORY_KEY = 'sc_search_history_v1';
-function scSaveToHistory(q) {
+const API_BASE_NAV = '/api';
+
+async function scSaveToHistory(q) {
+  // Optimistically update localStorage so the dropdown feels instant
   try {
-    const hist = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
-    const filtered = hist.filter(h => h.q !== q);
-    filtered.unshift({ q, ts: Date.now() });
-    localStorage.setItem(SC_HISTORY_KEY, JSON.stringify(filtered.slice(0, 12)));
-    renderSearchHistory();
+    const local = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
+    const filtered = local.filter(h => h.q !== q);
+    filtered.unshift({ q });
+    localStorage.setItem(SC_HISTORY_KEY, JSON.stringify(filtered.slice(0, 20)));
   } catch(e) {}
+  // Persist to database
+  try {
+    await fetch(API_BASE_NAV + '/navigator/searches', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q })
+    });
+  } catch(e) {}
+  renderSearchHistory();
 }
-function renderSearchHistory() {
+
+async function loadSearchHistory() {
+  try {
+    const r = await fetch(API_BASE_NAV + '/navigator/searches?limit=20');
+    const d = await r.json();
+    const searches = (d.searches || []).map(s => ({ q: s.question }));
+    // Merge with any localStorage entries not yet synced
+    const local = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
+    const dbQs = new Set(searches.map(s => s.q));
+    const extra = local.filter(h => !dbQs.has(h.q));
+    return [...searches, ...extra].slice(0, 20);
+  } catch(e) {
+    // Fallback to localStorage only
+    try { return JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]'); } catch(_) { return []; }
+  }
+}
+
+async function renderSearchHistory() {
   const sel = document.getElementById('sc-history-select');
   if (!sel) return;
-  try {
-    const hist = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
-    if (!hist.length) { sel.style.display = 'none'; return; }
-    sel.style.display = '';
-    // Rebuild options — first option is the placeholder, then history items, then a clear separator
-    sel.innerHTML = '<option value="">🕐 Recent searches…</option>' +
-      hist.map(h => {
-        const label = h.q.length > 72 ? h.q.slice(0, 72) + '…' : h.q;
-        return `<option value="${h.q.replace(/"/g, '&quot;')}">${label}</option>`;
-      }).join('') +
-      '<option value="__clear__" style="color:#C0392B">✕ Clear history</option>';
-  } catch(e) { sel.style.display = 'none'; }
+  const hist = await loadSearchHistory();
+  if (!hist.length) { sel.style.display = 'none'; return; }
+  sel.style.display = '';
+  sel.innerHTML = '<option value="">🕐 Recent searches…</option>' +
+    hist.map(h => {
+      const label = h.q.length > 72 ? h.q.slice(0, 72) + '…' : h.q;
+      return `<option value="${h.q.replace(/"/g, '&quot;')}">${escHtml(label)}</option>`;
+    }).join('') +
+    '<option value="__clear__" style="color:#C0392B">✕ Clear history</option>';
 }
-function scClearHistory() {
+
+async function scClearHistory() {
   localStorage.removeItem(SC_HISTORY_KEY);
+  try { await fetch(API_BASE_NAV + '/navigator/searches', { method: 'DELETE' }); } catch(e) {}
   renderSearchHistory();
 }
 

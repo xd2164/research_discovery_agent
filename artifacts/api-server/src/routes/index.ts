@@ -8,6 +8,7 @@ import historyRouter from "./history";
 import trackRouter from "./track";
 import resourcesRouter from "./resources";
 import navigatorChatRouter from "./navigatorChat";
+import navigatorSearchesRouter from "./navigatorSearches";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(historyRouter);
 router.use(trackRouter);
 router.use(resourcesRouter);
 router.use(navigatorChatRouter);
+router.use(navigatorSearchesRouter);
 
 export default router;
