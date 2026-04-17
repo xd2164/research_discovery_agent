@@ -693,20 +693,91 @@ if (document.readyState === 'loading') {
   setTimeout(renderSearchHistory, 0);
 }
 
-// Load text into the textarea without auto-running (user sees and can edit before submitting)
+// In-memory cache of loaded history records (populated by renderSearchHistory)
+let scHistoryCache = [];
+
+// Load text into the textarea without auto-running
 function scPrompt(text) {
   const ta = document.getElementById('sc-input');
   ta.value = text.trim();
   ta.focus();
   ta.scrollIntoView({ behavior:'smooth', block:'center' });
 }
-// Called by both dropdown selects — load selected option value into textarea and reset the select
+// Called by both dropdown selects
 function scLoadFromSelect(sel) {
   const val = sel.value;
   if (!val) return;
-  if (val === '__clear__') { scClearHistory(); sel.value = ''; return; }
-  scPrompt(val);
-  sel.value = ''; // reset so the placeholder shows again
+  sel.value = '';
+  if (val === '__clear__') { scClearHistory(); return; }
+  // Check if we have a cached synthesis for this question (DB has .question, localStorage fallback has .q)
+  const cached = scHistoryCache.find(r => (r.question || r.q) === val);
+  if (cached && cached.synthesis_text) {
+    scRestoreFromCache(cached);
+  } else {
+    scPrompt(val);
+  }
+}
+
+// Restore a full previous search result from cache without re-running the API
+function scRestoreFromCache(record) {
+  scQuestion = record.question;
+  scSynthesisText = record.synthesis_text;
+  scSources = Array.isArray(record.sources) ? record.sources : [];
+
+  // Fill the input so the user can see what question this is for
+  document.getElementById('sc-input').value = record.question;
+
+  // Hide any previous output sections first
+  ['sc-papers-section','sc-synthesis-section','sc-graph-section','sc-qa-section','sc-related-section'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('sc-action-row').style.display = 'none';
+  document.getElementById('sc-qa-out').style.display = 'none';
+
+  // Restore papers section
+  const papersSection = document.getElementById('sc-papers-section');
+  const papersBody = document.getElementById('sc-papers-body');
+  papersSection.style.display = 'block';
+  const count = record.paper_count || scSources.length;
+  document.getElementById('sc-papers-count').textContent = count ? `${count} papers` : '';
+  if (scSources.length) {
+    renderSourcePapers(scSources);
+  } else {
+    papersBody.innerHTML = `<div style="font-size:12px;color:#7A8A9B">Paper list not cached for this entry.</div>`;
+  }
+
+  // Restore synthesis section with a cache badge
+  const synthSection = document.getElementById('sc-synthesis-section');
+  const synthBody = document.getElementById('sc-synthesis-body');
+  synthSection.style.display = 'block';
+
+  const ts = record.searched_at ? new Date(record.searched_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : 'saved';
+  const cacheBanner = `<div style="display:flex;align-items:center;justify-content:space-between;background:#F4F7FF;border:1px solid #C8D3E8;border-radius:7px;padding:8px 12px;margin-bottom:10px;gap:10px;flex-wrap:wrap">
+    <span style="font-size:11px;color:#4A5568">📥 Restored from cache · ${ts}</span>
+    <button onclick="startSearch()" style="font-size:11px;font-weight:700;color:#1A6BC4;background:none;border:1px solid #1A6BC4;border-radius:6px;padding:4px 12px;cursor:pointer;white-space:nowrap">🔄 Run fresh search</button>
+  </div>`;
+
+  // Parse and render sections
+  const sections = parseSections(scSynthesisText);
+  const cardsHtml = sections.length
+    ? sections.map(sec => {
+        const st = SC_SECTION_STYLES[sec.title] || { color:'#5E52D4', bg:'#EEECFF', icon:'✦' };
+        return `<div class="sum-card">
+          <div class="sum-card-hdr" style="background:${st.bg};border-bottom:2px solid ${st.color}44">
+            <span class="sum-card-icon">${st.icon}</span>
+            <span class="sum-card-label" style="color:${st.color}">${sec.title}</span>
+          </div>
+          <div class="sum-card-body">${renderMarkdownBody(sec.content)}</div>
+        </div>`;
+      }).join('')
+    : `<div style="font-size:13px;line-height:1.7;color:#0D1B2A">${renderMarkdownBody(scSynthesisText)}</div>`;
+
+  synthBody.innerHTML = cacheBanner + cardsHtml;
+
+  document.getElementById('sc-action-row').style.display = 'flex';
+  document.getElementById('sc-qa-section').style.display = 'block';
+  document.getElementById('sc-related-section').style.display = 'block';
+  synthSection.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
 async function startSearch() {
@@ -1107,19 +1178,24 @@ const SC_HISTORY_KEY = 'sc_search_history_v1';
 const API_BASE_NAV = '/api';
 
 async function scSaveToHistory(q) {
-  // Optimistically update localStorage so the dropdown feels instant
+  // Optimistically update localStorage
   try {
     const local = JSON.parse(localStorage.getItem(SC_HISTORY_KEY) || '[]');
     const filtered = local.filter(h => h.q !== q);
     filtered.unshift({ q });
     localStorage.setItem(SC_HISTORY_KEY, JSON.stringify(filtered.slice(0, 20)));
   } catch(e) {}
-  // Persist to database
+  // Persist to database — include synthesis text and sources for cache restore
   try {
     await fetch(API_BASE_NAV + '/navigator/searches', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: q })
+      body: JSON.stringify({
+        question: q,
+        synthesis_text: scSynthesisText || null,
+        sources: scSources.length ? scSources : null,
+        paper_count: scSources.length || null
+      })
     });
   } catch(e) {}
   renderSearchHistory();
@@ -1145,12 +1221,17 @@ async function renderSearchHistory() {
   const sel = document.getElementById('sc-history-select');
   if (!sel) return;
   const hist = await loadSearchHistory();
+  // Store full records in memory for cache restore
+  scHistoryCache = hist;
   if (!hist.length) { sel.style.display = 'none'; return; }
   sel.style.display = '';
   sel.innerHTML = '<option value="">🕐 Recent searches…</option>' +
     hist.map(h => {
-      const label = h.q.length > 72 ? h.q.slice(0, 72) + '…' : h.q;
-      return `<option value="${h.q.replace(/"/g, '&quot;')}">${escHtml(label)}</option>`;
+      const q = h.question || h.q || '';
+      const hasCached = !!(h.synthesis_text);
+      const label = q.length > 72 ? q.slice(0, 72) + '…' : q;
+      const prefix = hasCached ? '📥 ' : '';
+      return `<option value="${q.replace(/"/g, '&quot;')}">${prefix}${escHtml(label)}</option>`;
     }).join('') +
     '<option value="__clear__" style="color:#C0392B">✕ Clear history</option>';
 }
