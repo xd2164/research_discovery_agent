@@ -153,11 +153,11 @@ a:hover{text-decoration:underline}
 .sum-card-icon{font-size:14px;flex-shrink:0}
 .sum-card-label{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
 .sum-card-body{padding:10px 14px 12px;background:#fff;font-size:12.5px;line-height:1.7;color:#0D1B2A}
-.sum-card-body p{margin-bottom:5px}
+.sum-card-body p{margin:0 0 6px}
 .sum-card-body p:last-child{margin-bottom:0}
-.sum-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
-.sum-ul li{display:flex;gap:8px;align-items:flex-start;line-height:1.55}
-.sum-ul li::before{content:'·';color:#5E52D4;font-weight:900;flex-shrink:0}
+.sum-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sum-ul li{position:relative;padding-left:14px;line-height:1.65}
+.sum-ul li::before{content:'·';color:#5E52D4;font-weight:900;position:absolute;left:0;top:0}
 .graph-output-panel{background:#F2F7FD;border:1px solid #D8E3F0;border-radius:10px;overflow:hidden;position:relative}
 .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .related-card{background:#fff;border:1px solid #D8E3F0;border-radius:9px;padding:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;text-decoration:none;display:block}
@@ -814,7 +814,7 @@ function renderMarkdownBody(text) {
   const inline = s => s
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[(\d+)\]/g, '<cite style="color:#5E52D4;font-weight:800;font-size:10.5px;font-style:normal">[$1]</cite>')
+    .replace(/\[(\d+)\]/g, '<cite style="color:#5E52D4;font-weight:700;font-size:0.82em;font-style:normal;vertical-align:baseline;white-space:nowrap">[$1]</cite>')
     .replace(/\[Present\]/g, '<span style="display:inline-flex;align-items:center;background:#D6F5EC;color:#0B6E52;border-radius:3px;padding:0 5px;font-size:9.5px;font-weight:800;letter-spacing:.3px;margin-right:4px;vertical-align:middle">✓ Present</span>')
     .replace(/\[Absent\]/g, '<span style="display:inline-flex;align-items:center;background:#FFE8DC;color:#9E3A14;border-radius:3px;padding:0 5px;font-size:9.5px;font-weight:800;letter-spacing:.3px;margin-right:4px;vertical-align:middle">✗ Absent</span>');
   for (const line of lines) {
